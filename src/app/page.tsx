@@ -236,6 +236,29 @@ export default function ComposePage() {
 
   const mailtoTooLong = mailtoHref.length > MAILTO_SAFE_LENGTH;
 
+  const hasNoNames = isRebook
+    ? ticketNumbers.length === 0
+    : passengers.length === 0;
+
+  const missingLabel = isDorm
+    ? "trainees"
+    : isRebook
+      ? "ticket numbers"
+      : "passengers";
+
+  function handleOpenOutlook(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (hasNoNames) {
+      const confirmed = window.confirm(
+        `Warning: No ${missingLabel} have been added.\n\nDo you want to open Outlook anyway?`
+      );
+      if (!confirmed) {
+        e.preventDefault();
+        setToast(`⚠️ Please add ${missingLabel} before sending.`);
+        return;
+      }
+    }
+  }
+
   function toggleFlight(no: string) {
     setFlightNos((cur) =>
       cur.includes(no) ? cur.filter((x) => x !== no) : [...cur, no],
@@ -279,13 +302,26 @@ export default function ComposePage() {
   async function copy(text: string, what: string) {
     try {
       await navigator.clipboard.writeText(text);
-      setToast(`${what} copied ✔`);
+      if (hasNoNames) {
+        setToast(`⚠️ ${what} copied, but warning: no ${missingLabel} added!`);
+      } else {
+        setToast(`${what} copied ✔`);
+      }
     } catch {
       setToast("Copy blocked — select the text and copy manually");
     }
   }
 
   async function saveToHistory() {
+    if (hasNoNames) {
+      const confirmed = window.confirm(
+        `Warning: No ${missingLabel} have been added.\n\nSave to history anyway?`
+      );
+      if (!confirmed) {
+        setToast(`⚠️ Please add ${missingLabel} first.`);
+        return;
+      }
+    }
     const res = await fetch("/api/requests", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -540,6 +576,12 @@ export default function ComposePage() {
               placeholder={"0712162366863\n0712156444358"}
               className="mail-preview"
             />
+            {ticketNumbers.length === 0 ? (
+              <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-amber-700">
+                <span>⚠️</span>
+                <span>No ticket numbers entered yet. Add at least one ticket to rebook.</span>
+              </p>
+            ) : null}
           </div>
         ) : null}
 
@@ -555,6 +597,12 @@ export default function ComposePage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
+            {passengers.length === 0 ? (
+              <p className="mt-2 flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
+                <span>⚠️</span>
+                <span>No {isDorm ? "trainees" : "passengers"} chosen yet. Search and click to add people to the email.</span>
+              </p>
+            ) : null}
             {!isDorm ? (
               <div className="mt-2 flex gap-1.5">
                 {[["all", "All"], ["employee", "Employees"], ["trainee", "Trainees"]].map(
@@ -622,8 +670,25 @@ export default function ComposePage() {
           rows={16}
           className="mail-preview w-full rounded-xl border border-slate-200 p-3 text-sm"
         />
+        {hasNoNames ? (
+          <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+            <span className="text-base leading-none">⚠️</span>
+            <div>
+              <p className="font-bold">No {missingLabel} added</p>
+              <p className="mt-0.5 text-amber-800">
+                This email currently contains no {isDorm ? "trainee names" : isRebook ? "ticket numbers" : "passenger names"}. Please add {missingLabel} before sending.
+              </p>
+            </div>
+          </div>
+        ) : null}
         <div className="mt-3 grid grid-cols-2 gap-2">
-          <a className={`${btn} min-h-[48px]`} href={mailtoHref}>✉ Open in Outlook</a>
+          <a
+            className={`${btn} min-h-[48px]`}
+            href={mailtoHref}
+            onClick={handleOpenOutlook}
+          >
+            ✉ Open in Outlook
+          </a>
           <button type="button" className={`${btnGhost} min-h-[48px]`}
                   onClick={() => copy(email.body, "Body")}>
             Copy body

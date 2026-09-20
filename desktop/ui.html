@@ -1299,6 +1299,14 @@ $("reason").addEventListener("change", render);
 $("paxSearch").addEventListener("input", searchPax);
 
 $("btnSend").addEventListener("click", function(){
+  var st = currentState();
+  var isRe = st.kind === "rebooking";
+  var isDorm = st.kind === "dormitory";
+  var hasNoNames = isRe ? (!st.tickets || !st.tickets.trim()) : (!st.pax || st.pax.length === 0);
+  if(hasNoNames){
+    var label = isDorm ? "trainees" : (isRe ? "ticket numbers" : "passengers");
+    if(!confirm("Warning: No " + label + " added.\n\nDo you want to send anyway?")) return;
+  }
   api.send_mail(currentState()).then(function(r){
     toast(r.message, "ok"); if(r.history) D.history = r.history;
   });
