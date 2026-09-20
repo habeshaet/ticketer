@@ -574,7 +574,16 @@ export default function ComposePage() {
                 <Field label="Sector">
                   <div className="flex flex-wrap gap-1.5">
                     {sectors.map((s) => (
-                      <Chip key={s} active={s === sector} onClick={() => setSector(s)}>{s}</Chip>
+                      <Chip
+                        key={s}
+                        active={s === sector}
+                        onClick={() => {
+                          setSector(s);
+                          if (s !== sector) setFlightNos([]);
+                        }}
+                      >
+                        {s}
+                      </Chip>
                     ))}
                   </div>
                 </Field>
