@@ -16,6 +16,7 @@ import {
 import {
   addDaysISO,
   buildEmail,
+  buildMailto,
   formatTicketDate,
   routeLegs,
   stripSelf,

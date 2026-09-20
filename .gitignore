@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+
+# local env (holds the DATABASE_URL password — never commit)
+.env
+.env*.local
+
+# build output
+.next/
+out/
+build/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# misc
+.DS_Store
+*.pem
+
+# python (desktop app dev)
+__pycache__/
+*.py[cod]
+venv/
+dist/
+*.spec
+selftest_log.txt
+
+# local ticket mailer data (regenerated / personal)
+/ticket_mailer_data.json
+desktop/ticket_mailer_data.json

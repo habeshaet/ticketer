@@ -98,6 +98,13 @@ export default function SettingsPage() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
+      <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900 lg:col-span-2">
+        Coming from the desktop app?{" "}
+        <a href="/tools#import" className="font-bold underline">
+          Import your data.json
+        </a>{" "}
+        — staff, flights, reasons and wording move across in one go.
+      </div>
       <section className={`${card} p-4`}>
         <SectionTitle title="Defaults" />
         <div className="grid gap-3">

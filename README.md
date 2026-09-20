@@ -81,6 +81,13 @@ Open the site and go to **Templates**:
 Then load your real people on **Directory** and your real flights on
 **Flights**.
 
+If you already use the desktop app, you don't need to retype anything: on
+your PC open TicketMailer → **Share & backup** → **Export backup** (or copy
+`data.json` from beside `TicketMailer.exe`), then open this site's
+**Desktop app** page and pick the file in the **import box at the top**.
+Staff, flights, reasons, wording and history all move across — merged with
+what's here, or replacing it, your choice.
+
 ### 6. On the iPad
 
 1. Open the Vercel address in **Safari**.

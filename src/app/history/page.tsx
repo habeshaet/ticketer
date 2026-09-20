@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { SectionTitle, TextInput, btnGhost, card } from "@/components/ui";
-import { formatTicketDate } from "@/lib/email";
+import { buildMailto, formatTicketDate } from "@/lib/email";
 import type { RequestRecord } from "@/lib/types";
 
 export default function HistoryPage() {
@@ -116,9 +116,10 @@ export default function HistoryPage() {
                     </button>
                     <a
                       className={btnGhost}
-                      href={`mailto:?subject=${encodeURIComponent(
-                        item.subject,
-                      )}&body=${encodeURIComponent(item.body)}`}
+                      href={buildMailto("", {
+                        subject: item.subject,
+                        body: item.body,
+                      })}
                     >
                       ✉ Open in mail app
                     </a>
