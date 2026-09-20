@@ -25,7 +25,7 @@ import {
   type Leg,
 } from "@/lib/email";
 import type { Flight, PassengerLine, Person, Reason, Settings } from "@/lib/types";
-import { DAYPARTS } from "@/lib/types";
+import { AIRPORTS, DAYPARTS } from "@/lib/types";
 
 type Bootstrap = {
   settings: Settings;
@@ -80,6 +80,7 @@ export default function ComposePage() {
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState("all");
   const [batchFilter, setBatchFilter] = useState("all");
+  const [showBatchList, setShowBatchList] = useState(false);
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -450,13 +451,6 @@ export default function ComposePage() {
                 ))}
               </Select>
             </Field>
-            <Field label="Charge cc">
-              <TextInput
-                value={chargeCode}
-                onChange={(e) => setChargeCode(e.target.value.toUpperCase())}
-                className="uppercase"
-              />
-            </Field>
           </div>
         ) : null}
 
@@ -571,9 +565,19 @@ export default function ComposePage() {
                 ))}
               </>
             ) : (
-              <>
-                <Field label="Sector">
-                  <div className="flex flex-wrap gap-1.5">
+              <div className="space-y-4">
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Sector
+                    </span>
+                    {origin && destination ? (
+                      <span className="text-xs font-medium text-emerald-700">
+                        {AIRPORTS[origin] ?? origin} → {AIRPORTS[destination] ?? destination}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
                     {sectors.map((s) => (
                       <Chip
                         key={s}
@@ -587,39 +591,97 @@ export default function ComposePage() {
                       </Chip>
                     ))}
                   </div>
-                </Field>
-                <Field label="Time of day">
-                  <div className="flex flex-wrap gap-1.5">
-                    <Chip active={daypart === "any"} onClick={() => setDaypart("any")}>Any</Chip>
-                    {DAYPARTS.map((p) => (
-                      <Chip key={p.value} active={daypart === p.value} onClick={() => setDaypart(p.value)}>
-                        {p.label}
-                      </Chip>
-                    ))}
-                  </div>
-                </Field>
-                {visibleFlights.map((f) => {
-                  const on = flightNos.includes(f.flightNo);
-                  return (
+                </div>
+
+                <div>
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Time of day
+                  </span>
+                  <div className="grid grid-cols-4 gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-1">
                     <button
-                      key={f.id}
                       type="button"
-                      onClick={() => toggleFlight(f.flightNo)}
-                      className={`mb-1.5 flex min-h-[44px] w-full items-center gap-3 rounded-xl border px-3 text-left text-sm ${
-                        on ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-white"
+                      onClick={() => setDaypart("any")}
+                      className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                        daypart === "any"
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
-                      <span className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] ${
-                        on ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-300 text-transparent"
-                      }`}>✓</span>
-                      <span className="font-mono font-bold">{f.flightNo}</span>
-                      <span className="ml-auto text-xs text-slate-500">
-                        {f.depTime}{f.arrTime ? ` → ${f.arrTime}` : ""} · {f.daypart}
-                      </span>
+                      Any
                     </button>
-                  );
-                })}
-              </>
+                    {DAYPARTS.map((p) => (
+                      <button
+                        key={p.value}
+                        type="button"
+                        onClick={() => setDaypart(p.value)}
+                        className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                          daypart === p.value
+                            ? "bg-white text-slate-900 shadow-sm"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span className="font-bold uppercase tracking-wider">
+                      Available Flights ({visibleFlights.length})
+                    </span>
+                    <span>{flightNos.length} selected</span>
+                  </div>
+                  {visibleFlights.map((f) => {
+                    const on = flightNos.includes(f.flightNo);
+                    return (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => toggleFlight(f.flightNo)}
+                        className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                          on
+                            ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                            on
+                              ? "border-emerald-600 bg-emerald-600 text-white"
+                              : "border-slate-300 bg-white text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-mono text-sm font-bold text-slate-900">
+                            {f.flightNo}
+                          </span>
+                          <span className="text-[11px] font-medium text-slate-400">
+                            {f.days || "Daily"}
+                          </span>
+                        </div>
+                        <div className="ml-auto flex items-center gap-2">
+                          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                            {f.daypart}
+                          </span>
+                          <span className="font-mono text-xs font-medium text-slate-700">
+                            {f.depTime}
+                            {f.arrTime ? ` → ${f.arrTime}` : ""}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                  {visibleFlights.length === 0 ? (
+                    <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center text-xs text-slate-500">
+                      No flights scheduled for this sector in the {daypart} slot.
+                    </p>
+                  ) : null}
+                </div>
+              </div>
             )}
           </>
         ) : null}
@@ -672,31 +734,61 @@ export default function ComposePage() {
               </div>
             ) : null}
             {availableBatches.length > 0 ? (
-              <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-2 text-xs">
-                <span className="font-semibold text-slate-600">Batch:</span>
-                <Chip
-                  active={batchFilter === "all"}
-                  onClick={() => setBatchFilter("all")}
+              <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-slate-50/70 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowBatchList((prev) => !prev)}
+                  className="flex w-full items-center justify-between px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
                 >
-                  All
-                </Chip>
-                {availableBatches.map((b) => (
-                  <Chip
-                    key={b}
-                    active={batchFilter === b}
-                    onClick={() => setBatchFilter(b)}
-                  >
-                    {b}
-                  </Chip>
-                ))}
-                {batchFilter !== "all" ? (
-                  <button
-                    type="button"
-                    className="ml-auto font-semibold text-emerald-700 hover:underline"
-                    onClick={() => addAllInBatch(batchFilter)}
-                  >
-                    + Add all in {batchFilter}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-slate-700">Filter by Batch</span>
+                    <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                      {availableBatches.length} batches
+                    </span>
+                    {batchFilter !== "all" ? (
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                        Selected: {batchFilter}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span className="font-mono text-xs text-slate-400">
+                    {showBatchList ? "▲ Hide" : "▼ Expand"}
+                  </span>
+                </button>
+                {showBatchList ? (
+                  <div className="border-t border-slate-200 p-2.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Chip
+                        active={batchFilter === "all"}
+                        onClick={() => setBatchFilter("all")}
+                      >
+                        All Batches
+                      </Chip>
+                      {availableBatches.map((b) => (
+                        <Chip
+                          key={b}
+                          active={batchFilter === b}
+                          onClick={() => setBatchFilter(b)}
+                        >
+                          {b}
+                        </Chip>
+                      ))}
+                    </div>
+                    {batchFilter !== "all" ? (
+                      <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/60 pt-2">
+                        <span className="text-[11px] text-slate-500">
+                          Quick add all trainees from batch {batchFilter}
+                        </span>
+                        <button
+                          type="button"
+                          className="rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+                          onClick={() => addAllInBatch(batchFilter)}
+                        >
+                          + Add all in {batchFilter}
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
                 ) : null}
               </div>
             ) : null}
@@ -706,7 +798,7 @@ export default function ComposePage() {
                   key={p.id}
                   type="button"
                   onClick={() => addPerson(p)}
-                  className="flex min-h-[44px] w-full items-center gap-2.5 border-b border-slate-100 px-3 text-left text-sm last:border-0"
+                  className="flex min-h-[44px] w-full items-center gap-2.5 border-b border-slate-100 px-3 text-left text-sm last:border-0 hover:bg-slate-50"
                 >
                   <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
                     p.kind === "trainee" ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
@@ -718,6 +810,9 @@ export default function ComposePage() {
                   ) : null}
                   <span className="w-14 shrink-0 font-mono text-xs text-slate-500">{p.staffNo}</span>
                   <span className="flex-1 truncate">{p.fullName}</span>
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-lg border border-emerald-600/30 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-100">
+                    + Add
+                  </span>
                 </button>
               ))}
               {searchResults.length === 0 ? (

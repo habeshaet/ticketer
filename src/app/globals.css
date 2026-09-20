@@ -46,7 +46,110 @@ header::after {
   /* iOS zooms the page when a font under 16px gets focus */
   input, select, textarea { font-size: 16px; }
   /* comfortable tap targets */
-  button, a.inline-flex, .chip { min-height: 40px; }
+  button, a.inline-flex, .chip { min-height: 44px; }
 }
 /* respect the notch / home indicator when added to the home screen */
 body { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ---------- Dark Mode Support ---------- */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #0a261a 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #0c1c2e 0%, transparent 55%),
+    #0b1320;
+  color: #f1f5f9;
+}
+
+html.dark header {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+  border-color: #243447 !important;
+}
+
+html.dark header span.block.text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark header span.block.text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark [class*="rounded-2xl border"] {
+  background-color: rgba(21, 32, 48, 0.95) !important;
+  border-color: #24354c !important;
+  color: #f1f5f9;
+}
+
+html.dark h2[class*="text-slate-700"],
+html.dark h3[class*="text-slate-800"],
+html.dark span[class*="text-slate-900"],
+html.dark p[class*="text-slate-900"] {
+  color: #f8fafc !important;
+}
+
+html.dark [class*="text-slate-500"],
+html.dark [class*="text-slate-600"] {
+  color: #94a3b8 !important;
+}
+
+html.dark [class*="text-slate-700"] {
+  color: #cbd5e1 !important;
+}
+
+html.dark [class*="bg-slate-50"],
+html.dark [class*="bg-slate-100"] {
+  background-color: #121c2b !important;
+  border-color: #24354c !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0d1522 !important;
+  border-color: #2a3d56 !important;
+  color: #f8fafc !important;
+}
+
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.75;
+}
+
+html.dark button[class*="border-slate-300"],
+html.dark a[class*="border-slate-300"] {
+  background-color: #162234 !important;
+  border-color: #2e435f !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark button[class*="border-slate-300"]:hover,
+html.dark a[class*="border-slate-300"]:hover {
+  background-color: #1f2e46 !important;
+}
+
+html.dark button[class*="border-slate-200"],
+html.dark div[class*="border-slate-200"] {
+  border-color: #24354c !important;
+}
+
+html.dark .mail-preview {
+  background-color: #0d1522 !important;
+  color: #e2e8f0 !important;
+  border-color: #2a3d56 !important;
+}
+
+html.dark tr[class*="border-slate-100"],
+html.dark tr[class*="border-slate-200"] {
+  border-color: #1e2c3e !important;
+}
+
+html.dark tr:hover {
+  background-color: #182537 !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334760;
+}
