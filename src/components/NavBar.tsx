@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,11 +10,16 @@ const LINKS = [
   { href: "/flights", label: "Flights" },
   { href: "/history", label: "History" },
   { href: "/settings", label: "Templates" },
-  { href: "/tools", label: "Desktop app" },
 ];
 
 export function NavBar() {
   const pathname = usePathname();
+
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  }, []);
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
