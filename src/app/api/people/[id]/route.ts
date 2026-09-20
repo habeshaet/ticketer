@@ -2,13 +2,25 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { people } from "@/db/schema";
 import { classifyId, normalizeId } from "@/lib/classify";
-import { badRequest, json, str } from "@/lib/server";
+import {
+  badRequest,
+  ensureDatabaseColumns,
+  json,
+  str,
+  unauthorized,
+  verifyAdmin,
+} from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, ctx: Ctx) {
+  await ensureDatabaseColumns();
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to edit directory");
+  }
+
   const { id } = await ctx.params;
   const personId = Number(id);
   if (!Number.isFinite(personId)) return badRequest("Invalid id");
@@ -26,6 +38,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
   if (body.fullName !== undefined)
     patch.fullName = str(body.fullName).toUpperCase();
   if (body.idNo !== undefined) patch.idNo = str(body.idNo);
+  if (body.batch !== undefined) patch.batch = str(body.batch);
   if (body.chargeCode !== undefined) patch.chargeCode = str(body.chargeCode);
   if (body.station !== undefined) patch.station = str(body.station).toUpperCase();
   if (body.phone !== undefined) patch.phone = str(body.phone);
@@ -43,7 +56,12 @@ export async function PATCH(request: Request, ctx: Ctx) {
   return json(row);
 }
 
-export async function DELETE(_request: Request, ctx: Ctx) {
+export async function DELETE(request: Request, ctx: Ctx) {
+  await ensureDatabaseColumns();
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to delete from directory");
+  }
+
   const { id } = await ctx.params;
   const personId = Number(id);
   if (!Number.isFinite(personId)) return badRequest("Invalid id");

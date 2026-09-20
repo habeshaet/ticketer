@@ -7,6 +7,7 @@ export type Person = {
   staffNo: string;
   fullName: string;
   idNo: string;
+  batch?: string;
   chargeCode: string;
   station: string;
   phone: string;
@@ -43,6 +44,7 @@ export type Settings = {
   dormToEmails: string;
   dormCcEmails: string;
   myEmail: string;
+  adminPassword?: string;
   theme: string;
   signOff: string;
   signature: string;
@@ -59,6 +61,7 @@ export type PassengerLine = {
   staffNo: string;
   fullName: string;
   idNo: string;
+  batch?: string;
   ticketNo?: string;
   kind?: string;
 };

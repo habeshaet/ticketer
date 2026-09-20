@@ -79,6 +79,7 @@ export default function ComposePage() {
   const [remarks, setRemarks] = useState("");
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState("all");
+  const [batchFilter, setBatchFilter] = useState("all");
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -161,6 +162,18 @@ export default function ComposePage() {
     [data, reasonKey],
   );
 
+  const availableBatches = useMemo(() => {
+    if (!data) return [] as string[];
+    const set = new Set<string>();
+    data.people.forEach((p) => {
+      if (p.batch && p.batch.trim()) {
+        if (isDorm && p.kind !== "trainee") return;
+        set.add(p.batch.trim());
+      }
+    });
+    return Array.from(set).sort();
+  }, [data, isDorm]);
+
   const searchResults = useMemo(() => {
     if (!data) return [] as Person[];
     const q = query.trim().toLowerCase();
@@ -168,10 +181,17 @@ export default function ComposePage() {
     return data.people
       .filter((p) => (wanted === "all" ? true : p.kind === wanted))
       .filter((p) =>
-        q ? `${p.staffNo} ${p.fullName} ${p.idNo}`.toLowerCase().includes(q) : true,
+        batchFilter === "all" ? true : (p.batch || "").trim() === batchFilter,
       )
-      .slice(0, 40);
-  }, [data, query, kindFilter, isDorm]);
+      .filter((p) =>
+        q
+          ? `${p.staffNo} ${p.fullName} ${p.idNo} ${p.batch ?? ""}`
+              .toLowerCase()
+              .includes(q)
+          : true,
+      )
+      .slice(0, 50);
+  }, [data, query, kindFilter, isDorm, batchFilter]);
 
   // switching to dormitory must drop anyone who is not a trainee
   useEffect(() => {
@@ -292,11 +312,40 @@ export default function ComposePage() {
               staffNo: person.staffNo,
               fullName: person.fullName,
               idNo: person.idNo,
+              batch: person.batch,
               kind: person.kind,
               ticketNo: "",
             },
           ],
     );
+  }
+
+  function addAllInBatch(batchName: string) {
+    if (!data) return;
+    const matching = data.people.filter(
+      (p) =>
+        (isDorm ? p.kind === "trainee" : true) &&
+        (p.batch || "").trim() === batchName,
+    );
+    if (matching.length === 0) return;
+    setPassengers((cur) => {
+      const next = [...cur];
+      matching.forEach((person) => {
+        if (!next.some((p) => p.personId === person.id)) {
+          next.push({
+            personId: person.id,
+            staffNo: person.staffNo,
+            fullName: person.fullName,
+            idNo: person.idNo,
+            batch: person.batch,
+            kind: person.kind,
+            ticketNo: "",
+          });
+        }
+      });
+      return next;
+    });
+    setToast(`Added ${matching.length} from ${batchName} ✔`);
   }
 
   async function copy(text: string, what: string) {
@@ -593,7 +642,7 @@ export default function ComposePage() {
               right={<span className="text-xs text-slate-400">{passengers.length} chosen</span>}
             />
             <TextInput
-              placeholder="Search ID or name…"
+              placeholder="Search ID, name, or batch…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -612,17 +661,51 @@ export default function ComposePage() {
                 )}
               </div>
             ) : null}
+            {availableBatches.length > 0 ? (
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-2 text-xs">
+                <span className="font-semibold text-slate-600">Batch:</span>
+                <Chip
+                  active={batchFilter === "all"}
+                  onClick={() => setBatchFilter("all")}
+                >
+                  All
+                </Chip>
+                {availableBatches.map((b) => (
+                  <Chip
+                    key={b}
+                    active={batchFilter === b}
+                    onClick={() => setBatchFilter(b)}
+                  >
+                    {b}
+                  </Chip>
+                ))}
+                {batchFilter !== "all" ? (
+                  <button
+                    type="button"
+                    className="ml-auto font-semibold text-emerald-700 hover:underline"
+                    onClick={() => addAllInBatch(batchFilter)}
+                  >
+                    + Add all in {batchFilter}
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
             <div className="mt-2 max-h-52 overflow-y-auto rounded-xl border border-slate-200">
               {searchResults.map((p) => (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => addPerson(p)}
-                  className="flex min-h-[44px] w-full items-center gap-3 border-b border-slate-100 px-3 text-left text-sm last:border-0"
+                  className="flex min-h-[44px] w-full items-center gap-2.5 border-b border-slate-100 px-3 text-left text-sm last:border-0"
                 >
                   <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
                     p.kind === "trainee" ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
                   }`}>{p.kind === "trainee" ? "TRN" : "EMP"}</span>
+                  {p.batch ? (
+                    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-700">
+                      {p.batch}
+                    </span>
+                  ) : null}
                   <span className="w-14 shrink-0 font-mono text-xs text-slate-500">{p.staffNo}</span>
                   <span className="flex-1 truncate">{p.fullName}</span>
                 </button>
@@ -637,7 +720,14 @@ export default function ComposePage() {
                     className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm">
                   <span className="text-xs font-bold text-slate-400">{i + 1}</span>
                   <span className="font-mono text-xs text-slate-500">{p.staffNo}</span>
-                  <span className="flex-1 truncate">{p.fullName}</span>
+                  <span className="flex-1 truncate">
+                    {p.fullName}
+                    {p.batch ? (
+                      <span className="ml-1.5 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
+                        {p.batch}
+                      </span>
+                    ) : null}
+                  </span>
                   <button
                     type="button"
                     className="text-xs font-semibold text-rose-600"

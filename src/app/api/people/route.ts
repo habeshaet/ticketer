@@ -2,14 +2,23 @@ import { asc, ilike, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { people } from "@/db/schema";
 import { classifyId, normalizeId } from "@/lib/classify";
-import { badRequest, json, str } from "@/lib/server";
+import {
+  badRequest,
+  ensureDatabaseColumns,
+  json,
+  str,
+  unauthorized,
+  verifyAdmin,
+} from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  await ensureDatabaseColumns();
   const { searchParams } = new URL(request.url);
   const q = (searchParams.get("q") ?? "").trim();
   const kind = (searchParams.get("kind") ?? "").trim();
+  const batch = (searchParams.get("batch") ?? "").trim();
 
   const filters = [];
   if (q) {
@@ -19,6 +28,7 @@ export async function GET(request: Request) {
         ilike(people.fullName, like),
         ilike(people.staffNo, like),
         ilike(people.idNo, like),
+        ilike(people.batch, like),
         ilike(people.station, like),
         ilike(people.note, like),
       ),
@@ -26,6 +36,9 @@ export async function GET(request: Request) {
   }
   if (kind === "employee" || kind === "trainee") {
     filters.push(sql`${people.kind} = ${kind}`);
+  }
+  if (batch) {
+    filters.push(sql`${people.batch} = ${batch}`);
   }
 
   const rows = filters.length
@@ -40,6 +53,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  await ensureDatabaseColumns();
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to add to directory");
+  }
+
   const body = await request.json().catch(() => null);
   if (!body) return badRequest("Invalid JSON body");
   const fullName = str(body.fullName).toUpperCase();
@@ -59,6 +77,7 @@ export async function POST(request: Request) {
       staffNo,
       fullName,
       idNo: str(body.idNo),
+      batch: str(body.batch),
       chargeCode: str(body.chargeCode),
       station: str(body.station).toUpperCase(),
       phone: str(body.phone),

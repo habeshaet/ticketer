@@ -16,6 +16,7 @@ export const people = pgTable("people", {
   staffNo: text("staff_no").notNull().default(""),
   fullName: text("full_name").notNull(),
   idNo: text("id_no").notNull().default(""), // passport / national ID number
+  batch: text("batch").notNull().default(""), // training batch e.g. Batch 12, B-24
   chargeCode: text("charge_code").notNull().default(""),
   station: text("station").notNull().default(""),
   phone: text("phone").notNull().default(""),
@@ -61,6 +62,7 @@ export const settings = pgTable("settings", {
   dormCcEmails: text("dorm_cc_emails").notNull().default(""),
   // your own address, always stripped from To and Cc
   myEmail: text("my_email").notNull().default(""),
+  adminPassword: text("admin_password").notNull().default("admin123"),
   signOff: text("sign_off").notNull().default("Best regards,"),
   signature: text("signature").notNull().default(""),
   newTicketTemplate: text("new_ticket_template").notNull().default(""),

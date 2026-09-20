@@ -128,6 +128,19 @@ export default function SettingsPage() {
                 }
               />
             </Field>
+            <Field
+              label="Admin password"
+              hint="Required to add, edit or delete in Directory and Flights (default: admin123)"
+            >
+              <TextInput
+                type="password"
+                value={settings.adminPassword ?? ""}
+                placeholder="admin123"
+                onChange={(e) =>
+                  setSettings({ ...settings, adminPassword: e.target.value })
+                }
+              />
+            </Field>
           </div>
           <Field label="Signature (your name / department)">
             <TextArea

@@ -125,6 +125,7 @@ export const SEED_SETTINGS = {
   dormToEmails: "",
   dormCcEmails: "",
   myEmail: "",
+  adminPassword: "admin123",
   theme: "ethiopian",
   signOff: "Best regards,",
   signature: "",

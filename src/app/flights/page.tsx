@@ -12,6 +12,7 @@ import {
   inputClass,
 } from "@/components/ui";
 import { AIRPORTS, DAYPARTS, daypartOf } from "@/lib/types";
+import { getAdminHeaders, useAdmin } from "@/lib/useAdmin";
 import type { Flight } from "@/lib/types";
 
 const EMPTY = {
@@ -25,12 +26,14 @@ const EMPTY = {
 };
 
 export default function FlightsPage() {
+  const { isAdmin, requestAdminAccess, lockAdmin } = useAdmin();
   const [flights, setFlights] = useState<Flight[]>([]);
   const [form, setForm] = useState({ ...EMPTY });
   const [editing, setEditing] = useState<Flight | null>(null);
   const [message, setMessage] = useState("");
   const [importText, setImportText] = useState("");
   const [replaceAll, setReplaceAll] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [importResult, setImportResult] = useState<{
     inserted: number;
     updated: number;
@@ -39,13 +42,22 @@ export default function FlightsPage() {
   } | null>(null);
 
   async function runImport() {
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    setBusy(true);
     setImportResult(null);
     const res = await fetch("/api/flights/import", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify({ text: importText, replaceAll }),
     });
     const payload = await res.json();
+    setBusy(false);
     if (res.ok) {
       setImportText("");
       setImportResult(payload);
@@ -57,7 +69,7 @@ export default function FlightsPage() {
 
   async function load() {
     const res = await fetch("/api/flights");
-    setFlights(await res.json());
+    if (res.ok) setFlights(await res.json());
   }
 
   useEffect(() => {
@@ -78,60 +90,129 @@ export default function FlightsPage() {
       setMessage("Flight number is required");
       return;
     }
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    setBusy(true);
     const res = await fetch("/api/flights", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify({
         ...form,
         daypart: form.daypart || daypartOf(form.depTime),
       }),
     });
+    setBusy(false);
     if (res.ok) {
       setForm({ ...EMPTY, origin: form.origin, destination: form.destination });
       setMessage("Flight added ✔");
       load();
     } else {
-      setMessage("Could not add this flight");
+      const err = await res.json().catch(() => ({}));
+      setMessage(err.error ?? "Could not add this flight");
     }
   }
 
   async function saveEdit() {
     if (!editing) return;
-    await fetch(`/api/flights/${editing.id}`, {
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    setBusy(true);
+    const res = await fetch(`/api/flights/${editing.id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify(editing),
     });
-    setEditing(null);
-    setMessage("Saved ✔");
-    load();
+    setBusy(false);
+    if (res.ok) {
+      setEditing(null);
+      setMessage("Saved ✔");
+      load();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      setMessage(err.error ?? "Could not save flight");
+    }
   }
 
   async function toggleActive(flight: Flight) {
-    await fetch(`/api/flights/${flight.id}`, {
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    const res = await fetch(`/api/flights/${flight.id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify({ active: !flight.active }),
     });
-    load();
+    if (res.ok) {
+      load();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      setMessage(err.error ?? "Could not update flight");
+    }
   }
 
   async function removeFlight(id: number) {
-    await fetch(`/api/flights/${id}`, { method: "DELETE" });
-    load();
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    if (!window.confirm("Are you sure you want to delete this flight?")) return;
+    const res = await fetch(`/api/flights/${id}`, {
+      method: "DELETE",
+      headers: getAdminHeaders(),
+    });
+    if (res.ok) {
+      setMessage("Flight deleted ✔");
+      load();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      setMessage(err.error ?? "Could not delete flight");
+    }
   }
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
       <section className={`${card} p-4`}>
-        <SectionTitle
-          title="Flight helper list"
-          right={
-            <span className="text-xs text-slate-400">
-              {flights.length} flights · {grouped.length} sectors
-            </span>
-          }
-        />
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <SectionTitle
+            title="Flight helper list"
+            right={
+              <span className="text-xs text-slate-400">
+                {flights.length} flights · {grouped.length} sectors
+              </span>
+            }
+          />
+          {isAdmin ? (
+            <button
+              onClick={lockAdmin}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
+              title="Admin access active. Click to lock."
+            >
+              🔓 Admin unlocked (click to lock)
+            </button>
+          ) : (
+            <button
+              onClick={requestAdminAccess}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+              title="Click to enter admin password"
+            >
+              🔒 Admin locked (click to edit)
+            </button>
+          )}
+        </div>
         <p className="mb-4 text-xs text-slate-500">
           These are the options offered when you pick a sector and a time of day
           on the compose screen. Morning = before 12:00, afternoon = 12:00–16:59,
@@ -195,7 +276,7 @@ export default function FlightsPage() {
                         ))}
                       </Select>
                       <div className="flex gap-2">
-                        <button className={btn} onClick={saveEdit}>
+                        <button className={btn} onClick={saveEdit} disabled={busy}>
                           Save
                         </button>
                         <button
@@ -231,7 +312,13 @@ export default function FlightsPage() {
                       <div className="mt-2 flex gap-3 text-xs">
                         <button
                           className="font-semibold text-emerald-700 hover:underline"
-                          onClick={() => setEditing(flight)}
+                          onClick={async () => {
+                            if (!isAdmin) {
+                              const ok = await requestAdminAccess();
+                              if (!ok) return;
+                            }
+                            setEditing(flight);
+                          }}
                         >
                           edit
                         </button>
@@ -330,7 +417,7 @@ export default function FlightsPage() {
               placeholder="Daily"
             />
           </Field>
-          <button className={btn} onClick={addFlight}>
+          <button className={btn} onClick={addFlight} disabled={busy}>
             Add flight
           </button>
           {message ? (
@@ -365,8 +452,8 @@ export default function FlightsPage() {
             />
             Replace the whole flight list
           </label>
-          <button className={`${btn} mt-2 w-full`} onClick={runImport}>
-            Import flights
+          <button className={`${btn} mt-2 w-full`} onClick={runImport} disabled={busy}>
+            {busy ? "Importing…" : "Import flights"}
           </button>
           {importResult ? (
             <div className="mt-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs text-emerald-900">

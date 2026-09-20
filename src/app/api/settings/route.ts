@@ -55,6 +55,7 @@ export async function PUT(request: Request) {
     dormSubject: reset
       ? DEFAULT_DORM_SUBJECT
       : str(body.dormSubject, DEFAULT_DORM_SUBJECT),
+    ...(body.adminPassword !== undefined ? { adminPassword: str(body.adminPassword) } : {}),
   };
 
   const [row] = await db

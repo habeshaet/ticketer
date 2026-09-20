@@ -1,7 +1,7 @@
 import { asc } from "drizzle-orm";
 import { db } from "@/db";
 import { flights } from "@/db/schema";
-import { badRequest, json, str } from "@/lib/server";
+import { badRequest, json, str, unauthorized, verifyAdmin } from "@/lib/server";
 import { daypartOf } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to add flight");
+  }
+
   const body = await request.json().catch(() => null);
   if (!body) return badRequest("Invalid JSON body");
   const flightNo = str(body.flightNo).toUpperCase();

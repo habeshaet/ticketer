@@ -19,6 +19,7 @@ export async function POST() {
         staff_no text not null default '',
         full_name text not null,
         id_no text not null default '',
+        batch text not null default '',
         charge_code text not null default '',
         station text not null default '',
         phone text not null default '',
@@ -85,6 +86,7 @@ export async function POST() {
       "dorm_to_emails text not null default ''",
       "dorm_cc_emails text not null default ''",
       "my_email text not null default ''",
+      "admin_password text not null default 'admin123'",
       "dorm_template text not null default ''",
       "dorm_reason text not null default ''",
       "dorm_subject text not null default ''",
@@ -95,6 +97,10 @@ export async function POST() {
         sql.raw(`alter table settings add column if not exists ${column}`),
       );
     }
+
+    await db.execute(
+      sql`alter table people add column if not exists batch text not null default ''`,
+    );
 
     const result = await runSeed({ force: false });
     return json({ ok: true, ...result });
