@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #e2f0e7 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #eef4f0 0%, transparent 55%),
+    #f1f5f2;
+  min-height: 100vh;
+}
+
+/* the national colours, as a thin ribbon under the header */
+header::after {
+  content: "";
+  display: block;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    #1f9d45 0 33.3%,
+    #f4c111 33.3% 66.6%,
+    #d81e28 66.6% 100%
+  );
+}
+
+.mail-preview {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+/* ---------- iPad / touch ---------- */
+@media (hover: none) and (pointer: coarse) {
+  /* iOS zooms the page when a font under 16px gets focus */
+  input, select, textarea { font-size: 16px; }
+  /* comfortable tap targets */
+  button, a.inline-flex, .chip { min-height: 40px; }
+}
+/* respect the notch / home indicator when added to the home screen */
+body { padding-bottom: env(safe-area-inset-bottom); }

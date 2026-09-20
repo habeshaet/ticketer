@@ -1,0 +1,15 @@
+# The app needs ONE package to show its window:
+#     pywebview   - a native window that renders the interface
+#                   (uses the Edge WebView2 runtime already on Windows 10/11)
+#
+# Optional extras:
+#     pyinstaller - turns the app into TicketMailer.exe
+#     pywin32     - lets the app hand the mail straight to Outlook instead of
+#                   falling back to your default mail program
+#
+# build_exe.bat installs all three automatically. To do it by hand:
+#     python -m pip install -r requirements.txt
+
+pywebview>=4.4
+pyinstaller>=6.0
+pywin32>=306 ; sys_platform == "win32"

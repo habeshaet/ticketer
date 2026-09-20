@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Mailer</title>
+<style>
+  /* ==================================================================
+     THEMES
+     Every colour below is a token, so switching theme restyles the whole
+     app. Your choice is saved in your data file and comes back next time.
+     ================================================================== */
+  /* Ethiopian - the national green, gold and red. This is the default. */
+  :root, html[data-theme="ethiopian"]{
+    --side1:#0a4726; --side2:#063017; --side-ink:#cfe6d7; --side-ink2:#94b8a2;
+    --side-hover:rgba(255,255,255,.09); --side-foot:#6f9480;
+    --page:#f1f5f2; --panel:#ffffff; --panel2:#f7faf8; --panel3:#eef4f0;
+    --ink:#10261a; --ink2:#2f4a3a; --muted:#5f7a6b; --muted2:#93a99c;
+    --line:#dfe9e3; --line2:#c4d6cb; --field:#ffffff;
+    --accent:#0b7a3b; --accent-dark:#075c2c; --accent-soft:#e6f4ea; --accent-ink:#05421f;
+    --warn:#9a6a05; --warn-soft:#fdf3d4; --warn-line:#f4d98a;
+    --danger:#c0201f; --danger-soft:#fdeaea; --danger-line:#f3bdbc;
+    --sky:#0369a1; --sky-soft:#e0f2fe; --amber:#8a5a06; --amber-soft:#fdf0cf;
+    --code-bg:#0a4726; --code-ink:#f4c111; --tag-line:transparent;
+    --shadow:0 1px 2px rgba(10,71,38,.07),0 8px 24px rgba(10,71,38,.08);
+    --ring:rgba(11,122,59,.16); --scroll:#c4d6cb; --scroll-h:#94b8a2;
+  }
+  /* the flag ribbon under the brand */
+  .side .flagbar{height:3px;border-radius:99px;margin:0 8px 12px;
+    background:linear-gradient(90deg,#1f9d45 0 33.3%,#f4c111 33.3% 66.6%,#d81e28 66.6% 100%);
+    opacity:.95}
+  html[data-theme="emerald"]{
+    --side1:#0f172a; --side2:#0b1220; --side-ink:#cbd5e1; --side-ink2:#94a3b8;
+    --side-hover:rgba(255,255,255,.07); --side-foot:#64748b;
+    --page:#f1f5f9; --panel:#ffffff; --panel2:#f8fafc; --panel3:#f1f5f9;
+    --ink:#0f172a; --ink2:#334155; --muted:#64748b; --muted2:#94a3b8;
+    --line:#e2e8f0; --line2:#cbd5e1; --field:#ffffff;
+    --accent:#0f9d6f; --accent-dark:#0b7c58; --accent-soft:#e7f7f0; --accent-ink:#065f46;
+    --warn:#b45309; --warn-soft:#fef3c7; --warn-line:#fde68a;
+    --danger:#dc2626; --danger-soft:#fee2e2; --danger-line:#fecaca;
+    --sky:#0369a1; --sky-soft:#e0f2fe; --amber:#92400e; --amber-soft:#fef3c7;
+    --code-bg:#0f172a; --code-ink:#a7f3d0; --tag-line:transparent;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.06);
+    --ring:rgba(15,157,111,.14); --scroll:#cbd5e1; --scroll-h:#94a3b8;
+  }
+  /* Deep navy sidebar with a calm royal-blue accent */
+  html[data-theme="indigo"]{
+    --side1:#111c3a; --side2:#0a1229; --side-ink:#c7d2fe; --side-ink2:#8b9ccc;
+    --side-hover:rgba(255,255,255,.08); --side-foot:#64748b;
+    --page:#f2f4f9; --panel:#ffffff; --panel2:#f8fafc; --panel3:#eef2ff;
+    --ink:#111827; --ink2:#334155; --muted:#64748b; --muted2:#94a3b8;
+    --line:#e3e7f0; --line2:#c9d1e3; --field:#ffffff;
+    --accent:#3557d8; --accent-dark:#2743ad; --accent-soft:#e8edfd; --accent-ink:#1e3a8a;
+    --warn:#b45309; --warn-soft:#fef3c7; --warn-line:#fde68a;
+    --danger:#dc2626; --danger-soft:#fee2e2; --danger-line:#fecaca;
+    --sky:#0369a1; --sky-soft:#e0f2fe; --amber:#92400e; --amber-soft:#fef3c7;
+    --code-bg:#111c3a; --code-ink:#c7d2fe; --tag-line:transparent;
+    --shadow:0 1px 2px rgba(17,28,58,.06),0 8px 24px rgba(17,28,58,.07);
+    --ring:rgba(53,87,216,.16); --scroll:#c9d1e3; --scroll-h:#94a3b8;
+  }
+  /* Full dark mode for long evenings */
+  html[data-theme="midnight"]{
+    --side1:#0b1220; --side2:#070d18; --side-ink:#cbd5e1; --side-ink2:#8595ad;
+    --side-hover:rgba(255,255,255,.08); --side-foot:#64748b;
+    --page:#0f1626; --panel:#18202f; --panel2:#1f2937; --panel3:#243040;
+    --ink:#e8eef6; --ink2:#c7d2de; --muted:#93a3b6; --muted2:#7b8ba0;
+    --line:#2a3546; --line2:#3a4759; --field:#131b28;
+    --accent:#19b37f; --accent-dark:#149068; --accent-soft:#123a2e;
+    --accent-ink:#8ff0cb;
+    --warn:#fbbf24; --warn-soft:#3a2f12; --warn-line:#5b4718;
+    --danger:#f87171; --danger-soft:#3a1d1d; --danger-line:#5b2a2a;
+    --sky:#7dd3fc; --sky-soft:#12303f; --amber:#fcd34d; --amber-soft:#3a2f12;
+    --code-bg:#070d18; --code-ink:#8ff0cb; --tag-line:rgba(255,255,255,.07);
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.35);
+    --ring:rgba(25,179,127,.22); --scroll:#33415a; --scroll-h:#475569;
+  }
+  /* Light and airy - a pale sidebar instead of a dark one */
+  html[data-theme="daylight"]{
+    --side1:#ffffff; --side2:#f4f6fa; --side-ink:#475569; --side-ink2:#8a97a8;
+    --side-hover:rgba(15,23,42,.06); --side-foot:#94a3b8;
+    --page:#eef1f6; --panel:#ffffff; --panel2:#f8fafc; --panel3:#f1f5f9;
+    --ink:#0f172a; --ink2:#334155; --muted:#64748b; --muted2:#94a3b8;
+    --line:#e2e8f0; --line2:#cbd5e1; --field:#ffffff;
+    --accent:#0f766e; --accent-dark:#0c5d57; --accent-soft:#e3f5f3; --accent-ink:#134e4a;
+    --warn:#b45309; --warn-soft:#fef3c7; --warn-line:#fde68a;
+    --danger:#dc2626; --danger-soft:#fee2e2; --danger-line:#fecaca;
+    --sky:#0369a1; --sky-soft:#e0f2fe; --amber:#92400e; --amber-soft:#fef3c7;
+    --code-bg:#1e293b; --code-ink:#a7f3d0; --tag-line:transparent;
+    --shadow:0 1px 2px rgba(15,23,42,.05),0 6px 18px rgba(15,23,42,.06);
+    --ring:rgba(15,118,110,.15); --scroll:#cbd5e1; --scroll-h:#94a3b8;
+  }
+  html[data-theme="daylight"] .side{border-right:1px solid var(--line)}
+  html[data-theme="daylight"] .brand b{color:var(--ink)}
+  html[data-theme="daylight"] .nav button.on{color:#fff}
+
+  :root{--radius:14px}
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--page); color:var(--ink); overflow:hidden;
+    font:14px/1.5 "Segoe UI Variable Text","Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition:background .18s,color .18s;
+  }
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:99px;border:2px solid transparent;background-clip:content-box}
+  ::-webkit-scrollbar-thumb:hover{background:var(--scroll-h);background-clip:content-box}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  /* ---------- shell ---------- */
+  .app{display:flex;height:100vh}
+  .side{
+    width:216px;flex:0 0 216px;background:linear-gradient(180deg,var(--side1),var(--side2));
+    color:var(--side-ink);display:flex;flex-direction:column;padding:14px 12px;gap:4px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px}
+  .brand .logo{width:34px;height:34px;flex:none;display:block;
+    filter:drop-shadow(0 4px 8px rgba(0,0,0,.28))}
+  .brand .logo svg{width:34px;height:34px;display:block;border-radius:9px}
+  .brand .logo img{width:34px;height:34px;display:block;object-fit:contain;
+    background:#fff;border-radius:99px;padding:5px}
+  html[data-theme="daylight"] .brand .logo img{box-shadow:0 0 0 1px var(--line)}
+  .brand b{display:block;color:#fff;font-size:14px;letter-spacing:.2px}
+  .brand span{display:block;font-size:11px;color:var(--side-ink2)}
+  .nav{display:flex;flex-direction:column;gap:2px}
+  .nav button{
+    display:flex;align-items:center;gap:10px;width:100%;padding:9px 11px;border:0;cursor:pointer;
+    background:transparent;color:var(--side-ink);border-radius:10px;font:inherit;font-weight:500;text-align:left;
+    transition:background .12s,color .12s;
+  }
+  .nav button .ic{width:18px;height:18px;flex:none;opacity:.9;display:grid;place-items:center}
+  .nav button .ic svg{width:17px;height:17px}
+  .nav button:hover{background:var(--side-hover);color:#fff}
+  html[data-theme="daylight"] .nav button:hover{color:var(--ink)}
+  .nav button.on{background:var(--accent);color:#fff;box-shadow:0 6px 16px var(--ring)}
+  .nav button.on .ic{opacity:1}
+  .side .foot{margin-top:auto;font-size:11px;color:var(--side-foot);padding:10px 10px 4px;line-height:1.45}
+  .side .foot b{color:var(--side-ink2);font-weight:600}
+
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .top{
+    height:54px;flex:none;background:var(--panel);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px;padding:0 18px;
+  }
+  .top h1{font-size:15px;margin:0;font-weight:650}
+  .top .sub{color:var(--muted);font-size:12px}
+  .top .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .pill{font-size:11px;padding:4px 9px;border-radius:99px;background:var(--panel3);color:var(--muted);font-weight:600}
+  .pill.ok{background:var(--accent-soft);color:var(--accent-dark)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .page{flex:1;overflow:auto;padding:16px 18px 24px}
+  .view{display:none}
+  .view.on{display:block}
+
+  /* theme dropdown in the title bar */
+  .themedd{position:relative;display:flex;align-items:center;gap:6px;padding:3px 3px 3px 7px;
+    border:1px solid var(--line2);border-radius:99px;background:var(--panel)}
+  .swatches{display:flex;align-items:center;gap:4px}
+  .swatches button{width:18px;height:18px;border-radius:99px;cursor:pointer;padding:0;
+    border:2px solid transparent;transition:.12s;box-shadow:inset 0 0 0 1px rgba(0,0,0,.16)}
+  .swatches button:hover{transform:scale(1.15)}
+  .swatches button.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--ring),inset 0 0 0 1px rgba(0,0,0,.16)}
+  .themebtn{display:flex;align-items:center;gap:6px;padding:4px 9px;border-radius:99px;cursor:pointer;
+    border:0;background:var(--panel3);color:var(--ink2);font-weight:600;font-size:12px;transition:.12s}
+  .themebtn:hover{background:var(--line)}
+  .themebtn .cv{margin-left:auto;opacity:.6}
+  .themebtn .dot,.themeitem .dot{width:14px;height:14px;border-radius:99px;flex:none;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
+  .thememenu{position:absolute;top:calc(100% + 6px);right:0;min-width:236px;z-index:60;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:5px;
+    box-shadow:0 14px 40px rgba(15,23,42,.20);display:none}
+  .thememenu.open{display:block;animation:in .13s ease-out}
+  .themeitem{display:flex;align-items:center;gap:9px;width:100%;padding:8px 9px;border:0;cursor:pointer;
+    background:transparent;border-radius:8px;text-align:left;font:inherit;color:var(--ink);transition:.1s}
+  .themeitem:hover{background:var(--panel3)}
+  .themeitem.on{background:var(--accent-soft)}
+  .themeitem .tx{flex:1;min-width:0}
+  .themeitem .tx b{display:block;font-size:12.5px;font-weight:650;line-height:1.25}
+  .themeitem .tx small{display:block;font-size:10.5px;color:var(--muted);line-height:1.3}
+  .themeitem .tick{font-size:12px;color:var(--accent-dark);opacity:0;flex:none;font-weight:800}
+  .themeitem.on .tick{opacity:1}
+  .dot-ethiopian{background:conic-gradient(from 210deg,#1f9d45 0 33%,#f4c111 33% 66%,#d81e28 66% 100%)}
+  .dot-emerald{background:linear-gradient(135deg,#0f172a 50%,#0f9d6f 50%)}
+  .dot-indigo{background:linear-gradient(135deg,#111c3a 50%,#3557d8 50%)}
+  .dot-midnight{background:linear-gradient(135deg,#070d18 50%,#19b37f 50%)}
+  .dot-daylight{background:linear-gradient(135deg,#e2e8f0 50%,#0f766e 50%)}
+
+  /* ---------- building blocks ---------- */
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .card .hd h2{margin:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+  .card .hd .n{width:20px;height:20px;border-radius:99px;background:var(--accent-soft);color:var(--accent-dark);
+    font-size:11px;font-weight:800;display:grid;place-items:center;flex:none}
+  .card .hd .sp{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500}
+  .card .bd{padding:14px}
+  .grid2{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:14px;align-items:start}
+  .grid2w{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+  @media (max-width:1080px){.grid2,.grid2w{grid-template-columns:minmax(0,1fr)}}
+
+  /* compose: flight rail on the left, people in the middle, e-mail on the right */
+  .cgrid{display:grid;grid-template-columns:336px minmax(326px,1fr) minmax(392px,1.04fr);gap:14px;align-items:start}
+  @media (max-width:1290px){
+    .cgrid{grid-template-columns:334px minmax(0,1fr)}
+    .cgrid .rightcol{grid-column:1/-1}
+  }
+  @media (max-width:900px){.cgrid{grid-template-columns:minmax(0,1fr)}}
+  .stack{display:flex;flex-direction:column;gap:14px}
+  .grouprow{display:flex;margin-top:10px}
+  .grouppill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;
+    background:var(--panel3);color:var(--muted);font-size:11.5px;font-weight:650;
+    cursor:default;white-space:nowrap}
+  .grouppill.alt{background:var(--accent-soft);color:var(--accent-ink)}
+  .grouppill.warn{background:var(--warn-soft);color:var(--warn)}
+
+  /* Each column scrolls by itself, so a long flight list never pushes the
+     rest of the screen out of reach. Below 1290px the page scrolls normally. */
+  @media (min-width:1291px){
+    /* flex rather than a magic pixel height, so it stays right whatever the
+       header or padding does */
+    .page{overflow:hidden;display:flex;flex-direction:column}
+    /* the .view section sits between .page and .cgrid, so it has to pass the
+       height down too - otherwise flex:1 below lands on nothing */
+    .view.on{flex:1;min-height:0}
+    .view.on:not(#v-compose){overflow-y:auto;padding-right:4px}
+    #v-compose.on{display:flex;flex-direction:column}
+    /* stretch, not start - otherwise the columns size to their content and
+       grow past the bottom of the screen */
+    .cgrid{flex:1;min-height:0;align-items:stretch}
+    .cgrid > .stack,.cgrid > .rightcol{min-height:0;overflow-y:auto;overflow-x:hidden;
+      padding-right:6px;scrollbar-gutter:stable}
+    .cgrid > .rightcol{display:flex;flex-direction:column;overflow:hidden;padding-right:0}
+    .cgrid > .rightcol > .card{display:flex;flex-direction:column;min-height:0;flex:1}
+    .cgrid > .rightcol > .card > .bd{display:flex;flex-direction:column;min-height:0;flex:1}
+    .prev{flex:1;height:auto;min-height:160px}
+  }
+
+  /* long lists inside a card get their own gentle cap */
+  #flightBox{max-height:38vh;overflow-y:auto}
+  #legsBox{max-height:46vh;overflow-y:auto}
+  #chosen{max-height:26vh;overflow-y:auto}
+
+  /* always-capitals fields */
+  .up{text-transform:uppercase}
+  .up::placeholder{text-transform:none}
+
+  /* one tidy native date field - the browser draws its own calendar icon */
+  input[type=date]{font-variant-numeric:tabular-nums;cursor:pointer}
+  input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.55;padding:2px}
+  input[type=date]::-webkit-calendar-picker-indicator:hover{opacity:1}
+  html[data-theme="midnight"] input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.7}
+
+  .leghd{display:flex;align-items:center;gap:8px;margin:10px 0 6px}
+  .leghd:first-child{margin-top:0}
+  .leghd .lgn{font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--accent-dark);background:var(--accent-soft);padding:2px 7px;border-radius:99px}
+  .leghd .lgs{font-family:"Cascadia Mono",Consolas,monospace;font-weight:700;font-size:12.5px;color:var(--ink)}
+  .leghd .lgc{margin-left:auto;font-size:11px;color:var(--muted)}
+
+  /* flight rows - one per line, roomy and easy to tick */
+  .fl{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin-bottom:7px;cursor:pointer;
+    border:1px solid var(--line);border-radius:11px;background:var(--panel);transition:.12s;text-align:left}
+  .fl:hover{border-color:var(--line2);background:var(--panel2)}
+  .fl.on{border-color:var(--accent);background:var(--accent-soft)}
+  .fl .bx{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line2);display:grid;place-items:center;
+    font-size:11px;color:transparent;flex:none;background:var(--field)}
+  .fl.on .bx{background:var(--accent);border-color:var(--accent);color:#fff}
+  .fl .no{font-weight:700;font-family:"Cascadia Mono",Consolas,monospace;font-size:13.5px;letter-spacing:.2px;
+    color:var(--ink)}
+  .fl.on .no{color:var(--accent-ink)}
+  .fl .tm{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+  .fl.on .tm{color:var(--accent-dark)}
+
+  label.f{display:block;margin-bottom:10px}
+  label.f>span{display:block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:5px}
+  input[type=text],input[type=date],select,textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--line2);border-radius:10px;background:var(--field);
+    color:var(--ink);font:inherit;outline:none;transition:border-color .12s,box-shadow .12s;
+  }
+  input::placeholder,textarea::placeholder{color:var(--muted2)}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+  textarea{resize:vertical;line-height:1.55}
+  .mono,textarea.mono,pre{font-family:"Cascadia Mono",Consolas,"SF Mono",monospace;font-size:12.5px}
+  .hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .hint.good{color:var(--accent-dark)} .hint.bad{color:var(--danger)}
+
+  button{font:inherit}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:8px 14px;border-radius:10px;
+    border:1px solid var(--line2);background:var(--panel);color:var(--ink2);font-weight:600;cursor:pointer;transition:.12s}
+  .btn:hover{border-color:var(--muted2);background:var(--panel2)}
+  .btn:active{transform:translateY(1px)}
+  .btn.p{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 6px 16px var(--ring)}
+  .btn.p:hover{background:var(--accent-dark);border-color:var(--accent-dark)}
+  .btn.d{color:var(--danger);border-color:var(--danger-line);background:var(--panel)}
+  .btn.d:hover{background:var(--danger-soft)}
+  .btn.sm{padding:5px 10px;font-size:12px;border-radius:8px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+  .seg{display:grid;grid-auto-flow:column;gap:4px;background:var(--panel3);padding:4px;border-radius:12px}
+  .seg button{border:0;background:transparent;padding:8px 6px;border-radius:9px;cursor:pointer;font-weight:600;
+    color:var(--ink2);transition:.12s;font-size:12.5px}
+  .seg button:hover{background:var(--panel)}
+  .seg button.on{background:var(--panel);color:var(--ink);box-shadow:0 1px 3px rgba(15,23,42,.14)}
+  .seg.big button{padding:11px 8px;font-size:13px}
+  .seg.big button.on{color:var(--accent-dark)}
+  .seg.big small{display:block;font-weight:500;font-size:10.5px;color:var(--muted);margin-top:1px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{padding:5px 11px;border-radius:99px;border:1px solid var(--line2);background:var(--panel);color:var(--ink2);
+    font-size:12px;font-weight:600;cursor:pointer;transition:.12s}
+  .chip:hover{border-color:var(--accent);color:var(--accent-dark)}
+  .chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  .list{border:1px solid var(--line);border-radius:11px;overflow:auto;background:var(--panel)}
+  .list .it{position:relative;display:flex;align-items:center;gap:9px;padding:8px 11px;
+    border-bottom:1px solid var(--line);cursor:pointer;transition:.1s}
+  .list .it:last-child{border-bottom:0}
+  .list .it:hover{background:var(--accent-soft)}
+  .list .it .idn{font-family:"Cascadia Mono",Consolas,monospace;font-size:12px;color:var(--ink2);width:56px;flex:none}
+  .list .it .nm{flex:1;min-width:0;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  /* the Add cue floats over the row end so long names keep the full width */
+  .list .it .plus{position:absolute;right:0;top:0;bottom:0;display:flex;align-items:center;
+    padding:0 11px 0 22px;font-size:11px;font-weight:700;color:var(--accent-dark);opacity:0;
+    transition:opacity .12s;background:linear-gradient(90deg,transparent,var(--accent-soft) 40%)}
+  .list .it:hover .plus{opacity:1}
+  .empty{padding:18px;text-align:center;color:var(--muted);font-size:12.5px}
+
+  .tag{font-size:9.5px;font-weight:800;letter-spacing:.05em;padding:2px 6px;border-radius:6px;
+    text-transform:uppercase;flex:none;border:1px solid var(--tag-line)}
+  .tag.e{background:var(--amber-soft);color:var(--amber)}
+  .tag.t{background:var(--sky-soft);color:var(--sky)}
+  .tag.g{background:var(--accent-soft);color:var(--accent-dark)}
+
+  .sel{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;
+    margin-bottom:6px;background:var(--panel)}
+  .sel .nm{flex:1;min-width:0;font-weight:500;white-space:normal;word-break:break-word;line-height:1.3}
+  .sel .ix{font-size:11px;font-weight:800;color:var(--muted2);width:14px}
+  .sel .x{margin-left:auto;border:0;background:transparent;color:var(--danger);cursor:pointer;font-weight:700;
+    font-size:12px;padding:2px 4px;border-radius:6px}
+  .sel .x:hover{background:var(--danger-soft)}
+  .sel input.tk{width:130px;padding:4px 7px;font-size:11.5px;border-radius:7px}
+
+  table{width:100%;border-collapse:collapse}
+  th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;
+    padding:8px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+  td{padding:7px 10px;border-bottom:1px solid var(--line);font-size:13px}
+  tbody tr:hover{background:var(--panel2)}
+  .tw{max-height:calc(100vh - 235px);overflow:auto;border:1px solid var(--line);border-radius:11px;background:var(--panel)}
+
+  .prev{width:100%;min-height:330px;height:calc(100vh - 360px);border:1px solid var(--line);border-radius:11px;
+    padding:12px 14px;background:var(--panel);white-space:pre-wrap;overflow:auto;line-height:1.65;color:var(--ink)}
+  .subj{background:var(--panel3);border:1px solid var(--line);border-radius:10px;padding:8px 11px;margin-bottom:9px}
+  .subj b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:2px}
+  .subj span{font-weight:600;font-size:13px}
+
+  .note{border-radius:11px;padding:11px 13px;font-size:12.5px;line-height:1.6}
+  .note.i{background:var(--accent-soft);color:var(--accent-ink);border:1px solid var(--accent)}
+  .note.w{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn-line)}
+  .note.g{background:var(--panel3);color:var(--ink2);border:1px solid var(--line)}
+  .kv{font-family:"Cascadia Mono",Consolas,monospace;font-size:11.5px;background:var(--code-bg);color:var(--code-ink);
+    padding:8px 10px;border-radius:9px;word-break:break-all;line-height:1.7}
+
+  #toast{position:fixed;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;z-index:99}
+  .tst{background:var(--side1);color:#fff;padding:11px 15px;border-radius:11px;box-shadow:0 12px 34px rgba(0,0,0,.28);
+    font-size:13px;max-width:400px;animation:in .18s ease-out;display:flex;gap:9px;align-items:flex-start}
+  .tst.ok{background:var(--accent-dark)} .tst.err{background:#b91c1c}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .boot{position:fixed;inset:0;display:grid;place-items:center;background:var(--page);z-index:200;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="boot" id="boot">Loading your lists…</div>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <span class="logo" id="brandLogo">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <defs>
+            <linearGradient id="etbg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0b6b35"/><stop offset="1" stop-color="#064d27"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="60" height="60" rx="15" fill="url(#etbg)"/>
+          <g fill="none" stroke-linecap="round" stroke-width="5">
+            <path d="M8 55C18 49 24 44 31 36" stroke="#1f9d45"/>
+            <path d="M15 59C25 53 30 48 36 41" stroke="#f4c111"/>
+            <path d="M23 61C31 57 36 53 41 47" stroke="#d81e28"/>
+          </g>
+          <path d="M17 29 55 10 39 41l-7-8z" fill="#ffffff"/>
+          <path d="M32 33l7 8 16-31z" fill="#d8e9de"/>
+        </svg>
+      </span>
+      <div><b>Ticket Mailer</b><span id="verLbl">Desktop edition</span></div>
+    </div>
+    <div class="flagbar"></div>
+    <nav class="nav" id="nav">
+      <button data-v="compose" class="on"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 5.5h15v10h-15z"/><path d="M2.5 6l7.5 5.5L17.5 6"/></svg></span>Compose</button>
+      <button data-v="people"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="7" r="3"/><path d="M2.5 16.5c0-3 2.5-4.5 5.5-4.5s5.5 1.5 5.5 4.5"/><path d="M14.5 5.2a2.8 2.8 0 0 1 0 5.4M16 12.4c1.6.6 2.6 1.9 2.6 4.1"/></svg></span>Staff list</button>
+      <button data-v="flights"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 11.5l16-6-6 12-2-4.6z"/></svg></span>Flights</button>
+      <button data-v="templates"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 7.5h14M7 7.5V17"/></svg></span>Templates</button>
+      <button data-v="history"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.2"/><path d="M10 5.8V10l2.8 1.8"/></svg></span>History</button>
+      <button data-v="share"><span class="ic"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.5V3.2M6.5 6.5L10 3l3.5 3.5"/><path d="M3.5 12v3.8c0 .6.5 1.2 1.2 1.2h10.6c.7 0 1.2-.6 1.2-1.2V12"/></svg></span>Share &amp; backup</button>
+    </nav>
+    <div class="foot"><b>Saving to</b><div id="pathLbl" style="word-break:break-all">…</div></div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <h1 id="viewTitle">Compose</h1>
+      <span class="sub" id="viewSub">write a ticketing e-mail</span>
+      <div class="right">
+        <div class="themedd" id="themeDD">
+          <div class="swatches" id="themeSwatches" title="Click a colour to switch theme"></div>
+          <button class="themebtn" id="themeBtn" type="button" aria-haspopup="listbox"
+                  aria-expanded="false" title="All themes by name">
+            <span id="themeName">Ethiopian</span>
+            <svg class="cv" viewBox="0 0 12 12" width="11" height="11" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2.5 4.5L6 8l3.5-3.5"/></svg>
+          </button>
+          <div class="thememenu" id="themeMenu" role="listbox"></div>
+        </div>
+        <span class="pill" id="outlookPill">Outlook</span>
+        <span class="pill" id="countPill">—</span>
+      </div>
+    </header>
+
+    <div class="page">
+
+      <!-- ============ COMPOSE ============ -->
+      <section class="view on" id="v-compose">
+        <div class="cgrid">
+
+          <!-- ---------- left rail ---------- -->
+          <div class="stack">
+            <div class="card">
+              <div class="hd"><span class="n">1</span><h2>Request</h2></div>
+              <div class="bd">
+                <div class="seg big" id="kindSeg" style="grid-template-columns:repeat(3,1fr)">
+                  <button data-k="new_ticket" class="on">New ticket<small>Process &amp; charge cc</small></button>
+                  <button data-k="rebooking">Rebooking<small>By ticket number</small></button>
+                  <button data-k="dormitory">Dormitory<small>Trainee arrivals</small></button>
+                </div>
+                <div class="grouprow"><span class="grouppill" id="groupNote"></span></div>
+                <div id="reasonWrap" style="margin-top:12px">
+                  <label class="f"><span>Reason</span><select id="reason"></select></label>
+                  <label class="f" style="margin-bottom:0"><span>Charge cc</span>
+                    <input type="text" id="charge" class="up mono"></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="hd"><span class="n">2</span><h2 id="dateTitle">Departure date</h2>
+                <span class="sp" id="dateHint"></span></div>
+              <div class="bd">
+                <label class="f" style="margin-bottom:8px"><span id="dateLabel">Date</span>
+                  <input type="date" id="dateISO"></label>
+                <div class="chips">
+                  <button class="chip" data-day="0">Today</button>
+                  <button class="chip" data-day="1">Tomorrow</button>
+                  <button class="chip" data-day="2">+2 days</button>
+                  <button class="chip" data-day="7">+1 week</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" id="flightCard">
+              <div class="hd"><span class="n">3</span><h2>Flight</h2>
+                <span class="sp" id="flPicked">None chosen</span></div>
+              <div class="bd">
+                <div class="seg" id="tripSeg" style="grid-template-columns:1fr 1fr;margin-bottom:12px">
+                  <button data-t="direct" class="on">Direct</button>
+                  <button data-t="multi">Multi-city</button>
+                </div>
+
+                <div id="directBlock">
+                  <label class="f" style="margin-bottom:6px"><span>Sector</span></label>
+                  <div class="chips" id="sectorChips" style="margin-bottom:12px"></div>
+
+                  <label class="f" style="margin-bottom:6px"><span>Time of day</span></label>
+                  <div class="seg" id="daypartSeg" style="grid-template-columns:repeat(4,1fr);margin-bottom:12px">
+                    <button data-d="any" class="on">Any</button><button data-d="morning">Morning</button>
+                    <button data-d="afternoon">Afternoon</button><button data-d="evening">Evening</button>
+                  </div>
+
+                  <div class="row" style="margin-bottom:7px">
+                    <b id="flLabel" style="font-size:11px;font-weight:700;letter-spacing:.04em;
+                       text-transform:uppercase;color:#64748b">Flights</b>
+                    <button class="btn sm" id="flAll" style="margin-left:auto">Select all</button>
+                    <button class="btn sm" id="flNone">Clear</button>
+                  </div>
+                  <div id="flightBox"></div>
+                </div>
+
+                <div id="multiBlock" style="display:none">
+                  <label class="f" style="margin-bottom:6px"><span>Route (via a connection)</span></label>
+                  <div class="chips" id="routeChips" style="margin-bottom:10px"></div>
+                  <div class="note g" style="margin-bottom:11px">
+                    Every flight of the day is listed for each leg — no morning
+                    / afternoon / evening filter.
+                  </div>
+                  <div class="row" style="margin-bottom:7px">
+                    <b style="font-size:11px;font-weight:700;letter-spacing:.04em;
+                       text-transform:uppercase;color:#64748b">Flights per leg</b>
+                    <button class="btn sm" id="legNone" style="margin-left:auto">Clear</button>
+                  </div>
+                  <div id="legsBox"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------- middle: tickets + people ---------- -->
+          <div class="stack">
+            <div class="card" id="ticketCard" style="display:none">
+              <div class="hd"><span class="n">3</span><h2>Ticket numbers</h2><span class="sp" id="tkCount">0</span></div>
+              <div class="bd">
+                <textarea id="tickets" class="mono" rows="5"
+                  placeholder="0712162366863&#10;0712156444358"></textarea>
+                <div class="hint">Commas, spaces or one per line — all fine.</div>
+              </div>
+            </div>
+
+            <div class="card" id="paxCard">
+              <div class="hd"><span class="n" id="paxStep">3</span><h2>Passengers</h2>
+                <span class="sp" id="paxCount">0 chosen</span></div>
+              <div class="bd">
+                <div class="row" style="margin-bottom:8px">
+                  <input type="text" id="paxSearch" placeholder="Search ID or name…" style="flex:1;min-width:170px">
+                  <div class="seg" id="paxFilter" style="grid-template-columns:repeat(3,auto)">
+                    <button data-f="all" class="on">All</button><button data-f="employee">Employees</button>
+                    <button data-f="trainee">Trainees</button>
+                  </div>
+                </div>
+                <div class="list" id="paxResults" style="max-height:186px"></div>
+                <div class="row" style="margin:10px 0 6px">
+                  <b style="font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b">Chosen</b>
+                  <button class="btn sm" id="addManual">+ Not in the list</button>
+                  <button class="btn sm d" id="clearPax" style="margin-left:auto">Clear</button>
+                </div>
+                <div id="chosen"></div>
+                <label class="f" id="dormReasonWrap" style="display:none;margin:10px 0 0">
+                  <span>Reason</span>
+                  <input type="text" id="dormReason"></label>
+                <label class="f" id="remarkWrap" style="margin:10px 0 0"><span>Extra remark (optional)</span>
+                  <input type="text" id="remarks" placeholder="Kindly confirm and share the ticket numbers."></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------- right: the e-mail ---------- -->
+          <div class="rightcol">
+            <div class="card">
+              <div class="hd"><span class="n">✓</span><h2>The e-mail</h2><span class="sp" id="kindLbl">New ticket</span></div>
+              <div class="bd">
+                <div class="subj"><b>Subject</b><span id="subject"></span></div>
+                <div class="prev mono" id="preview"></div>
+                <button class="btn p" id="btnSend" style="width:100%;margin-top:11px;padding:10px">
+                  <svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor"
+                       stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 5.5h15v10h-15z"/>
+                       <path d="M2.5 6l7.5 5.5L17.5 6"/></svg>Open in Outlook</button>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:6px">
+                  <button class="btn" id="btnCopy">Copy body</button>
+                  <button class="btn" id="btnCopyAll">Copy all</button>
+                  <button class="btn" id="btnTxt">Save .txt</button>
+                  <button class="btn" id="btnKeep">Keep</button>
+                </div>
+                <div class="hint">Nothing is sent automatically — you always press Send yourself.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ STAFF ============ -->
+      <section class="view" id="v-people">
+        <div class="grid2">
+          <div class="card">
+            <div class="hd"><h2>Employees &amp; trainees</h2><span class="sp" id="peopleStat"></span></div>
+            <div class="bd">
+              <div class="row" style="margin-bottom:10px">
+                <input type="text" id="pSearch" placeholder="Search by ID or name…" style="flex:1;min-width:180px">
+                <div class="seg" id="pFilter" style="grid-template-columns:repeat(3,auto)">
+                  <button data-f="all" class="on">All</button><button data-f="employee">Employees</button>
+                  <button data-f="trainee">Trainees</button>
+                </div>
+              </div>
+              <div class="tw"><table>
+                <thead><tr><th style="width:90px">ID</th><th>Name</th><th style="width:110px">Type</th><th style="width:70px"></th></tr></thead>
+                <tbody id="peopleRows"></tbody></table></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="hd"><h2>Add or update</h2></div>
+              <div class="bd">
+                <label class="f"><span>ID number</span><input type="text" id="npId" placeholder="36154"></label>
+                <div class="hint" id="ruleHint" style="margin-top:-6px;margin-bottom:10px"></div>
+                <label class="f"><span>Full name</span><input type="text" id="npName" class="up" placeholder="GETNET GEZAHEGN ENGIDA"></label>
+                <button class="btn p" id="btnSavePerson" style="width:100%">Save to list</button>
+              </div>
+            </div>
+            <div class="card" style="margin-top:14px">
+              <div class="hd"><h2>Paste your sheet</h2></div>
+              <div class="bd">
+                <div class="note g" style="margin-bottom:9px">
+                  6 digits starting <b>1</b> → trainee<br>
+                  5 digits, or 6 starting <b>2</b> → employee
+                </div>
+                <textarea id="pPaste" class="mono" rows="7"
+                  placeholder="36154&#9;GETNET GEZAHEGN ENGIDA&#10;104112&#9;NATNAEL BIRHANU ASSEFA"></textarea>
+                <label class="row" style="margin:8px 0;font-size:12px;color:#475569">
+                  <input type="checkbox" id="pReplace"> Replace the whole list</label>
+                <div class="row">
+                  <button class="btn p" id="btnImportPeople">Import paste</button>
+                  <button class="btn" id="btnPeopleFile">Import CSV…</button>
+                  <button class="btn" id="btnPeopleOut">Export CSV…</button>
+                </div>
+                <div id="pImportMsg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FLIGHTS ============ -->
+      <section class="view" id="v-flights">
+        <div class="grid2">
+          <div class="card">
+            <div class="hd"><h2>Flight helper list</h2><span class="sp" id="flightStat"></span></div>
+            <div class="bd"><div id="flightGroups"></div></div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="hd"><h2>Add or update a flight</h2></div>
+              <div class="bd">
+                <label class="f"><span>Flight number</span><input type="text" id="nfNo" class="up mono" placeholder="ET-154"></label>
+                <div class="grid2w" style="gap:10px">
+                  <label class="f"><span>From</span><input type="text" id="nfFrom" class="up mono" placeholder="AWA"></label>
+                  <label class="f"><span>To</span><input type="text" id="nfTo" class="up mono" placeholder="ADD"></label>
+                  <label class="f"><span>Departure</span><input type="text" id="nfDep" class="mono" placeholder="08:15"></label>
+                  <label class="f"><span>Arrival</span><input type="text" id="nfArr" class="mono" placeholder="09:10"></label>
+                </div>
+                <label class="f"><span>Time of day</span><select id="nfPart">
+                  <option value="morning">Morning (before 12:00)</option>
+                  <option value="afternoon">Afternoon (12:00–16:59)</option>
+                  <option value="evening">Evening (17:00 onwards)</option></select></label>
+                <button class="btn p" id="btnSaveFlight" style="width:100%">Save flight</button>
+              </div>
+            </div>
+            <div class="card" style="margin-top:14px">
+              <div class="hd"><h2>Import a flight list</h2></div>
+              <div class="bd">
+                <div class="note g" style="margin-bottom:9px">
+                  One flight per line. Airports as two columns or <b>AWA-ADD</b>;
+                  times as <b>08:15</b> or <b>0815</b>.
+                </div>
+                <textarea id="fPaste" class="mono" rows="7"
+                  placeholder="ET-154  AWA  ADD  08:15  09:10&#10;ET-174, AWA-ADD, 1455, 1550"></textarea>
+                <label class="row" style="margin:8px 0;font-size:12px;color:#475569">
+                  <input type="checkbox" id="fReplace"> Replace the whole flight list</label>
+                <div class="row">
+                  <button class="btn p" id="btnImportFlights">Import paste</button>
+                  <button class="btn" id="btnFlightFile">Import CSV…</button>
+                  <button class="btn" id="btnFlightOut">Export CSV…</button>
+                </div>
+                <div id="fImportMsg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TEMPLATES ============ -->
+      <section class="view" id="v-templates">
+        <div class="card">
+          <div class="hd"><h2>Defaults</h2><span class="sp">Used on every mail</span></div>
+          <div class="bd" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            <label class="f" style="margin:0"><span>Charge cc</span><input type="text" id="sCharge" class="up mono"></label>
+            <label class="f" style="margin:0"><span>Sign off</span><input type="text" id="sSignoff"></label>
+            <label class="f" style="margin:0"><span>Signature</span><input type="text" id="sSignature"></label>
+            <label class="f" style="margin:0"><span>Your own e-mail</span>
+              <input type="text" id="sMyEmail" placeholder="you@ethiopianairlines.com">
+              <span class="hint">Always removed from To and Cc, so you never
+                get your own mail back in your inbox.</span></label>
+          </div>
+        </div>
+
+        <div class="grid2w" style="margin-top:14px">
+          <div class="card">
+            <div class="hd"><h2>Ticketing group</h2><span class="sp">New tickets &amp; rebooking</span></div>
+            <div class="bd">
+              <label class="f"><span>Send to</span>
+                <input type="text" id="sTo" placeholder="ticketing@example.com"></label>
+              <label class="f" style="margin-bottom:0"><span>Cc</span>
+                <input type="text" id="sCc" placeholder="supervisor@example.com"></label>
+              <div class="hint">Separate several addresses with a semicolon.</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h2>Dormitory group</h2><span class="sp">Dormitory requests</span></div>
+            <div class="bd">
+              <label class="f"><span>Send to</span>
+                <input type="text" id="sDormTo" placeholder="dormitory@example.com"></label>
+              <label class="f" style="margin-bottom:0"><span>Cc</span>
+                <input type="text" id="sDormCc"></label>
+              <div class="hint">Dormitory requests never go to the ticketing group.</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid2w" style="margin-top:14px">
+          <div class="card">
+            <div class="hd"><h2>New ticket template</h2></div>
+            <div class="bd">
+              <label class="f"><span>Subject</span><input type="text" id="sNewSubject"></label>
+              <textarea id="sNewBody" class="mono" rows="15"></textarea>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h2>Rebooking template</h2></div>
+            <div class="bd">
+              <label class="f"><span>Subject</span><input type="text" id="sReSubject"></label>
+              <textarea id="sReBody" class="mono" rows="15"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="hd"><h2>Dormitory request template</h2>
+            <span class="sp">Goes to the dormitory group</span></div>
+          <div class="bd">
+            <div class="grid2w" style="gap:12px">
+              <label class="f"><span>Subject</span><input type="text" id="sDormSubject"></label>
+              <label class="f"><span>Reason line</span><input type="text" id="sDormReason"></label>
+            </div>
+            <textarea id="sDormBody" class="mono" rows="14"></textarea>
+            <div class="hint">{TRAINEES} becomes the numbered student list with
+              their ID numbers. {DORM_REASON} is the reason line above.</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="hd"><h2>Reasons for a new ticket</h2>
+            <span class="sp">The sentence lands in {PURPOSE}</span></div>
+          <div class="bd"><div id="reasonRows"></div>
+            <button class="btn sm" id="btnAddReason" style="margin-top:8px">+ Add a reason</button></div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="bd row">
+            <button class="btn p" id="btnSaveTpl">Save everything</button>
+            <button class="btn" id="btnResetTpl">Reset wording to default</button>
+            <span class="hint" style="margin-left:6px">Placeholders: {CHARGE_CODE} {PASSENGERS} {TICKETS}
+              {SECTOR} {SECTOR_SPACED} {DATE} {DATE_PHRASE} {FLIGHTS} {FLIGHTS_LINE} {REASON} {PURPOSE} {SIGNOFF}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ HISTORY ============ -->
+      <section class="view" id="v-history">
+        <div class="grid2" style="grid-template-columns:380px minmax(0,1fr)">
+          <div class="card">
+            <div class="hd"><h2>Saved mails</h2><span class="sp" id="histStat"></span></div>
+            <div class="bd"><div class="list" id="histList" style="max-height:calc(100vh - 220px)"></div></div>
+          </div>
+          <div class="card">
+            <div class="hd"><h2>Preview</h2>
+              <span class="sp"><button class="btn sm" id="btnHistCopy">Copy</button>
+              <button class="btn sm" id="btnHistOpen">Open in Outlook</button>
+              <button class="btn sm d" id="btnHistDel">Delete</button></span></div>
+            <div class="bd"><div class="prev mono" id="histBody"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SHARE ============ -->
+      <section class="view" id="v-share">
+        <div class="grid2w">
+          <div class="card">
+            <div class="hd"><h2>Where your data is</h2></div>
+            <div class="bd">
+              <div class="kv" id="sharePath"></div>
+              <div class="row" style="margin-top:10px">
+                <span class="pill ok" id="shPeople"></span><span class="pill ok" id="shFlights"></span>
+                <span class="pill ok" id="shReasons"></span><span class="pill" id="shHistory"></span>
+              </div>
+              <div class="note g" style="margin-top:11px" id="shSource"></div>
+              <button class="btn" id="btnOpenFolder" style="margin-top:11px">Open the data folder</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="hd"><h2>Backup &amp; restore</h2></div>
+            <div class="bd">
+              <p style="margin:0 0 11px;color:#475569">One file holding the staff list, flights,
+                reasons, wording and history.</p>
+              <div class="row">
+                <button class="btn" id="btnBackup">Export backup…</button>
+                <button class="btn" id="btnRestore">Restore from backup…</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="hd"><h2>Give this app to a colleague</h2></div>
+          <div class="bd grid2w">
+            <div class="note g">
+              <b style="color:#0f172a">Choice 1 — send the folder</b><br><br>
+              Send <b>TicketMailer.exe</b> together with the
+              <b>ticket_mailer_data.json</b> beside it. They put both in one
+              folder, open the exe, and everything you set up is there.
+            </div>
+            <div class="note i">
+              <b style="color:#065f46">Choice 2 — one single file</b><br><br>
+              1. Press the button below (writes <b>data.json</b>)<br>
+              2. Run <b>build_exe.bat</b> again<br>
+              3. Send just the new <b>TicketMailer.exe</b> — your staff, flights,
+              reasons and wording are baked inside it.
+              <div style="margin-top:10px">
+                <button class="btn p" id="btnSnapshot">Write data.json for the next build</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ------------------------------------------------------------------ */
+/*  small helpers                                                      */
+/* ------------------------------------------------------------------ */
+var $ = function(id){ return document.getElementById(id); };
+var api = null, D = {}, shownFlights = [], legRows = [], state = { theme:"ethiopian",
+  trip:"direct", route:"", legFlights:[],
+  kind:"new_ticket", sector:"", daypart:"any", flights:[], pax:[],
+  paxFilter:"all", peopleFilter:"all", histPick:null
+};
+var cap = function(s){ s = String(s==null?"":s);
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; };
+var esc = function(s){ return String(s==null?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); };
+
+function toast(msg, kind){
+  var box = $("toast"), el = document.createElement("div");
+  el.className = "tst" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(function(){
+    el.style.transition = "opacity .25s"; el.style.opacity = "0";
+    setTimeout(function(){ if(el.parentNode) box.removeChild(el); }, 260);
+  }, 2800);
+}
+function debounce(fn, ms){
+  var t; return function(){ var a = arguments, me = this;
+    clearTimeout(t); t = setTimeout(function(){ fn.apply(me, a); }, ms || 130); };
+}
+
+/* Anything with class "up" is a CAPITALS field - names, flight numbers,
+   airports, charge codes, reason labels. The value itself is uppercased
+   (not just how it looks) so what you see is exactly what the mail gets. */
+document.addEventListener("input", function(e){
+  var t = e.target;
+  if(!t || !t.classList || !t.classList.contains("up")) return;
+  var up = (t.value || "").toUpperCase();
+  if(up === t.value) return;
+  var s = t.selectionStart, en = t.selectionEnd;
+  t.value = up;
+  try{ t.setSelectionRange(s, en); }catch(err){}
+}, true);
+
+/* ---- dates ---- */
+function isoAddDays(n){
+  var d = new Date();
+  d.setHours(12,0,0,0);
+  d.setDate(d.getDate() + (parseInt(n,10) || 0));
+  var m = d.getMonth() + 1, day = d.getDate();
+  return d.getFullYear() + "-" + (m<10?"0":"") + m + "-" + (day<10?"0":"") + day;
+}
+
+/* ------------------------------------------------------------------ */
+/*  theme - your choice is saved in your data file                     */
+/* ------------------------------------------------------------------ */
+var THEMES = [
+  {id:"ethiopian", name:"Ethiopian",  note:"National green, gold and red"},
+  {id:"emerald",   name:"Emerald",    note:"Slate menu, green highlights"},
+  {id:"indigo",    name:"Indigo",     note:"Navy menu, royal blue"},
+  {id:"midnight",  name:"Midnight",   note:"Full dark mode"},
+  {id:"daylight",  name:"Daylight",   note:"Light and airy"}
+];
+function themeById(id){
+  for(var i=0;i<THEMES.length;i++) if(THEMES[i].id === id) return THEMES[i];
+  return THEMES[0];
+}
+function buildThemeMenu(){
+  $("themeSwatches").innerHTML = THEMES.map(function(t){
+    return '<button type="button" class="dot-'+t.id+'" data-theme="'+t.id+'" '
+      + 'title="'+esc(t.name)+' \u2014 '+esc(t.note)+'"></button>';
+  }).join("");
+  $("themeMenu").innerHTML = THEMES.map(function(t){
+    return '<button class="themeitem" role="option" data-theme="'+t.id+'">'
+      + '<span class="dot dot-'+t.id+'"></span>'
+      + '<span class="tx"><b>'+esc(t.name)+'</b><small>'+esc(t.note)+'</small></span>'
+      + '<span class="tick">\u2713</span></button>';
+  }).join("");
+}
+function applyTheme(id, save){
+  var t = themeById(id);
+  state.theme = t.id;
+  document.documentElement.setAttribute("data-theme", t.id);
+  $("themeName").textContent = t.name;
+  Array.prototype.forEach.call($("themeSwatches").children, function(b){
+    b.classList.toggle("on", b.getAttribute("data-theme") === t.id); });
+  Array.prototype.forEach.call($("themeMenu").children, function(b){
+    b.classList.toggle("on", b.getAttribute("data-theme") === t.id); });
+  if(save && api){
+    api.save_settings({theme:t.id}).then(function(r){
+      if(r && r.settings) D.settings = r.settings; });
+  }
+}
+function openThemeMenu(open){
+  $("themeMenu").classList.toggle("open", open);
+  $("themeBtn").setAttribute("aria-expanded", open ? "true" : "false");
+}
+$("themeBtn").addEventListener("click", function(e){
+  e.stopPropagation();
+  openThemeMenu(!$("themeMenu").classList.contains("open"));
+});
+$("themeSwatches").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-theme]"); if(!b) return;
+  applyTheme(b.getAttribute("data-theme"), true);
+  openThemeMenu(false);
+});
+$("themeMenu").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-theme]"); if(!b) return;
+  applyTheme(b.getAttribute("data-theme"), true);
+  openThemeMenu(false);
+});
+document.addEventListener("click", function(e){
+  if(!e.target.closest("#themeDD")) openThemeMenu(false);
+});
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape") openThemeMenu(false);
+});
+
+/* ------------------------------------------------------------------ */
+/*  navigation                                                         */
+/* ------------------------------------------------------------------ */
+var TITLES = {
+  compose:["Compose","write a ticketing e-mail"],
+  people:["Staff list","employees and trainees"],
+  flights:["Flights","the helper list behind Compose"],
+  templates:["Templates","wording, charge code and signature"],
+  history:["History","the mails you already made"],
+  share:["Share & backup","give the app to colleagues"]
+};
+$("nav").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-v]"); if(!b) return;
+  var v = b.getAttribute("data-v");
+  Array.prototype.forEach.call(document.querySelectorAll("#nav button"),
+    function(x){ x.classList.toggle("on", x === b); });
+  Array.prototype.forEach.call(document.querySelectorAll(".view"),
+    function(s){ s.classList.toggle("on", s.id === "v-" + v); });
+  $("viewTitle").textContent = TITLES[v][0];
+  $("viewSub").textContent = TITLES[v][1];
+  if(v === "share") loadShare();
+  if(v === "history") drawHistory();
+});
+
+/* ------------------------------------------------------------------ */
+/*  COMPOSE                                                            */
+/* ------------------------------------------------------------------ */
+function routeLegs(route){
+  var stops = String(route || "").split("-").filter(Boolean), out = [];
+  for(var i = 0; i < stops.length - 1; i++) out.push(stops[i] + "-" + stops[i+1]);
+  return out;
+}
+function currentState(){
+  if(state.trip === "multi"){
+    var legs = routeLegs(state.route).map(function(sec, i){
+      return {sector: sec, flights: (state.legFlights[i] || []).slice()};
+    });
+    return {
+      kind: state.kind, legs: legs, daypart: "",
+      dateText: $("dateISO").value,
+      tickets: ($("tickets").value || "").split(/[\s,;]+/).filter(Boolean),
+      passengers: state.pax,
+      charge: ($("charge").value || "").toUpperCase(),
+      reason: state.kind === "new_ticket" ? $("reason").value : "",
+      purpose: state.kind === "new_ticket" ? reasonPurpose($("reason").value) : "",
+      dormReason: $("dormReason").value,
+      remarks: state.kind === "dormitory" ? "" : $("remarks").value
+    };
+  }
+  var parts = state.sector.split("-");
+  return {
+    kind: state.kind,
+    origin: parts[0] || "", destination: parts[1] || "",
+    dateText: $("dateISO").value,
+    daypart: state.daypart,
+    flights: state.flights.slice(),
+    tickets: ($("tickets").value || "").split(/[\s,;]+/).filter(Boolean),
+    passengers: state.pax,
+    charge: ($("charge").value || "").toUpperCase(),
+    reason: state.kind === "new_ticket" ? $("reason").value : "",
+    purpose: state.kind === "new_ticket" ? reasonPurpose($("reason").value) : "",
+    dormReason: $("dormReason").value,
+    remarks: state.kind === "dormitory" ? "" : $("remarks").value
+  };
+}
+function reasonPurpose(label){
+  for(var i=0;i<(D.reasons||[]).length;i++)
+    if(D.reasons[i].label === label) return D.reasons[i].purposeLine || "";
+  return "";
+}
+var render = debounce(function(){
+  var st = currentState();
+  $("tkCount").textContent = st.tickets.length + (st.tickets.length===1?" ticket":" tickets");
+  $("paxCount").textContent = state.pax.length + " chosen";
+  if(state.trip === "multi"){
+    var picked = [];
+    state.legFlights.forEach(function(list){
+      if(list && list.length) picked.push(list.join(" OR ")); });
+    $("flPicked").textContent = picked.length ? picked.join(" / ") : "None chosen";
+  } else {
+    $("flPicked").textContent = state.flights.length
+      ? state.flights.join(" OR ") : "None chosen";
+  }
+  api.preview(st).then(function(r){
+    $("subject").textContent = r.subject;
+    $("preview").textContent = r.body;
+    var h = $("dateHint");
+    h.textContent = r.dateLabel;
+    h.className = "hint " + (r.dateOk ? "good" : "bad");
+  });
+}, 90);
+
+function drawSectors(){
+  $("sectorChips").innerHTML = (D.sectors||[]).map(function(s){
+    return '<button class="chip'+(s===state.sector?" on":"")+'" data-s="'+esc(s)+'">'+esc(s)+'</button>';
+  }).join("") || '<span class="hint">No flights yet — add them on the Flights page.</span>';
+}
+function drawFlights(){
+  $("flLabel").textContent = "Flights on " + (state.sector || "\u2014");
+  api.flights_for(state.sector, state.daypart).then(function(rows){
+    shownFlights = rows;
+    if(!rows.length){
+      $("flightBox").innerHTML = '<div class="note w">No flight stored for this sector '
+        + 'and time of day. Add one on the Flights page, or carry on \u2014 the mail '
+        + 'works without a flight number too.</div>';
+      return;
+    }
+    $("flightBox").innerHTML = rows.map(function(f){
+      var on = state.flights.indexOf(f.flightNo) >= 0;
+      return '<button class="fl'+(on?" on":"")+'" data-f="'+esc(f.flightNo)+'">'
+        + '<span class="bx">\u2713</span><span class="no">'+esc(f.flightNo)+'</span>'
+        + '<span class="tm">'+esc(f.depTime||"\u2014")
+        + (f.arrTime?" \u2192 "+esc(f.arrTime):"")
+        + ' \u00b7 '+esc(cap(f.daypart||""))+'</span></button>';
+    }).join("");
+  });
+}
+
+function drawRoutes(){
+  var routes = D.routes || [];
+  $("routeChips").innerHTML = routes.length ? routes.map(function(r){
+    return '<button class="chip'+(r===state.route?" on":"")+'" data-r="'+esc(r)+'">'+esc(r)+'</button>';
+  }).join("") : '<span class="hint">No connecting routes yet. They appear by '
+    + 'themselves once you have flights into and out of the same airport.</span>';
+}
+function drawLegs(){
+  var legs = routeLegs(state.route);
+  if(!legs.length){
+    $("legsBox").innerHTML = '<div class="note w">Pick a route above.</div>';
+    legRows = [];
+    return;
+  }
+  while(state.legFlights.length < legs.length) state.legFlights.push([]);
+  state.legFlights.length = legs.length;
+  legRows = [];
+  Promise.all(legs.map(function(sec){
+    return api.flights_for(sec, "any");     // every flight of the day
+  })).then(function(all){
+    legRows = all;
+    $("legsBox").innerHTML = legs.map(function(sec, i){
+      var rows = all[i] || [], chosen = state.legFlights[i] || [];
+      var head = '<div class="leghd"><span class="lgn">Leg '+(i+1)+'</span>'
+        + '<span class="lgs">'+esc(sec)+'</span>'
+        + '<span class="lgc">'+(rows.length?rows.length+' flight(s)':'none stored')+'</span></div>';
+      if(!rows.length){
+        return head + '<div class="note w">No flight stored for '+esc(sec)
+          + '. Add one on the Flights page, or carry on without a number.</div>';
+      }
+      return head + rows.map(function(f){
+        var on = chosen.indexOf(f.flightNo) >= 0;
+        return '<button class="fl'+(on?" on":"")+'" data-leg="'+i+'" data-f="'+esc(f.flightNo)+'">'
+          + '<span class="bx">\u2713</span><span class="no">'+esc(f.flightNo)+'</span>'
+          + '<span class="tm">'+esc(f.depTime||"\u2014")
+          + (f.arrTime?" \u2192 "+esc(f.arrTime):"")
+          + ' \u00b7 '+esc(cap(f.daypart||""))+'</span></button>';
+      }).join("");
+    }).join("");
+  });
+}
+function applyTrip(){
+  var multi = state.trip === "multi";
+  Array.prototype.forEach.call($("tripSeg").children, function(x){
+    x.classList.toggle("on", x.getAttribute("data-t") === state.trip); });
+  $("directBlock").style.display = multi ? "none" : "";
+  $("multiBlock").style.display = multi ? "" : "none";
+  if(multi){
+    if(!state.route && (D.routes || []).length) state.route = D.routes[0];
+    drawRoutes(); drawLegs();
+  } else {
+    drawFlights();
+  }
+  render();
+}
+function drawChosen(){
+  var box = $("chosen");
+  if(!state.pax.length){
+    box.innerHTML = '<div class="empty" style="border:1px dashed #cbd5e1;border-radius:10px">'
+      + 'Click a person above to add them.</div>';
+  } else {
+    box.innerHTML = state.pax.map(function(p,i){
+      return '<div class="sel" title="'+esc(p.name)+'"><span class="ix">'+(i+1)+'</span>'
+        + '<span class="tag '+(p.kind==="trainee"?"t":"e")+'">'+(p.kind==="trainee"?"TRN":"EMP")+'</span>'
+        + '<span class="idn" style="font-family:Consolas,monospace;font-size:12px;color:#475569">'+esc(p.id)+'</span>'
+        + '<span class="nm">'+esc(p.name)+'</span>'
+        + (state.kind==="rebooking"
+            ? '<input class="tk" data-tk="'+i+'" placeholder="ticket no" value="'+esc(p.ticket||"")+'">' : '')
+        + '<button class="x" data-rm="'+i+'">Remove</button></div>';
+    }).join("");
+  }
+  $("paxCount").textContent = state.pax.length + " chosen";
+}
+var searchPax = debounce(function(){
+  api.search_people($("paxSearch").value, state.paxFilter).then(function(rows){
+    $("paxResults").innerHTML = rows.length ? rows.slice(0,60).map(function(p){
+      return '<div class="it" title="'+esc(p.name)+'" data-add=\''+esc(JSON.stringify(p))+'\'>'
+        + '<span class="tag '+(p.kind==="trainee"?"t":"e")+'">'+(p.kind==="trainee"?"TRN":"EMP")+'</span>'
+        + '<span class="idn">'+esc(p.id)+'</span><span class="nm">'+esc(p.name)+'</span>'
+        + '<span class="plus">+ Add</span></div>';
+    }).join("") : '<div class="empty">Nobody matches. Add them on the Staff list page.</div>';
+  });
+}, 120);
+
+function applyKind(){
+  var re = state.kind === "rebooking";
+  var dorm = state.kind === "dormitory";
+  Array.prototype.forEach.call($("kindSeg").children, function(x){
+    x.classList.toggle("on", x.getAttribute("data-k") === state.kind); });
+
+  // Rebooking is driven purely by ticket numbers - no passenger list.
+  $("ticketCard").style.display = re ? "" : "none";
+  $("paxCard").style.display = re ? "none" : "";
+  // A dormitory request needs no flight, no charge code and no travel reason.
+  $("flightCard").style.display = dorm ? "none" : "";
+  $("reasonWrap").style.display = (re || dorm) ? "none" : "";
+  $("dormReasonWrap").style.display = dorm ? "" : "none";
+  $("remarkWrap").style.display = dorm ? "none" : "";
+  $("ticketCard").querySelector(".n").textContent = "4";
+  $("paxStep").textContent = dorm ? "3" : "4";
+  $("dateTitle").textContent = dorm ? "Arrival date" : "Departure date";
+  $("paxCard").querySelector("h2").textContent = dorm ? "Trainees" : "Passengers";
+  $("kindLbl").textContent = dorm ? "Dormitory" : (re ? "Rebooking" : "New ticket");
+
+  // Dormitory is for trainees only - instructors and staff are not listed.
+  $("paxFilter").style.display = dorm ? "none" : "";
+  if(dorm){
+    state.paxFilter = "trainee";
+    state.pax = state.pax.filter(function(p){ return p.kind === "trainee"; });
+    drawChosen();
+  }
+  if(re && state.pax.length){ state.pax = []; drawChosen(); }
+
+  // say plainly who the mail will go to
+  // Just the group name on the front screen - the addresses live on the
+  // Templates page. Hover to see them if you need to check.
+  var note = $("groupNote"), groups = D.groups || {};
+  var pair = dorm ? (groups.dormitory || []) : (groups.ticketing || []);
+  var to = (pair[0] || "").trim(), cc = (pair[1] || "").trim();
+  var label = dorm ? "Dormitory group" : "Ticketing group";
+  note.textContent = (to ? "\u2709 " : "\u26a0 ") + label;
+  note.className = "grouppill" + (to ? (dorm ? " alt" : "") : " warn");
+  note.title = to
+    ? ("To: " + to + (cc ? "\nCc: " + cc : ""))
+    : "No address set yet - add one on the Templates page.";
+
+  searchPax();
+}
+$("kindSeg").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.kind = b.getAttribute("data-k");
+  applyKind(); drawChosen(); render();
+});
+$("tripSeg").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.trip = b.getAttribute("data-t");
+  applyTrip();
+});
+$("routeChips").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-r]"); if(!b) return;
+  state.route = b.getAttribute("data-r");
+  state.legFlights = [];
+  drawRoutes(); drawLegs(); render();
+});
+$("legsBox").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-f]"); if(!b) return;
+  var i = parseInt(b.getAttribute("data-leg"), 10), no = b.getAttribute("data-f");
+  if(!state.legFlights[i]) state.legFlights[i] = [];
+  var at = state.legFlights[i].indexOf(no);
+  if(at >= 0) state.legFlights[i].splice(at, 1); else state.legFlights[i].push(no);
+  drawLegs(); render();
+});
+$("legNone").addEventListener("click", function(){
+  state.legFlights = []; drawLegs(); render();
+});
+$("sectorChips").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-s]"); if(!b) return;
+  state.sector = b.getAttribute("data-s"); state.flights = [];
+  drawSectors(); drawFlights(); render();
+});
+$("daypartSeg").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.daypart = b.getAttribute("data-d");
+  Array.prototype.forEach.call(this.children, function(x){ x.classList.toggle("on", x===b); });
+  drawFlights(); render();
+});
+$("flightBox").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-f]"); if(!b) return;
+  var no = b.getAttribute("data-f"), i = state.flights.indexOf(no);
+  if(i >= 0) state.flights.splice(i,1); else state.flights.push(no);
+  drawFlights(); render();
+});
+document.addEventListener("click", function(e){
+  var d = e.target.closest("button[data-day]"); if(!d) return;
+  $("dateISO").value = isoAddDays(d.getAttribute("data-day")); render();
+});
+$("flAll").addEventListener("click", function(){
+  state.flights = shownFlights.map(function(f){ return f.flightNo; });
+  drawFlights(); render();
+});
+$("flNone").addEventListener("click", function(){
+  state.flights = []; drawFlights(); render();
+});
+$("paxFilter").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.paxFilter = b.getAttribute("data-f");
+  Array.prototype.forEach.call(this.children, function(x){ x.classList.toggle("on", x===b); });
+  searchPax();
+});
+$("paxResults").addEventListener("click", function(e){
+  var it = e.target.closest("[data-add]"); if(!it) return;
+  var p = JSON.parse(it.getAttribute("data-add"));
+  if(state.kind === "dormitory" && p.kind !== "trainee"){
+    toast("Dormitory requests are for trainees only.", "err"); return;
+  }
+  for(var i=0;i<state.pax.length;i++) if(state.pax[i].id===p.id && state.pax[i].name===p.name) return;
+  state.pax.push({id:p.id, name:p.name, kind:p.kind, ticket:""});
+  drawChosen(); render();
+});
+$("chosen").addEventListener("click", function(e){
+  var rm = e.target.closest("[data-rm]"); if(!rm) return;
+  state.pax.splice(parseInt(rm.getAttribute("data-rm"),10),1);
+  drawChosen(); render();
+});
+$("chosen").addEventListener("input", function(e){
+  var tk = e.target.closest("[data-tk]"); if(!tk) return;
+  state.pax[parseInt(tk.getAttribute("data-tk"),10)].ticket = tk.value; render();
+});
+$("clearPax").addEventListener("click", function(){ state.pax = []; drawChosen(); render(); });
+$("addManual").addEventListener("click", function(){
+  var name = window.prompt("Full name:"); if(!name) return;
+  var dormOnly = state.kind === "dormitory";
+  var id = window.prompt("ID number (may be left blank):") || "";
+  var digits = id.replace(/[^0-9]/g,"");
+  var kind = (digits.length===6 && digits.charAt(0)==="1") ? "trainee" : "employee";
+  if(dormOnly && kind !== "trainee"){
+    toast("That ID is not a trainee (a trainee ID is 6 digits starting with 1).", "err");
+    return;
+  }
+  state.pax.push({id:digits, name:name.toUpperCase().trim(), kind:kind, ticket:""});
+  drawChosen(); render();
+});
+["tickets","charge","remarks"].forEach(function(id){
+  $(id).addEventListener("input", render);
+});
+$("dateISO").addEventListener("change", render);
+$("dateISO").addEventListener("input", render);
+$("reason").addEventListener("change", render);
+$("paxSearch").addEventListener("input", searchPax);
+
+$("btnSend").addEventListener("click", function(){
+  api.send_mail(currentState()).then(function(r){
+    toast(r.message, "ok"); if(r.history) D.history = r.history;
+  });
+});
+$("btnCopy").addEventListener("click", function(){
+  api.copy_text($("preview").textContent).then(function(r){
+    toast(r.ok ? "Body copied to the clipboard." : "Select the text and press Ctrl+C.", r.ok?"ok":"");
+  });
+});
+$("btnCopyAll").addEventListener("click", function(){
+  api.copy_text("Subject: " + $("subject").textContent + "\n\n" + $("preview").textContent)
+    .then(function(r){ toast(r.ok ? "Subject and body copied." : "Copy did not work here.", r.ok?"ok":""); });
+});
+$("btnTxt").addEventListener("click", function(){
+  api.save_text_file($("subject").textContent, $("preview").textContent).then(function(r){
+    if(r.ok) toast("Saved to " + r.path, "ok"); else if(r.error) toast(r.error, "err");
+  });
+});
+$("btnKeep").addEventListener("click", function(){
+  api.add_history($("subject").textContent, $("preview").textContent, state.kind).then(function(r){
+    if(r.history) D.history = r.history;
+    toast("Kept in History.", "ok");
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  STAFF                                                              */
+/* ------------------------------------------------------------------ */
+function drawPeople(){
+  var q = ($("pSearch").value||"").toLowerCase(), f = state.peopleFilter;
+  var rows = (D.people||[]).filter(function(p){
+    if(f !== "all" && p.kind !== f) return false;
+    return !q || (p.id + " " + p.name).toLowerCase().indexOf(q) >= 0;
+  });
+  $("peopleRows").innerHTML = rows.length ? rows.map(function(p){
+    return '<tr><td style="font-family:Consolas,monospace;font-weight:600">'+esc(p.id)+'</td>'
+      + '<td>'+esc(p.name)+'</td>'
+      + '<td><span class="tag '+(p.kind==="trainee"?"t":"e")+'">'+esc(cap(p.kind))+'</span></td>'
+      + '<td style="text-align:right"><button class="btn sm d" data-del="'+esc(p.id)+'" '
+      + 'data-nm="'+esc(p.name)+'">Delete</button></td></tr>';
+  }).join("") : '<tr><td colspan="4"><div class="empty">Nobody matches.</div></td></tr>';
+  var emp = (D.people||[]).filter(function(p){return p.kind==="employee";}).length;
+  var trn = (D.people||[]).length - emp;
+  $("peopleStat").textContent = rows.length + " shown · " + emp + " employees, " + trn + " trainees";
+  $("countPill").textContent = (D.people||[]).length + " people · " + (D.flights||[]).length + " flights";
+}
+$("pSearch").addEventListener("input", debounce(drawPeople, 110));
+$("pFilter").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  state.peopleFilter = b.getAttribute("data-f");
+  Array.prototype.forEach.call(this.children, function(x){ x.classList.toggle("on", x===b); });
+  drawPeople();
+});
+$("peopleRows").addEventListener("click", function(e){
+  var b = e.target.closest("[data-del]"); if(!b) return;
+  if(!window.confirm("Remove " + b.getAttribute("data-nm") + "?")) return;
+  api.delete_person(b.getAttribute("data-del"), b.getAttribute("data-nm")).then(function(r){
+    D.people = r.people; drawPeople(); searchPax(); toast("Removed.", "ok");
+  });
+});
+$("npId").addEventListener("input", function(){
+  var d = this.value.replace(/[^0-9]/g,""), h = $("ruleHint");
+  if(!d){ h.textContent = ""; return; }
+  if(d.length===6 && d.charAt(0)==="1"){ h.textContent="✓ 6 digits starting with 1 → trainee"; h.className="hint good"; }
+  else if(d.length===5){ h.textContent="✓ 5 digits → employee"; h.className="hint good"; }
+  else if(d.length===6 && d.charAt(0)==="2"){ h.textContent="✓ 6 digits starting with 2 → employee"; h.className="hint good"; }
+  else { h.textContent="⚠ "+d.length+" digits — outside the rule, saved as employee"; h.className="hint bad"; }
+});
+$("btnSavePerson").addEventListener("click", function(){
+  api.save_person({id:$("npId").value, name:$("npName").value}).then(function(r){
+    if(!r.ok){ toast(r.error, "err"); return; }
+    D.people = r.people; $("npId").value=""; $("npName").value=""; $("ruleHint").textContent="";
+    drawPeople(); searchPax(); toast("Saved as " + r.kind + ".", "ok");
+  });
+});
+function peopleImported(r, box){
+  if(!r.ok){ if(!r.cancelled) toast(r.error || "Import failed", "err"); return; }
+  D.people = r.people; drawPeople(); searchPax();
+  $(box).innerHTML = '<div class="note i" style="margin-top:10px">'
+    + '<b>'+r.added+' added · '+r.updated+' updated</b><br>'
+    + r.trainees+' trainees, '+r.employees+' employees detected'
+    + (r.skipped && r.skipped.length ? '<br><span style="color:#b45309">'+r.skipped.length
+        +' line(s) skipped</span>' : '') + '</div>';
+  toast("Staff list updated.", "ok");
+}
+$("btnImportPeople").addEventListener("click", function(){
+  api.import_people($("pPaste").value, $("pReplace").checked).then(function(r){
+    if(r.ok) $("pPaste").value = "";
+    peopleImported(r, "pImportMsg");
+  });
+});
+$("btnPeopleFile").addEventListener("click", function(){
+  api.import_people_file().then(function(r){ peopleImported(r, "pImportMsg"); });
+});
+$("btnPeopleOut").addEventListener("click", function(){
+  api.export_people().then(function(r){ if(r.ok) toast("Saved to " + r.path, "ok"); });
+});
+
+/* ------------------------------------------------------------------ */
+/*  FLIGHTS                                                            */
+/* ------------------------------------------------------------------ */
+function drawFlightGroups(){
+  var groups = {}, order = [];
+  (D.flights||[]).forEach(function(f){
+    var k = f.origin + "-" + f.destination;
+    if(!groups[k]){ groups[k] = []; order.push(k); }
+    groups[k].push(f);
+  });
+  order.sort();
+  $("flightStat").textContent = (D.flights||[]).length + " flights · " + order.length + " sectors";
+  $("flightGroups").innerHTML = order.length ? order.map(function(k){
+    return '<div style="margin-bottom:16px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'
+      + '<span style="background:#0f172a;color:#fff;font-family:Consolas,monospace;font-size:11.5px;'
+      + 'font-weight:700;padding:3px 9px;border-radius:7px">'+esc(k)+'</span>'
+      + '<span class="hint" style="margin:0">'+groups[k].length+' flight(s)</span></div>'
+      + '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px">'
+      + groups[k].map(function(f){
+          return '<div style="border:1px solid var(--line);border-radius:11px;padding:9px 11px;background:#fff">'
+            + '<div style="display:flex;align-items:center;gap:8px">'
+            + '<b style="font-family:Consolas,monospace">'+esc(f.flightNo)+'</b>'
+            + '<span class="tag g" style="margin-left:auto">'+esc(cap(f.daypart||""))+'</span></div>'
+            + '<div class="hint" style="margin-top:3px">Dep '+esc(f.depTime||"—")
+            + (f.arrTime? ' \u00b7 Arr '+esc(f.arrTime):'')+'</div>'
+            + '<div class="row" style="margin-top:7px">'
+            + '<button class="btn sm" data-edit=\''+esc(JSON.stringify(f))+'\'>Edit</button>'
+            + '<button class="btn sm d" data-fdel=\''+esc(JSON.stringify(f))+'\'>Delete</button></div></div>';
+        }).join("") + '</div></div>';
+  }).join("") : '<div class="empty">No flights yet. Paste your list on the right.</div>';
+}
+$("flightGroups").addEventListener("click", function(e){
+  var ed = e.target.closest("[data-edit]");
+  if(ed){
+    var f = JSON.parse(ed.getAttribute("data-edit"));
+    $("nfNo").value=f.flightNo; $("nfFrom").value=f.origin; $("nfTo").value=f.destination;
+    $("nfDep").value=f.depTime||""; $("nfArr").value=f.arrTime||""; $("nfPart").value=f.daypart||"morning";
+    window.scrollTo(0,0); return;
+  }
+  var dl = e.target.closest("[data-fdel]"); if(!dl) return;
+  var g = JSON.parse(dl.getAttribute("data-fdel"));
+  if(!window.confirm("Delete " + g.flightNo + " " + g.origin + "-" + g.destination + "?")) return;
+  api.delete_flight(g.flightNo, g.origin, g.destination).then(function(r){
+    D.flights = r.flights; D.sectors = r.sectors; D.routes = r.routes || D.routes;
+    drawFlightGroups(); drawSectors(); drawRoutes();
+  if(state.trip === "multi") drawLegs(); else drawFlights();
+  drawPeople(); toast("Deleted.", "ok");
+  });
+});
+$("nfDep").addEventListener("input", function(){
+  var m = this.value.replace(/[^0-9]/g,"");
+  if(m.length >= 3){
+    var h = parseInt(m.substring(0, m.length-2), 10);
+    if(!isNaN(h)) $("nfPart").value = h < 12 ? "morning" : (h < 17 ? "afternoon" : "evening");
+  }
+});
+$("btnSaveFlight").addEventListener("click", function(){
+  api.save_flight({flightNo:$("nfNo").value, origin:$("nfFrom").value, destination:$("nfTo").value,
+    depTime:$("nfDep").value, arrTime:$("nfArr").value, daypart:$("nfPart").value}).then(function(r){
+      if(!r.ok){ toast(r.error, "err"); return; }
+      D.flights = r.flights; D.sectors = r.sectors; D.routes = r.routes || D.routes;
+      ["nfNo","nfDep","nfArr"].forEach(function(i){ $(i).value=""; });
+      drawFlightGroups(); drawSectors(); drawRoutes();
+  if(state.trip === "multi") drawLegs(); else drawFlights();
+  drawPeople();
+      toast(r.added ? "Flight added." : "Flight updated.", "ok");
+  });
+});
+function flightsImported(r){
+  if(!r.ok){ if(!r.cancelled) toast(r.error || "Import failed", "err"); return; }
+  D.flights = r.flights; D.sectors = r.sectors; D.routes = r.routes || D.routes;
+  if(!state.sector && D.sectors.length) state.sector = D.sectors[0];
+  drawFlightGroups(); drawSectors(); drawRoutes();
+  if(state.trip === "multi") drawLegs(); else drawFlights();
+  drawPeople();
+  $("fImportMsg").innerHTML = '<div class="note i" style="margin-top:10px">'
+    + '<b>'+r.added+' added · '+r.updated+' updated</b><br>Sectors: '
+    + esc((r.importedSectors||[]).join(", "))
+    + (r.skipped && r.skipped.length ? '<br><span style="color:#b45309">'+r.skipped.length
+        +' line(s) skipped</span>' : '') + '</div>';
+  toast("Flight list updated.", "ok");
+}
+$("btnImportFlights").addEventListener("click", function(){
+  api.import_flights($("fPaste").value, $("fReplace").checked).then(function(r){
+    if(r.ok) $("fPaste").value = ""; flightsImported(r);
+  });
+});
+$("btnFlightFile").addEventListener("click", function(){
+  api.import_flights_file().then(flightsImported);
+});
+$("btnFlightOut").addEventListener("click", function(){
+  api.export_flights().then(function(r){ if(r.ok) toast("Saved to " + r.path, "ok"); });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TEMPLATES                                                          */
+/* ------------------------------------------------------------------ */
+function fillTemplates(){
+  var s = D.settings || {};
+  $("sCharge").value = s.defaultChargeCode || ""; $("sTo").value = s.toEmails || "";
+  $("sCc").value = s.ccEmails || ""; $("sSignoff").value = s.signOff || "";
+  $("sDormTo").value = s.dormToEmails || ""; $("sDormCc").value = s.dormCcEmails || "";
+  $("sMyEmail").value = s.myEmail || "";
+  $("sDormSubject").value = s.dormSubject || ""; $("sDormReason").value = s.dormReason || "";
+  $("sDormBody").value = s.dormTemplate || "";
+  $("sSignature").value = s.signature || "";
+  $("sNewSubject").value = s.newTicketSubject || ""; $("sReSubject").value = s.rebookSubject || "";
+  $("sNewBody").value = s.newTicketTemplate || ""; $("sReBody").value = s.rebookTemplate || "";
+  drawReasons();
+}
+function drawReasons(){
+  $("reasonRows").innerHTML = (D.reasons||[]).map(function(r,i){
+    return '<div style="border:1px solid var(--line);border-radius:11px;padding:10px;margin-bottom:8px">'
+      + '<div class="row"><input type="text" class="rLabel up" data-i="'+i+'" value="'+esc(r.label)+'" style="flex:1">'
+      + '<button class="btn sm d" data-rdel="'+i+'">Delete</button></div>'
+      + '<textarea class="rPurpose mono" data-i="'+i+'" rows="2" style="margin-top:7px">'
+      + esc(r.purposeLine||"") + '</textarea></div>';
+  }).join("");
+}
+$("reasonRows").addEventListener("click", function(e){
+  var b = e.target.closest("[data-rdel]"); if(!b) return;
+  D.reasons.splice(parseInt(b.getAttribute("data-rdel"),10),1); drawReasons();
+});
+$("btnAddReason").addEventListener("click", function(){
+  D.reasons = D.reasons || []; D.reasons.push({label:"NEW REASON", purposeLine:""}); drawReasons();
+});
+function collectReasons(){
+  var out = [];
+  Array.prototype.forEach.call(document.querySelectorAll(".rLabel"), function(inp){
+    var i = inp.getAttribute("data-i");
+    var ta = document.querySelector('.rPurpose[data-i="'+i+'"]');
+    out.push({label:inp.value, purposeLine: ta ? ta.value : ""});
+  });
+  return out;
+}
+$("btnSaveTpl").addEventListener("click", function(){
+  var settings = {
+    defaultChargeCode:$("sCharge").value.toUpperCase(), toEmails:$("sTo").value,
+    ccEmails:$("sCc").value, signOff:$("sSignoff").value, signature:$("sSignature").value,
+    newTicketSubject:$("sNewSubject").value, rebookSubject:$("sReSubject").value,
+    newTicketTemplate:$("sNewBody").value, rebookTemplate:$("sReBody").value,
+    dormToEmails:$("sDormTo").value, dormCcEmails:$("sDormCc").value,
+    dormSubject:$("sDormSubject").value, dormReason:$("sDormReason").value,
+    dormTemplate:$("sDormBody").value, myEmail:$("sMyEmail").value
+  };
+  api.save_settings(settings).then(function(r){
+    D.settings = r.settings;
+    return api.save_reasons(collectReasons());
+  }).then(function(r2){
+    D.reasons = r2.reasons; fillReasonPicker(); fillTemplates();
+    D.groups = {ticketing:[D.settings.toEmails||"", D.settings.ccEmails||""],
+                dormitory:[D.settings.dormToEmails||"", D.settings.dormCcEmails||""]};
+    $("dormReason").value = D.settings.dormReason || "";
+    applyKind(); render();
+    toast("Templates saved.", "ok");
+  });
+});
+$("btnResetTpl").addEventListener("click", function(){
+  if(!window.confirm("Put the original wording back?")) return;
+  api.reset_templates().then(function(r){ D.settings = r.settings; fillTemplates(); render();
+    toast("Wording reset.", "ok"); });
+});
+function fillReasonPicker(){
+  var sel = $("reason"), keep = sel.value;
+  sel.innerHTML = (D.reasons||[]).map(function(r){
+    return '<option>'+esc(r.label)+'</option>'; }).join("");
+  if(keep) sel.value = keep;
+  if(!sel.value && sel.options.length) sel.selectedIndex = 0;
+}
+
+/* ------------------------------------------------------------------ */
+/*  HISTORY                                                            */
+/* ------------------------------------------------------------------ */
+function drawHistory(){
+  var items = D.history || [];
+  $("histStat").textContent = items.length + " saved";
+  $("histList").innerHTML = items.length ? items.map(function(h){
+    return '<div class="it" data-h="'+esc(h.savedAt)+'">'
+      + '<span class="tag '+(h.kind==="rebooking"?"t":"g")+'">'
+      + (h.kind==="rebooking"?"Rebooking":"New ticket")+'</span>'
+      + '<span class="nm" style="font-size:12.5px">'+esc(h.subject||"(no subject)")+'</span>'
+      + '<span class="hint" style="margin:0">'+esc((h.savedAt||"").substring(5,16).replace("T"," "))+'</span></div>';
+  }).join("") : '<div class="empty">Nothing saved yet.</div>';
+}
+$("histList").addEventListener("click", function(e){
+  var it = e.target.closest("[data-h]"); if(!it) return;
+  state.histPick = it.getAttribute("data-h");
+  var found = (D.history||[]).filter(function(h){ return h.savedAt === state.histPick; })[0];
+  $("histBody").textContent = found ? ("Subject: " + found.subject + "\n\n" + found.body) : "";
+});
+$("btnHistCopy").addEventListener("click", function(){
+  if(!$("histBody").textContent) return;
+  api.copy_text($("histBody").textContent).then(function(r){ if(r.ok) toast("Copied.", "ok"); });
+});
+$("btnHistOpen").addEventListener("click", function(){
+  if(!state.histPick) return;
+  api.reopen_history(state.histPick).then(function(r){ toast(r.message, "ok"); });
+});
+$("btnHistDel").addEventListener("click", function(){
+  if(!state.histPick) return;
+  api.delete_history(state.histPick).then(function(r){
+    D.history = r.history; state.histPick = null; $("histBody").textContent = ""; drawHistory();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  SHARE                                                              */
+/* ------------------------------------------------------------------ */
+function loadShare(){
+  api.share_info().then(function(s){
+    $("sharePath").textContent = s.dataPath;
+    $("shPeople").textContent = s.people + " people";
+    $("shFlights").textContent = s.flights + " flights";
+    $("shReasons").textContent = s.reasons + " reasons";
+    $("shHistory").textContent = s.history + " saved mails";
+    $("shSource").innerHTML = s.embedded
+      ? "Your starting lists are <b>baked inside this .exe</b> — it works on its own."
+      : (s.beside ? "Starting lists come from <b>data.json</b> next to the program."
+                  : "No data.json found next to the program; the app is using what you typed here.");
+  });
+}
+$("btnSnapshot").addEventListener("click", function(){
+  api.write_build_snapshot().then(function(r){
+    if(!r.ok){ toast(r.error || "Could not write it", "err"); return; }
+    toast("Written. Now run build_exe.bat again.", "ok");
+    loadShare();
+  });
+});
+$("btnBackup").addEventListener("click", function(){
+  api.export_backup().then(function(r){ if(r.ok) toast("Backup saved to " + r.path, "ok"); });
+});
+$("btnRestore").addEventListener("click", function(){
+  if(!window.confirm("Replace everything with the contents of a backup file?")) return;
+  api.import_backup().then(function(r){
+    if(!r.ok){ if(!r.cancelled) toast(r.error || "Could not restore", "err"); return; }
+    applyBootstrap(r.bootstrap); toast("Restored.", "ok");
+  });
+});
+$("btnOpenFolder").addEventListener("click", function(){
+  api.open_data_folder().then(function(r){ toast(r.ok ? "Opened " + r.path : r.path, r.ok?"ok":""); });
+});
+
+/* ------------------------------------------------------------------ */
+/*  START-UP                                                           */
+/* ------------------------------------------------------------------ */
+function applyBootstrap(b){
+  D = b;
+  buildThemeMenu();
+  state.trip = "direct"; state.route = (b.routes && b.routes[0]) || ""; state.legFlights = [];
+  applyTheme((b.settings && b.settings.theme) || "ethiopian", false);
+  if(b.logo){ $("brandLogo").innerHTML = '<img src="'+b.logo+'" alt="logo">'; }
+  $("verLbl").textContent = "Version " + b.version;
+  $("pathLbl").textContent = b.dataPath;
+  $("outlookPill").textContent = b.outlook ? "Outlook ready" : "Default mail app";
+  $("outlookPill").className = "pill " + (b.outlook ? "ok" : "warn");
+  $("charge").value = ((b.settings && b.settings.defaultChargeCode) || "").toUpperCase();
+  $("dateISO").value = b.tomorrow || isoAddDays(1);
+  $("dormReason").value = (b.settings && b.settings.dormReason) || "";
+  state.sector = (b.sectors && b.sectors.length) ? b.sectors[0] : "";
+  applyKind();
+  fillReasonPicker(); fillTemplates(); drawSectors(); drawRoutes(); applyTrip();
+  drawChosen(); drawPeople(); drawFlightGroups(); drawHistory(); searchPax(); render();
+}
+function boot(){
+  api = window.pywebview.api;
+  api.bootstrap().then(function(b){
+    applyBootstrap(b);
+    $("boot").style.display = "none";
+  })["catch"](function(err){
+    $("boot").textContent = "Could not start: " + err;
+  });
+}
+if(window.pywebview && window.pywebview.api) boot();
+else window.addEventListener("pywebviewready", boot);
+</script>
+</body>
+</html>
