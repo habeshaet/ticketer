@@ -147,6 +147,32 @@ export function stripSelf(text: string, mine: string): string {
     .join("; ");
 }
 
+/**
+ * Build a mailto: link the way mail apps actually expect it (RFC 6068).
+ *
+ * Never use URLSearchParams for this: it encodes spaces as `+`, which desktop
+ * Outlook tolerates but phone mail apps show literally ("Dear+Team").
+ * encodeURIComponent writes %20, which every client decodes — the desktop app
+ * already does it this way (quote_via=quote).
+ */
+export function buildMailto(
+  to: string,
+  opts: { subject?: string; body?: string; cc?: string } = {},
+): string {
+  // comma-separated, one address after another; @ stays readable like desktop
+  const encodeLine = (line: string) =>
+    splitAddresses(line)
+      .map((entry) => encodeURIComponent(entry).replace(/%40/g, "@"))
+      .join(",");
+  const parts: string[] = [];
+  if (opts.subject) parts.push(`subject=${encodeURIComponent(opts.subject)}`);
+  if (opts.body) parts.push(`body=${encodeURIComponent(opts.body)}`);
+  const ccJoined = opts.cc ? splitAddresses(opts.cc).join(",") : "";
+  if (ccJoined) parts.push(`cc=${encodeURIComponent(ccJoined)}`);
+  const query = parts.length > 0 ? `?${parts.join("&")}` : "";
+  return `mailto:${encodeLine(to)}${query}`;
+}
+
 /** The numbered student list for a dormitory request. */
 export function traineeBlock(people: PassengerLine[]): string {
   return people

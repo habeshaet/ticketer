@@ -391,6 +391,13 @@ Best regards,`}
             writes one file with staff, flights, reasons, wording and history.
           </li>
           <li>
+            <strong>Move the other way — desktop → this site:</strong> use the{" "}
+            <a className="font-semibold text-emerald-700 underline" href="#import">
+              import box at the top of this page
+            </a>
+            .
+          </li>
+          <li>
             <strong>Refresh from this site:</strong> update the Directory or
             Flights pages, then download{" "}
             <a
