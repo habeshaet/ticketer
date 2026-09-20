@@ -50,7 +50,7 @@ export function useAdmin() {
     if (current && isAdmin) return true;
 
     const entered = window.prompt(
-      "Admin password required to make changes to Directory and Flights:\n(Default: admin123)",
+      "Admin password required to make changes to Directory and Flights:",
     );
     if (!entered) return false;
 
