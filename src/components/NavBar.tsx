@@ -9,7 +9,6 @@ const LINKS = [
   { href: "/directory", label: "Directory" },
   { href: "/flights", label: "Flights" },
   { href: "/history", label: "History" },
-  { href: "/settings", label: "Templates" },
 ];
 
 export function NavBar() {
