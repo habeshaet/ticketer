@@ -1,0 +1,4065 @@
+{
+ "generatedAt": "2026-09-20T16:37:11",
+ "settings": {
+  "theme": "ethiopian",
+  "defaultChargeCode": "EAAMG969",
+  "toEmails": "FrehiwotT@ethiopianairlines.com",
+  "ccEmails": "Abrihama@eau.edu.et, Yohannesfe@ethiopianairlines.com, YohannesMek@ethiopianairlines.com,YohannesSh@ethiopianairlines.com, TeklehaymanotS@ethiopianairlines.com, AbdulfetaN@ethiopianairlines.com, AbnetT@ethiopianairlines.com, AbenezerS@ethiopianairlines.com, BirukMs@ethiopianairlines.com, DanielAr@ethiopianairlines.com",
+  "dormToEmails": "AddisTd@ethiopianairlines.com",
+  "dormCcEmails": "Abrihama@eau.edu.et, Yohannesfe@ethiopianairlines.com, YohannesMek@ethiopianairlines.com,YohannesSh@ethiopianairlines.com, TeklehaymanotS@ethiopianairlines.com, AbdulfetaN@ethiopianairlines.com, AbnetT@ethiopianairlines.com, AbenezerS@ethiopianairlines.com, BirukMs@ethiopianairlines.com, DanielAr@ethiopianairlines.com",
+  "myEmail": "danielar@ethiopianairlines.com",
+  "signOff": "Best regards,",
+  "signature": "",
+  "newTicketTemplate": "Dear Team,\nGreetings!\n\nPlease process ticket and charge cc {CHARGE_CODE}\n\n{PASSENGERS}\n\nSector: {SECTOR_SPACED}\nDeparture Date: {DATE}\n{FLIGHTS_LINE}\n\n{PURPOSE}\n\n{SIGNOFF}",
+  "rebookTemplate": "Dear Team,\nGreetings!\n\nKindly rebook the below listed tickets for {DATE_PHRASE}{FLIGHTS_PHRASE} ({SECTOR}).\n\n{TICKETS}\n\n{SIGNOFF}",
+  "dormTemplate": "Dear Mr. Addis,\nGreetings,\nThis is to kindly request dormitory arrangement planning for the upcoming student arrivals scheduled throughout next week starting from {DATE}. The request is being made in advance to facilitate proper accommodation coordination and avoid any last-minute inconveniences.\nThe students are listed below:\n{TRAINEES}\n\nReason: {DORM_REASON}\nYour support and coordination in arranging the dormitory accommodations accordingly are highly appreciated.\n{SIGNOFF}",
+  "dormReason": "Completion of training at their respective stages.",
+  "newTicketSubject": "Ticket Request | {SECTOR}",
+  "rebookSubject": "Rebooking Request | {SECTOR}",
+  "dormSubject": "Dormitory Request | {COUNT} trainee(s) | {DATE}"
+ },
+ "reasons": [
+  {
+   "label": "FOR FLIGHT TRAINING",
+   "purposeLine": "Reason: For flight training."
+  },
+  {
+   "label": "FERRY RETURN",
+   "purposeLine": "Reason: To return from ferry flight."
+  },
+  {
+   "label": "STAGE COMPLETED BY TRAINEE",
+   "purposeLine": "Reason: Completed the training stage and returning."
+  },
+  {
+   "label": "FOR GROUND CLASS",
+   "purposeLine": "Reason: To attend ground class as per the training schedule."
+  },
+  {
+   "label": "PASSPORT REGISTRATION",
+   "purposeLine": "Reason: For passport registration."
+  },
+  {
+   "label": "MEDICAL RENEWAL",
+   "purposeLine": "Reason: For medical renewal."
+  },
+  {
+   "label": "RESIDENCE PERMIT RENEWAL",
+   "purposeLine": "Reason: To renew residence permit."
+  }
+ ],
+ "flights": [
+  {
+   "flightNo": "ET-155",
+   "origin": "ADD",
+   "destination": "AWA",
+   "depTime": "07:45",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-175",
+   "origin": "ADD",
+   "destination": "AWA",
+   "depTime": "12:20",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-179",
+   "origin": "ADD",
+   "destination": "AWA",
+   "depTime": "16:30",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-113",
+   "origin": "ADD",
+   "destination": "AWA",
+   "depTime": "17:30",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-206",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "06:50",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-248",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "06:55",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-204",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "10:20",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-208",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "14:05",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-222",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "15:40",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-224",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "16:40",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-220",
+   "origin": "ADD",
+   "destination": "DIR",
+   "depTime": "17:20",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-288",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "07:50",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-200",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "11:40",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-202",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "12:40",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-216",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "13:55",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-212",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "15:20",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-226",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "15:35",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-210",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "18:45",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-218",
+   "origin": "ADD",
+   "destination": "JIJ",
+   "depTime": "20:15",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-154",
+   "origin": "AWA",
+   "destination": "ADD",
+   "depTime": "10:35",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-174",
+   "origin": "AWA",
+   "destination": "ADD",
+   "depTime": "14:00",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-178",
+   "origin": "AWA",
+   "destination": "ADD",
+   "depTime": "18:10",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-112",
+   "origin": "AWA",
+   "destination": "ADD",
+   "depTime": "19:00",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-207",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "07:45",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-249",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "09:55",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-205",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "12:20",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-209",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "17:00",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-223",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "17:25",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-225",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "18:05",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-221",
+   "origin": "DIR",
+   "destination": "ADD",
+   "depTime": "18:25",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-219",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "10:10",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-289",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "11:05",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-211",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "11:25",
+   "arrTime": "",
+   "daypart": "morning"
+  },
+  {
+   "flightNo": "ET-201",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "13:40",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-203",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "14:43",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-217",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "15:50",
+   "arrTime": "",
+   "daypart": "afternoon"
+  },
+  {
+   "flightNo": "ET-213",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "17:15",
+   "arrTime": "",
+   "daypart": "evening"
+  },
+  {
+   "flightNo": "ET-227",
+   "origin": "JIJ",
+   "destination": "ADD",
+   "depTime": "17:30",
+   "arrTime": "",
+   "daypart": "evening"
+  }
+ ],
+ "people": [
+  {
+   "id": "15526",
+   "name": "BERHANE WUBNEH TESFAYE",
+   "kind": "employee"
+  },
+  {
+   "id": "204486",
+   "name": "CHANE TEFERI BELAY",
+   "kind": "employee"
+  },
+  {
+   "id": "23794",
+   "name": "YITBAREK ADDIS KIDANU",
+   "kind": "employee"
+  },
+  {
+   "id": "27658",
+   "name": "LINE PETROS BELETE",
+   "kind": "employee"
+  },
+  {
+   "id": "27660",
+   "name": "ABRIHAM AKELE GIZAW",
+   "kind": "employee"
+  },
+  {
+   "id": "27673",
+   "name": "MEKDIM GETACHEW SAHILU",
+   "kind": "employee"
+  },
+  {
+   "id": "31410",
+   "name": "YOHANNES FEKADU SHIFERAW",
+   "kind": "employee"
+  },
+  {
+   "id": "31411",
+   "name": "ROBEL TAMIRU GETACHEW",
+   "kind": "employee"
+  },
+  {
+   "id": "31412",
+   "name": "ABEL TSEGAYE WOLDESILASSIE",
+   "kind": "employee"
+  },
+  {
+   "id": "31413",
+   "name": "MULUGETA GAGA GASSA",
+   "kind": "employee"
+  },
+  {
+   "id": "31414",
+   "name": "MINTESNOT DEJENE FELEKE",
+   "kind": "employee"
+  },
+  {
+   "id": "31415",
+   "name": "ABEL YIGEZU MEKONEN",
+   "kind": "employee"
+  },
+  {
+   "id": "31416",
+   "name": "ABNET TADELE TILAHUN",
+   "kind": "employee"
+  },
+  {
+   "id": "31539",
+   "name": "MELAKU WONDIMU",
+   "kind": "employee"
+  },
+  {
+   "id": "31629",
+   "name": "SOLOMON ZEMEDKUN BELETE",
+   "kind": "employee"
+  },
+  {
+   "id": "31631",
+   "name": "BISRAT GIRMA TESEMA",
+   "kind": "employee"
+  },
+  {
+   "id": "31632",
+   "name": "YOHANNES SHEMELES",
+   "kind": "employee"
+  },
+  {
+   "id": "31634",
+   "name": "ABDULFETA NESREDIN NASSIR",
+   "kind": "employee"
+  },
+  {
+   "id": "31635",
+   "name": "YIDNEKACHEW DEBEBE TEKLETSADIK",
+   "kind": "employee"
+  },
+  {
+   "id": "31636",
+   "name": "BINIAM ASSEFA GELAGAY",
+   "kind": "employee"
+  },
+  {
+   "id": "31637",
+   "name": "BINIYAM BELEW WONDEMAGEGN",
+   "kind": "employee"
+  },
+  {
+   "id": "31638",
+   "name": "YOHANNES MEKUANENT TAKELE",
+   "kind": "employee"
+  },
+  {
+   "id": "31639",
+   "name": "LEUL TSEGAYE HADDIS",
+   "kind": "employee"
+  },
+  {
+   "id": "31640",
+   "name": "NATNAEL FEKADU BERHANE",
+   "kind": "employee"
+  },
+  {
+   "id": "31641",
+   "name": "KIDUS RETA TADESSE",
+   "kind": "employee"
+  },
+  {
+   "id": "31642",
+   "name": "GEMECHIS ABERA BAISSA",
+   "kind": "employee"
+  },
+  {
+   "id": "31643",
+   "name": "BIRUK TEKABE HAILEMARIAM",
+   "kind": "employee"
+  },
+  {
+   "id": "31644",
+   "name": "AMANUEL AKALU MEKONNEN",
+   "kind": "employee"
+  },
+  {
+   "id": "31645",
+   "name": "BERHANESILASE TEMESGEN",
+   "kind": "employee"
+  },
+  {
+   "id": "31646",
+   "name": "HENOK KIBEBEW HABTEMARIAM",
+   "kind": "employee"
+  },
+  {
+   "id": "31647",
+   "name": "FIKERESILASSE MESFIN ABEBE",
+   "kind": "employee"
+  },
+  {
+   "id": "31648",
+   "name": "DAWIT MAEREGU BELAY",
+   "kind": "employee"
+  },
+  {
+   "id": "31649",
+   "name": "ABEBE MULUGETA ABEBE",
+   "kind": "employee"
+  },
+  {
+   "id": "32140",
+   "name": "MINTESNOT WOLDE GONFA",
+   "kind": "employee"
+  },
+  {
+   "id": "32142",
+   "name": "TEKLEHAYMANOT SEMU TESSEMA",
+   "kind": "employee"
+  },
+  {
+   "id": "32143",
+   "name": "KIRUBEL DANIEL BELAYNEH",
+   "kind": "employee"
+  },
+  {
+   "id": "32145",
+   "name": "NATENAEL SHEWAKENA CHERINET",
+   "kind": "employee"
+  },
+  {
+   "id": "32146",
+   "name": "ABENEZER SOLOMON DEGENE",
+   "kind": "employee"
+  },
+  {
+   "id": "32147",
+   "name": "GETA BIYAZEN BEZE",
+   "kind": "employee"
+  },
+  {
+   "id": "32148",
+   "name": "TEWFIQ MOHAMMED AHMED",
+   "kind": "employee"
+  },
+  {
+   "id": "32149",
+   "name": "MOHAMMED SEID SULEIMAN",
+   "kind": "employee"
+  },
+  {
+   "id": "32150",
+   "name": "ANDUAMLAKE WALELEGN",
+   "kind": "employee"
+  },
+  {
+   "id": "32151",
+   "name": "ABRHAM SOLOMON HAILU",
+   "kind": "employee"
+  },
+  {
+   "id": "32152",
+   "name": "ROBERA CHALCHISA BELISA",
+   "kind": "employee"
+  },
+  {
+   "id": "32153",
+   "name": "TEWODROS ABEBE WONDEMENEH",
+   "kind": "employee"
+  },
+  {
+   "id": "32154",
+   "name": "ABRAHAM ABEBAW DRESS",
+   "kind": "employee"
+  },
+  {
+   "id": "32155",
+   "name": "KALEAB GETACHEW BEYENE",
+   "kind": "employee"
+  },
+  {
+   "id": "33128",
+   "name": "YOHANNES TESFAYE GETACHEW",
+   "kind": "employee"
+  },
+  {
+   "id": "33129",
+   "name": "BIRUK KEBEDE GEMEDA",
+   "kind": "employee"
+  },
+  {
+   "id": "33130",
+   "name": "HABTAMU GIRMA DEMISSIE",
+   "kind": "employee"
+  },
+  {
+   "id": "33131",
+   "name": "KALEAB SAMUEL BEKELE",
+   "kind": "employee"
+  },
+  {
+   "id": "33132",
+   "name": "HENOK BIRHANU TEREFE",
+   "kind": "employee"
+  },
+  {
+   "id": "33133",
+   "name": "LEUL ATSBEHA REDA",
+   "kind": "employee"
+  },
+  {
+   "id": "33134",
+   "name": "ABENEZER TAYE ENGDA",
+   "kind": "employee"
+  },
+  {
+   "id": "33135",
+   "name": "ABDULKERIM MUSTEFA MOHAMED",
+   "kind": "employee"
+  },
+  {
+   "id": "33136",
+   "name": "KIBROM BELAY ABADI",
+   "kind": "employee"
+  },
+  {
+   "id": "33865",
+   "name": "ABEL G/EGZIABHER HAILU",
+   "kind": "employee"
+  },
+  {
+   "id": "33866",
+   "name": "SAMUEL MULUGETA ADMASU",
+   "kind": "employee"
+  },
+  {
+   "id": "33867",
+   "name": "MICHAEL MASRESHA HAILE",
+   "kind": "employee"
+  },
+  {
+   "id": "33868",
+   "name": "AMSALU TADESSE GEBRETSADIK",
+   "kind": "employee"
+  },
+  {
+   "id": "33869",
+   "name": "AMANUEL GETACHEW HAILU",
+   "kind": "employee"
+  },
+  {
+   "id": "33870",
+   "name": "SINTAYEHU TILAHUN HUNEGNAW",
+   "kind": "employee"
+  },
+  {
+   "id": "33871",
+   "name": "SURA MATHEWOS GETACHEW",
+   "kind": "employee"
+  },
+  {
+   "id": "33872",
+   "name": "SAMSON HAILU KASSA",
+   "kind": "employee"
+  },
+  {
+   "id": "33873",
+   "name": "MULUKEN AYALEW TEFERA",
+   "kind": "employee"
+  },
+  {
+   "id": "33874",
+   "name": "IMRAN FUAD AHMED",
+   "kind": "employee"
+  },
+  {
+   "id": "33875",
+   "name": "NATNAEL ABEYU SHEFERAW",
+   "kind": "employee"
+  },
+  {
+   "id": "33876",
+   "name": "BETSELOT ELIAS HASSEN",
+   "kind": "employee"
+  },
+  {
+   "id": "33877",
+   "name": "EMANUEL GEBEYEHU NIGUSSIE",
+   "kind": "employee"
+  },
+  {
+   "id": "33878",
+   "name": "HABTAMU WEGAYEHU MEBRATE",
+   "kind": "employee"
+  },
+  {
+   "id": "33879",
+   "name": "GUTU ABEYA TEMESGEN",
+   "kind": "employee"
+  },
+  {
+   "id": "33880",
+   "name": "TEYIB KADI ABDURAHMAN",
+   "kind": "employee"
+  },
+  {
+   "id": "34569",
+   "name": "ABIY ZENA MARKOS",
+   "kind": "employee"
+  },
+  {
+   "id": "34570",
+   "name": "FERHAN KIFLE WORKU",
+   "kind": "employee"
+  },
+  {
+   "id": "34571",
+   "name": "ROBEL ABEBAW SIMENEH",
+   "kind": "employee"
+  },
+  {
+   "id": "34572",
+   "name": "AMEHA ABEBAW SENTIE",
+   "kind": "employee"
+  },
+  {
+   "id": "34573",
+   "name": "HENOK DAMTEW TEKLEMARIAM",
+   "kind": "employee"
+  },
+  {
+   "id": "34574",
+   "name": "BERHANU WELDERUFAEL",
+   "kind": "employee"
+  },
+  {
+   "id": "34575",
+   "name": "YIDNEKACHEW ARAGIE ASEFA",
+   "kind": "employee"
+  },
+  {
+   "id": "34576",
+   "name": "ABRHAM TAKELE HAILEMESKEL",
+   "kind": "employee"
+  },
+  {
+   "id": "34577",
+   "name": "LEUL MEKONNEN ASSEFA",
+   "kind": "employee"
+  },
+  {
+   "id": "34578",
+   "name": "BAHIRAN BERGA MINOTA",
+   "kind": "employee"
+  },
+  {
+   "id": "34579",
+   "name": "RAEY TAYE WOLDERUFAEL",
+   "kind": "employee"
+  },
+  {
+   "id": "35679",
+   "name": "BROOK GETANEH BEKELE",
+   "kind": "employee"
+  },
+  {
+   "id": "35680",
+   "name": "ABDUREZAK ABDELA TESEMA",
+   "kind": "employee"
+  },
+  {
+   "id": "35681",
+   "name": "DAGMAWI ABEBE SEIFU",
+   "kind": "employee"
+  },
+  {
+   "id": "35682",
+   "name": "BIRUK MESSERET MEKURIA",
+   "kind": "employee"
+  },
+  {
+   "id": "35683",
+   "name": "ZELALEM ADUGNA BEDADA",
+   "kind": "employee"
+  },
+  {
+   "id": "35684",
+   "name": "ANATOLI YEMANE EJETA",
+   "kind": "employee"
+  },
+  {
+   "id": "35685",
+   "name": "DANIEL HAILESELASSIE GEBRU",
+   "kind": "employee"
+  },
+  {
+   "id": "36143",
+   "name": "ERMIAS MULAT ZEWDIE",
+   "kind": "employee"
+  },
+  {
+   "id": "36144",
+   "name": "EYASU HAILESILASSIE MELAKE",
+   "kind": "employee"
+  },
+  {
+   "id": "36145",
+   "name": "PAULOS WELDEGEBRIEL ASSEFA",
+   "kind": "employee"
+  },
+  {
+   "id": "36146",
+   "name": "ZEKARIYAS FEKADU GERMAME",
+   "kind": "employee"
+  },
+  {
+   "id": "36147",
+   "name": "EYOB GETACHEW AYALEW",
+   "kind": "employee"
+  },
+  {
+   "id": "36148",
+   "name": "SIMGNEW ESUBALEW KEBEDE",
+   "kind": "employee"
+  },
+  {
+   "id": "36149",
+   "name": "GERSAM ZERIHUN TESFAYE",
+   "kind": "employee"
+  },
+  {
+   "id": "36150",
+   "name": "DAGNACHEW ABERA REGASSA",
+   "kind": "employee"
+  },
+  {
+   "id": "36151",
+   "name": "MATIYOS TEKLU MERGIYA",
+   "kind": "employee"
+  },
+  {
+   "id": "36152",
+   "name": "DANIEL ANBELU TEBEJE",
+   "kind": "employee"
+  },
+  {
+   "id": "36153",
+   "name": "MOHAMMED HASSEN AHMED",
+   "kind": "employee"
+  },
+  {
+   "id": "36154",
+   "name": "GETNET GEZAHEGN ENGIDA",
+   "kind": "employee"
+  },
+  {
+   "id": "36155",
+   "name": "ISRAEL TESHOME ZEWDE",
+   "kind": "employee"
+  },
+  {
+   "id": "37277",
+   "name": "AMANUEL MINDA TADESSE",
+   "kind": "employee"
+  },
+  {
+   "id": "37304",
+   "name": "WONDU KEDA KETO",
+   "kind": "employee"
+  },
+  {
+   "id": "37723",
+   "name": "ABI BATENO KABETO",
+   "kind": "employee"
+  },
+  {
+   "id": "37724",
+   "name": "DANIEL AREGAY BELAY",
+   "kind": "employee"
+  },
+  {
+   "id": "37725",
+   "name": "BINIYAM TSEGAYE BELETE",
+   "kind": "employee"
+  },
+  {
+   "id": "37726",
+   "name": "YOSEPH DEMESEW ADMASSU",
+   "kind": "employee"
+  },
+  {
+   "id": "37727",
+   "name": "KIBUR MENGISTU TEKESTE",
+   "kind": "employee"
+  },
+  {
+   "id": "37728",
+   "name": "DAGMAWI G/MEDHIN TEKLEWOLD",
+   "kind": "employee"
+  },
+  {
+   "id": "37729",
+   "name": "FITSUMBIRHAN SEYOUM REDIE",
+   "kind": "employee"
+  },
+  {
+   "id": "37730",
+   "name": "YEABSRA SHIFERAW DELELEGN",
+   "kind": "employee"
+  },
+  {
+   "id": "37731",
+   "name": "MAEREG ASSEFA ABATE",
+   "kind": "employee"
+  },
+  {
+   "id": "111311",
+   "name": "ERMIYAS NIGUSSIE MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "111330",
+   "name": "ABREHAM GETAYE BELAY",
+   "kind": "trainee"
+  },
+  {
+   "id": "111343",
+   "name": "YONAS TEREFE JIMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112423",
+   "name": "ABDELLAH HUSSEIN KELIFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112424",
+   "name": "ABDI TESEMA TOLESA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112425",
+   "name": "ABEL KASSA GETACHEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "112426",
+   "name": "ABENEZER TESFAYE ANTENEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "112427",
+   "name": "ABIY MESFIN DAGNEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "112428",
+   "name": "AMANUEL MIHIRETU TIRSAMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112429",
+   "name": "AMANUEL DERIB ANELEY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112430",
+   "name": "AMANUEL ZEWDIE BERHE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112431",
+   "name": "BASLEL ALEMAYEHU NEGASH",
+   "kind": "trainee"
+  },
+  {
+   "id": "112432",
+   "name": "BEREKET ZEWDU ASSEFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112433",
+   "name": "BETELHEM TEKLEBIRHAN WALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112434",
+   "name": "BINIAM MILLION SEBSIBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112435",
+   "name": "BIRUK KETEMA DENNEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112436",
+   "name": "BISRAT SEYFU BESHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112437",
+   "name": "DAGIM WOSSEN DEMISSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112439",
+   "name": "DANIEL KAHSU TEKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112440",
+   "name": "DANIEL TESFAYE BOGALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112442",
+   "name": "DAWIT HABTU AYNALEM",
+   "kind": "trainee"
+  },
+  {
+   "id": "112443",
+   "name": "DAWIT MULUGETA DEHNE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112444",
+   "name": "EFA TADESSE GURMESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112445",
+   "name": "ELIAS MEKUANENT YIRSAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "112446",
+   "name": "ELIAS SHIMELES DEJENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112447",
+   "name": "EMNET YIRDAW MINUTA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112448",
+   "name": "ENDALE MITIKU WODAJO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112449",
+   "name": "ESHETU TARKO BISET",
+   "kind": "trainee"
+  },
+  {
+   "id": "112450",
+   "name": "EYOAS WAKGARI KEBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112451",
+   "name": "EZEDIN MUSTEFA SABIR",
+   "kind": "trainee"
+  },
+  {
+   "id": "112452",
+   "name": "FEDASA HAILU OLANA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112453",
+   "name": "FIRAOL TEMESGEN GAROMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112454",
+   "name": "FITSUM BALKEW WORKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112455",
+   "name": "GIRMAY GEBREWAHID GEZAHAGN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112456",
+   "name": "HABITU KENAW EMIBIALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112457",
+   "name": "HABTAMU BELETE GEBRESELASSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112458",
+   "name": "HAILU TADESSE FUFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112459",
+   "name": "HAWI GEMECHU BEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112460",
+   "name": "KALEAB ASHENAFI TESERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112461",
+   "name": "KIRUBEL TASEW SHEWATATEK",
+   "kind": "trainee"
+  },
+  {
+   "id": "112463",
+   "name": "MATIYAS FIKRE HAILE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112464",
+   "name": "MEBRAHTOM TAEME MENGISTU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112465",
+   "name": "MELAKE MIKRU MESSERT",
+   "kind": "trainee"
+  },
+  {
+   "id": "112466",
+   "name": "MELAKU JEMANEH KIFLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112467",
+   "name": "MELAKU PAWLOS CHEGEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112469",
+   "name": "MESFIN BELAY MENKIR",
+   "kind": "trainee"
+  },
+  {
+   "id": "112470",
+   "name": "MICHAEL SETEGN GETANEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "112471",
+   "name": "MIKIYAS ASSEFA TEFERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112472",
+   "name": "MOHAMMED ADIL KAMIL",
+   "kind": "trainee"
+  },
+  {
+   "id": "112473",
+   "name": "MOHAMMED ABDULJELIL MOHAMMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "112474",
+   "name": "MOIBON ARFASSA DANU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112475",
+   "name": "MUHAMMED MUHDIN HASSEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112476",
+   "name": "NAHOM DESALEGN YAZEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "112477",
+   "name": "NAHOM ZENA WUBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112478",
+   "name": "NATAN MOHAMMOD SIRAG",
+   "kind": "trainee"
+  },
+  {
+   "id": "112479",
+   "name": "NATAN NEGATU BEREDED",
+   "kind": "trainee"
+  },
+  {
+   "id": "112480",
+   "name": "NATNAEL WONDEM FELEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112481",
+   "name": "NEBYU HAILU HABTE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112482",
+   "name": "NEHEMIAH GETACHEW KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112483",
+   "name": "NESREDIN NEGUSSIE ASSEFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112484",
+   "name": "REDIET ZENEBE ABAYNEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "112485",
+   "name": "ROBEL DEMSEW MASRESHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112486",
+   "name": "SAMUEL AMSALU BERGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112487",
+   "name": "SAMUEL MENGISTU TUFER",
+   "kind": "trainee"
+  },
+  {
+   "id": "112488",
+   "name": "SAMUEL TILAHUN MOLLA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112489",
+   "name": "SOFONYAS DAGNACHEW GIZAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "112490",
+   "name": "TENSAYE AYALEW DIBABE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112491",
+   "name": "TINSAE TILAHUN AMEHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112492",
+   "name": "TSIYON JIMA GEMMECHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112493",
+   "name": "WAKDANNO DANIEL ABOSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112494",
+   "name": "YAFET HAILU NAGASSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112495",
+   "name": "YARED ABATE ADEME",
+   "kind": "trainee"
+  },
+  {
+   "id": "112496",
+   "name": "YARED TAMRAT BEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112497",
+   "name": "YIDNEKACHEW AMIDE TAFESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112498",
+   "name": "YITBAREK BIRHANIE GEBRETSADKAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112499",
+   "name": "YOHANES HAILU MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112500",
+   "name": "YONAF WAKUMA NEMOMSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112501",
+   "name": "YONAS ABEBE MARU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112502",
+   "name": "YONAS MULAT EDDESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112503",
+   "name": "YOSEF ALEMNEH BELAY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112504",
+   "name": "YOSEF AMANUEL BERHE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112505",
+   "name": "YOSEF DEGIFE ALEMU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112506",
+   "name": "YOSEPH SHAMBEL KABETO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112507",
+   "name": "YOSEPH TAMIRAT GEMECHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112858",
+   "name": "ALLOGO NTOGO GERVAIS",
+   "kind": "trainee"
+  },
+  {
+   "id": "112859",
+   "name": "AMBONGUILA ASSOUMOU ASTRID ESPERANCE AUDREY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112860",
+   "name": "PAUL ENOCK AVOUGOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112861",
+   "name": "AWA BANGOYI FAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112862",
+   "name": "JHANICE SARHA BIBALOU DITOUGOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112863",
+   "name": "BINGHA DORLAND LEVINE MARTIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112864",
+   "name": "DJENILA DORCAS BIREMBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112865",
+   "name": "ESTHER ELISA BIYE BI EDOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112866",
+   "name": "BODOU GOMEZ BIEN AIME",
+   "kind": "trainee"
+  },
+  {
+   "id": "112867",
+   "name": "ELISA MANUELLA BONGO MPOLO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112868",
+   "name": "BOUSSAMBA PATAPIRI ELOISE FIONA BETHUELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112869",
+   "name": "BOUSSOUGOU MOUANDA PAUL CHISTEVY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112870",
+   "name": "BUSSU-BUSSUGWU DARRYL RAPHAEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "112871",
+   "name": "DEMBA JOSEPH AMOS BRICE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112872",
+   "name": "MOHAMED DIAB",
+   "kind": "trainee"
+  },
+  {
+   "id": "112873",
+   "name": "DJONI NGAVE EMMANUEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "112874",
+   "name": "JEAN JUNIOR DJOUMBOU CHOTHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112875",
+   "name": "EDZANG EYI FRED GENEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "112876",
+   "name": "ARMEL-RODRIGUE EDZOME MEBIENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112877",
+   "name": "EKWAGHE OLOURI YANEZ HEARLY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112878",
+   "name": "ELISNA NOJONGHA NTOLO EMMANUEL ARCHY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112880",
+   "name": "ESSONO NDONG MARTINIEN DESIRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112881",
+   "name": "ETELE LEBOUNDA LUC GIOVANI",
+   "kind": "trainee"
+  },
+  {
+   "id": "112883",
+   "name": "EYEGHE SERGE CURTYS ITOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112884",
+   "name": "GNAGNI NOE BERLIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "112886",
+   "name": "DILAN THIERRY ISSA MONGARINA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112887",
+   "name": "ITADI LE SAGE CHADRAK",
+   "kind": "trainee"
+  },
+  {
+   "id": "112888",
+   "name": "KEBA NDOULOU DORIAN WILLIAM KENNETH",
+   "kind": "trainee"
+  },
+  {
+   "id": "112889",
+   "name": "KORYA KONDJA-EPOUTA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112890",
+   "name": "ANGE IBRAHIM KOUMBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112891",
+   "name": "KOUMBA-KOUMBA JORDY YESS",
+   "kind": "trainee"
+  },
+  {
+   "id": "112892",
+   "name": "MICHEL JUNIOR LEMOTIO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112893",
+   "name": "LEPONI NTSOUGOLIA NORLIE REBECCA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112894",
+   "name": "LIKOUKI GARBA DUDAEL IZDIN ANDRIDJ",
+   "kind": "trainee"
+  },
+  {
+   "id": "112895",
+   "name": "LARRY KEVINE DARICK MADJOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "112896",
+   "name": "MATT WALTER MASSAMBI IDOUKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112897",
+   "name": "MASSAVALA FREDÉRIC MANDÉLA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112898",
+   "name": "ESTHER AURIE MAYENE TSOUMBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "112899",
+   "name": "MOUKAMBA GAYABA FLEURDA PRODIGE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112900",
+   "name": "MICHEL JORIS SALEM NANG NDONG",
+   "kind": "trainee"
+  },
+  {
+   "id": "112901",
+   "name": "OBOUYOU SOREMONGANI OLSEN PIERRICK",
+   "kind": "trainee"
+  },
+  {
+   "id": "112902",
+   "name": "ONGONE OBIANG CHARLY PRESTIGE NOE",
+   "kind": "trainee"
+  },
+  {
+   "id": "112903",
+   "name": "OTHAKEME D'OTHAKEME FRANCOIS",
+   "kind": "trainee"
+  },
+  {
+   "id": "112904",
+   "name": "MARC AURELE ESTHER SEMEDO",
+   "kind": "trainee"
+  },
+  {
+   "id": "112905",
+   "name": "TOMO KARAN SAMY",
+   "kind": "trainee"
+  },
+  {
+   "id": "112906",
+   "name": "PAUL ILAN TOMO NTOUTOUME",
+   "kind": "trainee"
+  },
+  {
+   "id": "112907",
+   "name": "PASCAL QUEMY ZHE BIKANG",
+   "kind": "trainee"
+  },
+  {
+   "id": "113092",
+   "name": "KAMAL ABDULMALIK TORO",
+   "kind": "trainee"
+  },
+  {
+   "id": "113093",
+   "name": "KHALED ALAWI AHMED ESMAIL",
+   "kind": "trainee"
+  },
+  {
+   "id": "113094",
+   "name": "SOUMAINE HASSANE SOUMAINE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113097",
+   "name": "ABDULMALIK YAHAYA ALI",
+   "kind": "trainee"
+  },
+  {
+   "id": "113098",
+   "name": "ACHTA MAHAMAT ALI",
+   "kind": "trainee"
+  },
+  {
+   "id": "113171",
+   "name": "MARFUGI JOBARTEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113172",
+   "name": "MODOU LAMIN CHAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "113174",
+   "name": "CHELSEA KAEAKA MAIRA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113179",
+   "name": "BATCHELILI MOUNDEMBA WISSY AMAYA WENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113180",
+   "name": "BIBANGOYE PRUNELLE MARY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113182",
+   "name": "EBOROBESSE'E NKOULOU EDOU-EVOUN CHRIST",
+   "kind": "trainee"
+  },
+  {
+   "id": "113183",
+   "name": "JOSEPH MANEL EVOUDZA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113184",
+   "name": "IBINDE IMBUMBE IMOSSI LASBIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113185",
+   "name": "MABERI GRODET MURIELLE LESLIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113188",
+   "name": "MBADINGA-OKAMI CHRIST-STELY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113503",
+   "name": "BEZA MERSEEAHAZEN YESHITLA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113504",
+   "name": "BIRUK EJIGU NEGEWO",
+   "kind": "trainee"
+  },
+  {
+   "id": "113505",
+   "name": "GEDION ZEWDIE AARON",
+   "kind": "trainee"
+  },
+  {
+   "id": "113506",
+   "name": "HERMELA MULUGETA SHIFERAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113507",
+   "name": "ISIHAK BERHANU ASEGU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113508",
+   "name": "JEHU SERRAT",
+   "kind": "trainee"
+  },
+  {
+   "id": "113509",
+   "name": "KEABTSEGA BIRARA SITOTAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113510",
+   "name": "KIDUS PAULOS NEGATU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113511",
+   "name": "KIRUBEL ALEMU JEMBERU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113512",
+   "name": "LEUL GETACHEW BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113513",
+   "name": "MEKDELAWIT TSEGU WEDAJ",
+   "kind": "trainee"
+  },
+  {
+   "id": "113514",
+   "name": "MIHRETAB ADANE DEMEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113515",
+   "name": "MIKIAS GETAHUN FIKADU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113516",
+   "name": "MOIBON TSFAYE DIBISA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113517",
+   "name": "MUBAREK JEMAL KEMELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113518",
+   "name": "MULUKEN ALEMAYEHU KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113519",
+   "name": "NAHOM ATAKILT REDDA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113520",
+   "name": "NAHOM DIRO MEGERSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113521",
+   "name": "NAHOM MENGISTU KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113523",
+   "name": "NURIA ABDU DAWUD",
+   "kind": "trainee"
+  },
+  {
+   "id": "113524",
+   "name": "PENIEL YUSUF RESHID",
+   "kind": "trainee"
+  },
+  {
+   "id": "113525",
+   "name": "RAMI HUSSEN SAID",
+   "kind": "trainee"
+  },
+  {
+   "id": "113526",
+   "name": "SAMUEL ZEKARIAS TIBEBU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113527",
+   "name": "TEBIBU SOLOMON HAILU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113528",
+   "name": "TIRSIT WORKU BAREGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113529",
+   "name": "YOSEF SIRAK WORKNEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113530",
+   "name": "YULIYAN GETACHEW ALEMAYEHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113531",
+   "name": "MBORO ASSOGHO LUCNEL-MESMIN-EDMOND",
+   "kind": "trainee"
+  },
+  {
+   "id": "113532",
+   "name": "MENDOME MABITI DARLE'S KENNY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113533",
+   "name": "MENDOME NZAMBA GUYLANE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113534",
+   "name": "METANGA MIAYA MABAKABOUA DÉSIR MAHÉVA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113535",
+   "name": "MFOUROU AYAYA TED JEFFREY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113566",
+   "name": "LUCIE NDAY NKOLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113576",
+   "name": "MORRY BIYO MANASSE DONALD KELLY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113577",
+   "name": "MOUCKOUMY PAMBA O'NEIL MARVAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113578",
+   "name": "MOUGUIAMA MANUEL KELLY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113579",
+   "name": "MOUNANGA MOUNANGA FRED",
+   "kind": "trainee"
+  },
+  {
+   "id": "113580",
+   "name": "MOUREMBOU KOMBA LUDJI BLANDIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113581",
+   "name": "MOUSSIROU MOUNGUENGUI JORDAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113582",
+   "name": "MVO ANDRE EMMANUAL SPIDY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113583",
+   "name": "NANG METSITA PAMPHILLE SACRÉE-FLEUR",
+   "kind": "trainee"
+  },
+  {
+   "id": "113584",
+   "name": "NDONG EYAGHA ADRIEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113585",
+   "name": "NDONG LEVY DARWIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113586",
+   "name": "NGALO RAPON'ESTE DARELLE AMOUR",
+   "kind": "trainee"
+  },
+  {
+   "id": "113587",
+   "name": "NGOKOUAKA MFOUMOU RHYMA HULDY C.",
+   "kind": "trainee"
+  },
+  {
+   "id": "113588",
+   "name": "NGOMA MOUBEYI IVAN ALEXANDRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113589",
+   "name": "NGOULOU NKONA FRANEL WID JUNIOR",
+   "kind": "trainee"
+  },
+  {
+   "id": "113590",
+   "name": "NGUIMIONY KOUMBA DIVINE YRONDU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113591",
+   "name": "NKOGHE MENSAH JOËL CELIO LOÏC",
+   "kind": "trainee"
+  },
+  {
+   "id": "113592",
+   "name": "NKOULAVENG EFONG AARON DARCY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113593",
+   "name": "NKOUNDA MAPEMBI LUIZ CARLY",
+   "kind": "trainee"
+  },
+  {
+   "id": "113594",
+   "name": "OBAMA BOUBALA MOHAMED YASIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113595",
+   "name": "OBAME ENDAMANE SEVY MERMOZ JERASCH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113596",
+   "name": "OBEYI KENDZELE CHADRACK",
+   "kind": "trainee"
+  },
+  {
+   "id": "113597",
+   "name": "OKEY NTOUTOUME BASILE CLERMONT OSCAR",
+   "kind": "trainee"
+  },
+  {
+   "id": "113598",
+   "name": "OKOUMBA MAMADOU KEN GÉDÉON",
+   "kind": "trainee"
+  },
+  {
+   "id": "113599",
+   "name": "OLOGAKWA AZAPH VIRELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113600",
+   "name": "ONDO MEBA FRANCK EZEKIEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "113601",
+   "name": "ONDO SIMOST BRANDON FLEURI",
+   "kind": "trainee"
+  },
+  {
+   "id": "113602",
+   "name": "ONGALA AKOGHE JOVANYS PONCE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113603",
+   "name": "DJESS LOÏCK ONGNIAMI ABA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113604",
+   "name": "OSSIELI JECHONIAS OTHNIELLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113605",
+   "name": "OYENI NGUIABESSA AMOUR LEONA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113700",
+   "name": "ABENEZER MULUNEH GIRMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113701",
+   "name": "AMHA ESAYAS TSEGAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113702",
+   "name": "BAROK LIJWENDEME LAIKEMARIAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "113703",
+   "name": "BIRHANE GEBREHIWOT GEBREKIRSTOS",
+   "kind": "trainee"
+  },
+  {
+   "id": "113704",
+   "name": "BROOK HABTE DEGU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113705",
+   "name": "DAGMAWI MEKONNEN TESFAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113706",
+   "name": "DAWIT MEKONNEN KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113707",
+   "name": "DAWIT MENBERMARIAM WOLDEYESUS",
+   "kind": "trainee"
+  },
+  {
+   "id": "113708",
+   "name": "DESALEGN FEKEDE MEKURIA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113709",
+   "name": "ENDALEW TSEGAYE ALFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113710",
+   "name": "FANUEL TSEGAYE ABEGAZ",
+   "kind": "trainee"
+  },
+  {
+   "id": "113711",
+   "name": "HABTAMU BIRHANU WORKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113712",
+   "name": "HERMELA GEBEYEHU ASFAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113713",
+   "name": "HERMELLA FASIL REGASSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113714",
+   "name": "HILDANA MESERET MULUNEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113715",
+   "name": "KALID ABDELLA ABDULKADIR",
+   "kind": "trainee"
+  },
+  {
+   "id": "113716",
+   "name": "MIKIYAS AGEGNEHU AYNALEM",
+   "kind": "trainee"
+  },
+  {
+   "id": "113717",
+   "name": "MIKIYAS GIZACHEW TILAHUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113718",
+   "name": "MINTESINOT BIRHANU SENBETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113719",
+   "name": "NAFIYAD KELBESA DINKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113720",
+   "name": "NATNAEL NIBRET WORKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113721",
+   "name": "REDIET WEREDE MENBERU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113722",
+   "name": "SEGNI WERKU GULUMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113723",
+   "name": "SEID BESHIR MOHAMMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "113724",
+   "name": "TSEGAEYESUS BEYENE DESALEGN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113725",
+   "name": "YABTSEGA TIBEBU GORFU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113726",
+   "name": "YEABSIRA MESFIN TEKALIGN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113727",
+   "name": "ZAKARIAS SHIMELES SIMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113728",
+   "name": "ABDULHAMED MOHAMMED ABAGERO",
+   "kind": "trainee"
+  },
+  {
+   "id": "113729",
+   "name": "ABEL MENGISTU NEGASH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113730",
+   "name": "ALEXANDER GASHAW MEKONNEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113731",
+   "name": "BERHANU TESFAYE HAYLEMICHIEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "113732",
+   "name": "BIRUK ZEGENE TAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113733",
+   "name": "DAGMAWI FASIL EJIGU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113734",
+   "name": "DAWIT ZEBENE NADEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113735",
+   "name": "DILAMO WONDIMU DEBOCH",
+   "kind": "trainee"
+  },
+  {
+   "id": "113736",
+   "name": "ELIAS MELAKU AYELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113737",
+   "name": "EYOB GEZAHEGN MULUGETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113738",
+   "name": "FIRIWAK TOLESA MEGERSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113739",
+   "name": "GIRUM ALEMNEH ALEMU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113740",
+   "name": "MEKIBEB YICHENEKU URAGO",
+   "kind": "trainee"
+  },
+  {
+   "id": "113741",
+   "name": "MICHAEL ANTENEH MEBRATU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113742",
+   "name": "MIKIYAS TESFAYE MESKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113743",
+   "name": "MINAB WULETAW TADESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113744",
+   "name": "NATAN WUHIB TSIGU",
+   "kind": "trainee"
+  },
+  {
+   "id": "113745",
+   "name": "NATHAN YEMANE SHEFERAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113746",
+   "name": "NATNAEL DANIEL GETACHEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "113747",
+   "name": "NUHAMIN TAMIRU GEBRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113748",
+   "name": "ROBEL BERHE ATSBAHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113749",
+   "name": "SOLOMON BELACHEW WALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113750",
+   "name": "SURAPHEL BIRHANE KIFLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113751",
+   "name": "YISHAK ASFAW MULETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "113752",
+   "name": "YOHANNES TESFAYE ZEMEDKUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "113753",
+   "name": "YOHANNIS ABEBEW WALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113754",
+   "name": "YONATAN SHEWAZEMED WOLDEMICHAEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "113755",
+   "name": "ZEMRAN TESFAYE KIDANE",
+   "kind": "trainee"
+  },
+  {
+   "id": "113796",
+   "name": "POBA DISSA BRUNEL CARLITHO",
+   "kind": "trainee"
+  },
+  {
+   "id": "113825",
+   "name": "AMANUEL TADIWOS YOHANNES",
+   "kind": "trainee"
+  },
+  {
+   "id": "114049",
+   "name": "ABDI DANIEL TARAGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114050",
+   "name": "ABEL EJIGAYEHU JEMBERE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114051",
+   "name": "ABENEZER ALEBACHEW ALEMU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114052",
+   "name": "AKEWAK ADUGNA TUJUBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114053",
+   "name": "AMANUEL KINFE HABTE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114054",
+   "name": "AMANUEL EPHREM BEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114055",
+   "name": "AMANUEL TAMIRU AYANA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114056",
+   "name": "AMANUEL WOLDESELASSIE ABBUTE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114057",
+   "name": "AMANUEL YOHANNES ADDIS",
+   "kind": "trainee"
+  },
+  {
+   "id": "114058",
+   "name": "BEREKET GUTA MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "114059",
+   "name": "BETELHEM ZENEBE WORKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114060",
+   "name": "BINIAM MELIS BIZANE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114061",
+   "name": "DAWIT TOLOSA TUFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114062",
+   "name": "DONI FIKREYOHANNES YADESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114063",
+   "name": "EHTSHET KASSEGN DAMTEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114064",
+   "name": "FLKRMARLYAM ABERA DURESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114065",
+   "name": "GETNET ABAYNEW TADDESE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114066",
+   "name": "KIDUS HAILEAB MENGISTEAB",
+   "kind": "trainee"
+  },
+  {
+   "id": "114067",
+   "name": "MIKYAS SHIMELES HUNDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114068",
+   "name": "NAHOM ZERIHUN ESHETU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114069",
+   "name": "NATHNAEL GEBRESELASE KIDANEMARIAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "114070",
+   "name": "NATNAEL ASNAKE SHIFERAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114071",
+   "name": "NATNAEL ASRAT ASSEFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114072",
+   "name": "NATNAEL BERHANU ADERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114073",
+   "name": "ROBEL GETACHEW ADDIS",
+   "kind": "trainee"
+  },
+  {
+   "id": "114074",
+   "name": "SAMUEL BERHANU SOLOMON",
+   "kind": "trainee"
+  },
+  {
+   "id": "114075",
+   "name": "SELAMAWIT ALEM ASHENAFI",
+   "kind": "trainee"
+  },
+  {
+   "id": "114076",
+   "name": "WEYNSHET BILHATU ABEZE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114550",
+   "name": "ABEL SHALO MORKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114551",
+   "name": "AMANUEL TAREKEGN AYALAWE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114552",
+   "name": "ELIAS ABAYNHE ISSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114553",
+   "name": "EYUEL SIME AYANO",
+   "kind": "trainee"
+  },
+  {
+   "id": "114554",
+   "name": "FELEGE GHION TESFAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114555",
+   "name": "FILIMON GEBREYOHANES GEBRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114556",
+   "name": "GIRUM TIMERGA AGZA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114557",
+   "name": "HAYDER HUNDITO SHUKURA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114558",
+   "name": "JOSEPH AYELE BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114559",
+   "name": "KALEB FIKRE MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "114560",
+   "name": "KALEB TEFERA MANAZIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114561",
+   "name": "LAIKE GEBREMEDHEN AZEMACH",
+   "kind": "trainee"
+  },
+  {
+   "id": "114562",
+   "name": "LIUL SHEWAYE ERGETE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114563",
+   "name": "MEKDES GETACHEW GIRMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114564",
+   "name": "MIKIAS SISAY REDA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114565",
+   "name": "MINTESNOT DEMSSIE BIRATU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114566",
+   "name": "NATNAEL DEGIFE WOLDETSADIK",
+   "kind": "trainee"
+  },
+  {
+   "id": "114567",
+   "name": "NATNAEL DEREJE SEKAL",
+   "kind": "trainee"
+  },
+  {
+   "id": "114568",
+   "name": "SAMUEL ADANE CHANE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114569",
+   "name": "SURAPHEL WOLDEMICHAEL LUIGI",
+   "kind": "trainee"
+  },
+  {
+   "id": "114570",
+   "name": "TEKLEAB MULUGETA GEBREMARIAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "114571",
+   "name": "TEKLEHAWARIAT FANTAHUN WAKIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114572",
+   "name": "TESFAMICHAEL BERHANU GEBERETEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114573",
+   "name": "TINSAE KIDANE WOLDEMARIAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "114574",
+   "name": "TINSAE NIKODIMOS LEMMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114575",
+   "name": "YEABSIRA SOLOMON MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "114576",
+   "name": "YOHANNES GETINET TIBEBU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114577",
+   "name": "ZELALEM DEMEKE HAILE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114769",
+   "name": "ADUGNA CHOMBE AYELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114770",
+   "name": "AMOTS MEHARI FENTA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114771",
+   "name": "BEAMLAK MOLLA NIGATU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114772",
+   "name": "BERSABEH ZELALEM TADESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114773",
+   "name": "BETLHEM ABEBE CHALLA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114774",
+   "name": "BINIAM YONAS URBANOS",
+   "kind": "trainee"
+  },
+  {
+   "id": "114775",
+   "name": "DANIEL WUBIE GIZAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114776",
+   "name": "DANIEL ZEWDU BUKASSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114777",
+   "name": "ELIAS YESHIWAS GETASEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114778",
+   "name": "EPHREM BEKELE DUBISSO",
+   "kind": "trainee"
+  },
+  {
+   "id": "114779",
+   "name": "EYASU THEODROS ALEMAYEHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "114780",
+   "name": "EYOULE ABDI HUNDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114781",
+   "name": "FASIL MENGISTE ADERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114782",
+   "name": "ISMAIL BEHAILU MUZEYIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "114783",
+   "name": "ISRAEL HAILU ABEBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114784",
+   "name": "KELIL DEKEBO GURE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114785",
+   "name": "LUHANA DANIEL ZELEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114786",
+   "name": "MESFIN SILESHI DAGNE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114787",
+   "name": "MIKIYAS MESFIN ZENEBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114788",
+   "name": "ROBEL GUADIE TEMEME",
+   "kind": "trainee"
+  },
+  {
+   "id": "114789",
+   "name": "ROBEL DANIEL ASFAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "114790",
+   "name": "SAMUEL TEMESGEN NIGUSSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114791",
+   "name": "SEID TAKELE BIREDA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114792",
+   "name": "SURAFEL SOLOMON ABREHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114793",
+   "name": "VICTOR GETNET GUTETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114794",
+   "name": "YEABSERA TESFAYE BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114795",
+   "name": "YONATAN WONDIMU NEGASH",
+   "kind": "trainee"
+  },
+  {
+   "id": "114796",
+   "name": "YORDANOS SHUMIYE ABEBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "114797",
+   "name": "YOSEF ENDALU HUNDESA",
+   "kind": "trainee"
+  },
+  {
+   "id": "114801",
+   "name": "BOUBA NABIL",
+   "kind": "trainee"
+  },
+  {
+   "id": "115127",
+   "name": "ABDULKERIM GETNET SEYED",
+   "kind": "trainee"
+  },
+  {
+   "id": "115128",
+   "name": "ABEL AKILEW TIGISTU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115129",
+   "name": "ABEL GEBRETSADIK BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115130",
+   "name": "ANANYA GEBREMEDHIN TEKLEWOLD",
+   "kind": "trainee"
+  },
+  {
+   "id": "115131",
+   "name": "ANTENEH BEZA BEYIDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115132",
+   "name": "BEKALU ZELEKE BEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115133",
+   "name": "BIRUK BELHU MINIYELSHWA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115134",
+   "name": "BIRUK ZERIHUN ADMASU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115135",
+   "name": "EYOAB DEGEFU DEBELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115136",
+   "name": "EYOB FIKADU TEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115137",
+   "name": "EYOSIAS BELAY AREGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115138",
+   "name": "FASIKA TEREFE KIDANE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115139",
+   "name": "FIKRESELAM DEREJE DEJENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115140",
+   "name": "GELILA MESFIN ZERGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115141",
+   "name": "GETAENDALE MESFIN ALEMAYEHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115142",
+   "name": "MERON KIBRET HAILU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115143",
+   "name": "MINTESNOT GEBREMESKEL GEBRESELASSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115144",
+   "name": "NATNAEL SHIFERAW TEKLU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115145",
+   "name": "SISAY BELETE WELDEKIRKOS",
+   "kind": "trainee"
+  },
+  {
+   "id": "115146",
+   "name": "TEBIBU SOLOMON ABREHAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "115147",
+   "name": "TESFAAB LEGESSE ADILE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115148",
+   "name": "TEWELDE GEBRETSAHMA WELDESILASSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115149",
+   "name": "TEZERA BEKELE CHERINET",
+   "kind": "trainee"
+  },
+  {
+   "id": "115150",
+   "name": "TIGIST HABTIE CHANIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115151",
+   "name": "YARED LEGESSE HAILE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115152",
+   "name": "YONAS GETA ASMARE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115153",
+   "name": "YONAS TATEK ZELEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115154",
+   "name": "YONAS TESHOME ESHETU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115155",
+   "name": "YONATHAN SEYOUM YIBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115157",
+   "name": "ABEL AKLILU BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115158",
+   "name": "FIKIR ABEBE AMTATAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "115159",
+   "name": "HUSSEN HASEN HUSSEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115160",
+   "name": "NATNAEL ALEMU DEMISSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115161",
+   "name": "NATNAEL YESHIWAS MERRA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115162",
+   "name": "YETMGETA DEMISSE ALEMNEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "115177",
+   "name": "AGOSTINHO VICTOR MANUEL FALUSSO",
+   "kind": "trainee"
+  },
+  {
+   "id": "115191",
+   "name": "FRANCIS MUTULA AKONKWA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115192",
+   "name": "MUHAMED ABASHAR",
+   "kind": "trainee"
+  },
+  {
+   "id": "115193",
+   "name": "GRACIE MUYEMBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115219",
+   "name": "JULES KAMBERE KARASISI",
+   "kind": "trainee"
+  },
+  {
+   "id": "115227",
+   "name": "ABDOULAYE MAMANE KAKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115228",
+   "name": "AMAN ASSOUAN JEAN-EMMANUEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "115229",
+   "name": "ASSEMIEN MAURICE DANIEL AUREL",
+   "kind": "trainee"
+  },
+  {
+   "id": "115230",
+   "name": "ASSOUMOU ETTIEN ASA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115231",
+   "name": "ASSOUMOU ETHRIE GERARD-MELVIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115232",
+   "name": "DOSSO ABOUBAKAR",
+   "kind": "trainee"
+  },
+  {
+   "id": "115234",
+   "name": "FOFFIE BRINWA ALIX MARIE OLIVE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115235",
+   "name": "KONAN KAN KOUADIO ANGE CHRISTIAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115236",
+   "name": "KONAN YAO JEAN MAX JEREMIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115237",
+   "name": "KONE MAKESSA THERESE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115238",
+   "name": "KOUASSI ATOUHOMAN RENAUD PRINCE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115239",
+   "name": "LOHOUESS ADOU ANGE WILFRIED",
+   "kind": "trainee"
+  },
+  {
+   "id": "115240",
+   "name": "MOLLOU BENIWA ANGE CHRIST-LAURE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115241",
+   "name": "N'GUETTIA ABENAN YEMAH ANNE-CHRISTELLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115242",
+   "name": "SANGARE MEMA LADJI MOHAMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "115243",
+   "name": "TALL IBRAHIM",
+   "kind": "trainee"
+  },
+  {
+   "id": "115244",
+   "name": "YAVO EMMANUEL FORTUNAT",
+   "kind": "trainee"
+  },
+  {
+   "id": "115360",
+   "name": "MOHAMED MOUSSA SEYNI",
+   "kind": "trainee"
+  },
+  {
+   "id": "115381",
+   "name": "ABDOUL AZIZ MOUSSA MOUMOUNI",
+   "kind": "trainee"
+  },
+  {
+   "id": "115382",
+   "name": "ABDOUL AZIZ NOUHOU ADAMOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115383",
+   "name": "ABDOUL MADJID ABOUBACAR MOUSSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115384",
+   "name": "ABDOURAHAMANE IDRISSA AROUNA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115385",
+   "name": "ABOUBACAR TOUKOU HABI",
+   "kind": "trainee"
+  },
+  {
+   "id": "115386",
+   "name": "AMINA SOULEY ABDOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115387",
+   "name": "AMR DIT MOUSSA ISSOUFOU IDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115388",
+   "name": "DJAFAROU OUMAROU IBRAHIM",
+   "kind": "trainee"
+  },
+  {
+   "id": "115389",
+   "name": "KASSOUM GADO DANZAMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115390",
+   "name": "MAMAN MOUSTAPHA MAMAN RABIOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115391",
+   "name": "MOUSTAFA DADI BARMOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115392",
+   "name": "MOUSTAPHA YOUNSA SEYBOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115393",
+   "name": "SAMINOU DAOUDA ISSAKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115394",
+   "name": "YASSIM HAROUNA KOUASSI",
+   "kind": "trainee"
+  },
+  {
+   "id": "115395",
+   "name": "JOSEPH KUNABA BIJA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115402",
+   "name": "MURIEL ARCHANCHE SEDJRO MONKOUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115703",
+   "name": "ABDOUL MAJID SADOU YAMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115704",
+   "name": "AMADOU MAHAMADOU BOUKARY",
+   "kind": "trainee"
+  },
+  {
+   "id": "115706",
+   "name": "BEVERLY AKPADIAHA ABAKASANGA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115707",
+   "name": "BILAL MOHAMED HALIDOU",
+   "kind": "trainee"
+  },
+  {
+   "id": "115708",
+   "name": "BLESSING ENE ETIM",
+   "kind": "trainee"
+  },
+  {
+   "id": "115709",
+   "name": "BRACHA BARAKA MARCOS",
+   "kind": "trainee"
+  },
+  {
+   "id": "115710",
+   "name": "EDIDIONG DANIEL ETUK",
+   "kind": "trainee"
+  },
+  {
+   "id": "115711",
+   "name": "EDIKAN WILFRED DAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115712",
+   "name": "EMMANUEL DANIEL BASSEY",
+   "kind": "trainee"
+  },
+  {
+   "id": "115713",
+   "name": "FLORIEN ABENA KUMIWAA AGYEKUM",
+   "kind": "trainee"
+  },
+  {
+   "id": "115714",
+   "name": "GLORY BASSEY ARCHIBONG",
+   "kind": "trainee"
+  },
+  {
+   "id": "115715",
+   "name": "IMA-OBONG BASSEY ESSIENETTE",
+   "kind": "trainee"
+  },
+  {
+   "id": "115716",
+   "name": "MFON-ABASI KOKO JOHN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115717",
+   "name": "MOUSTAPHA IBRAHIM IDRISSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "115719",
+   "name": "RICH ERNEST BASSEY",
+   "kind": "trainee"
+  },
+  {
+   "id": "115720",
+   "name": "RODOLPHO AKAKPO",
+   "kind": "trainee"
+  },
+  {
+   "id": "115721",
+   "name": "UDEME EMMANUEL JOHN",
+   "kind": "trainee"
+  },
+  {
+   "id": "115723",
+   "name": "SANGARE AICHA LAURE MOUNIRAH",
+   "kind": "trainee"
+  },
+  {
+   "id": "115724",
+   "name": "OUATTARA N'KLO YVES",
+   "kind": "trainee"
+  },
+  {
+   "id": "116138",
+   "name": "TANFLOTIEN AXEL ERIC JUNIOR",
+   "kind": "trainee"
+  },
+  {
+   "id": "116139",
+   "name": "KRAGBA JEAN MICHEL",
+   "kind": "trainee"
+  },
+  {
+   "id": "116140",
+   "name": "BAUGNY YAPO JEAN PHILIPPE MATHURIN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116141",
+   "name": "KONATE ILIYASS",
+   "kind": "trainee"
+  },
+  {
+   "id": "116142",
+   "name": "ASSOMA EDI LAVRY MARTINIEN EUDES",
+   "kind": "trainee"
+  },
+  {
+   "id": "116143",
+   "name": "CAMARA PENANTCHIONRON SIAKA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116144",
+   "name": "N'GUESSAN KOKO AUDREY ESTHER",
+   "kind": "trainee"
+  },
+  {
+   "id": "116145",
+   "name": "ZELI ZEBA SYNTYCHE JEMIMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116146",
+   "name": "OKPO GUIEGUI CHARLES ANDERSON",
+   "kind": "trainee"
+  },
+  {
+   "id": "116147",
+   "name": "BAYA KOFFI KOUADIO JEAN-MARC",
+   "kind": "trainee"
+  },
+  {
+   "id": "116148",
+   "name": "GOGBE SAMUEL AXEL JORDY",
+   "kind": "trainee"
+  },
+  {
+   "id": "116149",
+   "name": "KRA KOFFI EMMANUEL JEAN PHILIPPE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116150",
+   "name": "N'GUESSAN KOUADIO JONATHAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116183",
+   "name": "GOH YENESSOU ASRAT",
+   "kind": "trainee"
+  },
+  {
+   "id": "116184",
+   "name": "MERKEB MESFIN MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116185",
+   "name": "EFRATA TAMIRAT GEBRU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116186",
+   "name": "ABRHAM MENGISTU ZELALEM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116187",
+   "name": "TSINAT MENGESHA MOLLA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116188",
+   "name": "DANIEL AMARE TAFESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116189",
+   "name": "REDIAT SISAY DESALEGN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116190",
+   "name": "BEZAWIT SOLOMON MEBRATU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116191",
+   "name": "SURAFAEL ASEGID ANTENEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "116192",
+   "name": "LENCHO DEREJE FUTASSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116193",
+   "name": "HUNDUMA YADTEA TURE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116194",
+   "name": "BIYAOL ETEFA ALI",
+   "kind": "trainee"
+  },
+  {
+   "id": "116195",
+   "name": "SOLOMON SHIBESHE TEFERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116196",
+   "name": "YEKINA YASIN ABAGARO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116197",
+   "name": "YADESA BIRHANU SAKETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116198",
+   "name": "ANANIYA SINTAYEHU TULU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116199",
+   "name": "BIRUK TASEW MEKURIYA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116200",
+   "name": "NAOL MESTIRU TOLESA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116201",
+   "name": "NEBIL NUREDIN ABAFITA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116202",
+   "name": "HUNDAOL GIRMA MEGERSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116203",
+   "name": "BILISUMA BEFIKADU BAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116204",
+   "name": "ELIAS BEHAILU EPRHEM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116205",
+   "name": "MULAT ASCHALE NEGESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116206",
+   "name": "GIRUM SITOTA TILAHUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116207",
+   "name": "SULTAN ABDINASIR MOHAMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "116208",
+   "name": "KALEB ALEM TESFAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116209",
+   "name": "NAHOM ESAYAS WOLDU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116210",
+   "name": "SEMAHEGN DEMEKE GADABO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116211",
+   "name": "SALEAMLAK ASSEFA TEMI",
+   "kind": "trainee"
+  },
+  {
+   "id": "116212",
+   "name": "ABDULAZIZ MOHAMMED YIMAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116213",
+   "name": "MILKA FASIKA GEBRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116214",
+   "name": "TEWODROS YENESEW DESSIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116215",
+   "name": "SAMUEL KASAHUN ZEGEYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116216",
+   "name": "BEZA TEKEBA MARYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116217",
+   "name": "KIDUS TESFAYE ZEWDIE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116218",
+   "name": "HENOK SIME ABEBE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116219",
+   "name": "ERMIAS SOLOMON HAILU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116220",
+   "name": "DAGMAWI MELAKU FANTAHUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116221",
+   "name": "ABENEZER BEFEKADU KBEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116222",
+   "name": "KIBREAB SELLO SHEGE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116223",
+   "name": "EYERUSALEM FRESENBET CHAMISO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116224",
+   "name": "ZULAL ADEM AWOL",
+   "kind": "trainee"
+  },
+  {
+   "id": "116225",
+   "name": "DAWIT HAILU BIRHANU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116226",
+   "name": "JOSSI OUMER EBRAHIM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116227",
+   "name": "YOHANNES DEJENE HABTEWOLD",
+   "kind": "trainee"
+  },
+  {
+   "id": "116228",
+   "name": "HENOK ANDUALEM REDA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116229",
+   "name": "BETHELHEM ZEWDE GEBRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116230",
+   "name": "ABENEZER NIGUSSIE ADUGNA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116231",
+   "name": "ARIF ABDI MOHAMMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "116232",
+   "name": "METI AMSALU WORKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116233",
+   "name": "NAOL WALTAJI TUFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116234",
+   "name": "MICHAEL ARGAW DAMITE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116235",
+   "name": "NOTE TARIKU TEFERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116236",
+   "name": "AMDEWORK TADELE EMUNU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116237",
+   "name": "NEAMIN ASSEFA ABEGAZ",
+   "kind": "trainee"
+  },
+  {
+   "id": "116238",
+   "name": "YOHANNES MOGES LUAULSEGED",
+   "kind": "trainee"
+  },
+  {
+   "id": "116239",
+   "name": "AMANUEL TILAYE MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116240",
+   "name": "FEKRESELASSIE SOLOMON MULU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116241",
+   "name": "FILIMON ZEKARIYAS ADMASU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116242",
+   "name": "LIDETU AMARE BIZUNEH",
+   "kind": "trainee"
+  },
+  {
+   "id": "116243",
+   "name": "MIKIAS KEBEDE BESHAH",
+   "kind": "trainee"
+  },
+  {
+   "id": "116244",
+   "name": "YINEBEB BAHIRU ZELEKE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116245",
+   "name": "BIRUK WELDE GEBRE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116246",
+   "name": "WILLIAM HABTAMU HUNDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116247",
+   "name": "LIBEN DOYO HARGSSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116248",
+   "name": "NAOL TEGENE LEGESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116249",
+   "name": "BESUFIKAD GIRMA TADELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116250",
+   "name": "GURMESSA GARRAMU NEGASA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116251",
+   "name": "HERMELLA H/GIORGIS LEMMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116252",
+   "name": "SIMERA KENO MAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116253",
+   "name": "YENEZER GETACHEW AYELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116254",
+   "name": "SEGNI FEYISA KENEA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116255",
+   "name": "YOHANNIS HAILE GONFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116256",
+   "name": "BEKA TILAHUN KOPESSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116257",
+   "name": "FIRROMSA FEYISSA GUTA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116258",
+   "name": "NAHIMIYA TEFERI TEFE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116259",
+   "name": "FETI ZIYAD IBIRAHIM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116260",
+   "name": "SAMUEL GETU BORENA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116261",
+   "name": "AMANUEL ALEMBRHAN DUGUMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116262",
+   "name": "KALID MUKTAR ADNAN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116263",
+   "name": "SAMSON GIZAW GIRMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116264",
+   "name": "EYASU MOLLA ABREHA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116265",
+   "name": "EYUEL ENDASHAW KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116266",
+   "name": "KOKOB BERIHU SBHAT",
+   "kind": "trainee"
+  },
+  {
+   "id": "116267",
+   "name": "BISERAT GETNET AYANAW",
+   "kind": "trainee"
+  },
+  {
+   "id": "116268",
+   "name": "HILINA ALENE BIRHANU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116269",
+   "name": "KALAB WASSIE ADMASSU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116270",
+   "name": "MINTAYITOT MINTESINOT TESHOME",
+   "kind": "trainee"
+  },
+  {
+   "id": "116271",
+   "name": "AGUMAS DESALEW AYELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116272",
+   "name": "AMANUEL ASRAT DESU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116273",
+   "name": "MATUSALA SENIBT TADESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116274",
+   "name": "NETSANET KASAHUN ABATE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116275",
+   "name": "ELBETHEL HAILE TEPAMO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116276",
+   "name": "MEBRATU DEJENE SHIRANGO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116277",
+   "name": "AMANUEL YOHANNES KENORE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116278",
+   "name": "WENGEL TESFAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116279",
+   "name": "MICHAEL DANIEL BELETE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116280",
+   "name": "ABRAHAM REGASA GEMEDA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116281",
+   "name": "GADA DIBA BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116282",
+   "name": "HAWI HABULU GOGOSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116283",
+   "name": "NAOL ABEBE BEYENE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116284",
+   "name": "KALEAB ZELALEM GEBEYEHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116285",
+   "name": "SURAFEL MEBRATU DINKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116286",
+   "name": "ABENEZER GETACHEW CHALA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116287",
+   "name": "NATHNAEL DEFARU TESEMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116288",
+   "name": "BEEMNET AMEHA BOGALE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116289",
+   "name": "FIRAOL FAYERA FUFA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116290",
+   "name": "MEKLIT GIRMA DERESA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116291",
+   "name": "BIRUK HAILU HASEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116292",
+   "name": "SELAMAWIT TAMENE TESSEMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116293",
+   "name": "KIRUBEL DEKE DEBELA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116294",
+   "name": "KIRUBEL ABEBE LEGESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116295",
+   "name": "ABEL GIRME TAFERE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116296",
+   "name": "BIRUK MULUGETA ZERFU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116297",
+   "name": "AMANUEL DAWIT YEMANEAB",
+   "kind": "trainee"
+  },
+  {
+   "id": "116298",
+   "name": "EFRON TILAHUN TESFAYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116299",
+   "name": "NAHOM TEKALGN LEMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116300",
+   "name": "ABEBE MEGBAR ALEMU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116301",
+   "name": "HAILKEMESKEL YILMA TADESSE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116302",
+   "name": "ABTSEGA GEREWEW AWAKU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116303",
+   "name": "ANTENEH TESFAYE GIBA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116304",
+   "name": "TEMESGEN DAGINET DESTA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116305",
+   "name": "AHMED ABDULHAKIM ABIBEKER",
+   "kind": "trainee"
+  },
+  {
+   "id": "116306",
+   "name": "FANUEL PETROS H/YESUS",
+   "kind": "trainee"
+  },
+  {
+   "id": "116307",
+   "name": "BEREKET TESFAYE KEBEDE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116308",
+   "name": "ENYABIN BAYISA DEMASA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116309",
+   "name": "EPAPHARA DIRIBA NEGASA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116310",
+   "name": "FARHAN MOHAMMED ABAS",
+   "kind": "trainee"
+  },
+  {
+   "id": "116311",
+   "name": "FIRAOL ADARSA MEGERSA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116312",
+   "name": "KALEAB ADISU AMINEW",
+   "kind": "trainee"
+  },
+  {
+   "id": "116313",
+   "name": "OLANA TARESA DABA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116314",
+   "name": "SAMUEL NEGASH ALALEQE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116315",
+   "name": "SIFAN ISRAEL KENO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116316",
+   "name": "TEMESGEN NAMIE GELETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116317",
+   "name": "YOAKIN MESFIN KIFLE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116318",
+   "name": "YONAS ABEBE YIMAM",
+   "kind": "trainee"
+  },
+  {
+   "id": "116319",
+   "name": "MEGERSA LAMESSA ABERA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116320",
+   "name": "CHERNET TAFESSE BOE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116321",
+   "name": "EPHREM ABEBE GENEBO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116322",
+   "name": "AKSUMAWIT YEMANE FISEHATSION",
+   "kind": "trainee"
+  },
+  {
+   "id": "116323",
+   "name": "SULEYMAN HABIB BOLKO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116324",
+   "name": "BETHLEHEM MESFIN FEKADE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116325",
+   "name": "HAILEMICHAEL MULUGETA AYANA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116326",
+   "name": "HERMELA ADDISU SEID",
+   "kind": "trainee"
+  },
+  {
+   "id": "116327",
+   "name": "MOA ANTENEH WASIHUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116328",
+   "name": "YORDANOS SHABA MEKONNEN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116329",
+   "name": "AMANUEL KETEMA TESEMA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116330",
+   "name": "DANIEL MARKOS TESHOME",
+   "kind": "trainee"
+  },
+  {
+   "id": "116331",
+   "name": "ABENEZER NEGASH DUGO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116332",
+   "name": "SAMUEL WONDIMU TAKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116333",
+   "name": "YOSEPH AKLILU AGO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116334",
+   "name": "DAGMAWI SEIFE AMBYE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116335",
+   "name": "FEYISA EFREM GARI",
+   "kind": "trainee"
+  },
+  {
+   "id": "116336",
+   "name": "JARA MESFIN LEGESE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116337",
+   "name": "DAGAGA TAKELE BEKELE",
+   "kind": "trainee"
+  },
+  {
+   "id": "116338",
+   "name": "JIMA GOBENA MIDEKSO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116339",
+   "name": "ROBERA ALEMU OLANA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116340",
+   "name": "BESUFIKAD TADELE AHMED",
+   "kind": "trainee"
+  },
+  {
+   "id": "116341",
+   "name": "BEHAILU BEDADA KORICHO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116342",
+   "name": "YOHANIS TAMANE GEBEYEHU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116343",
+   "name": "ABDI MOHAMMED CHURU",
+   "kind": "trainee"
+  },
+  {
+   "id": "116344",
+   "name": "REDIET BEHARU SENBETA",
+   "kind": "trainee"
+  },
+  {
+   "id": "116345",
+   "name": "DESTA FUTE GURARO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116346",
+   "name": "ABEBE ASEFA DIRAGO",
+   "kind": "trainee"
+  },
+  {
+   "id": "116347",
+   "name": "MUSTEFI HASSEN ABDILAHI",
+   "kind": "trainee"
+  },
+  {
+   "id": "116348",
+   "name": "MARAMAWIT BIRHANE G/HIWOT",
+   "kind": "trainee"
+  },
+  {
+   "id": "116349",
+   "name": "ESAYAS BAHTA KASSAHUN",
+   "kind": "trainee"
+  },
+  {
+   "id": "116350",
+   "name": "MIHRET BIZUAYEHU HAILEMICHAEL",
+   "kind": "trainee"
+  }
+ ],
+ "history": []
+}
