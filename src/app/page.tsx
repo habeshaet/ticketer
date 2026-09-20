@@ -227,11 +227,11 @@ export default function ComposePage() {
   }, [data, isDorm]);
 
   const mailtoHref = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set("subject", email.subject);
-    params.set("body", email.body);
-    if (recipients.cc) params.set("cc", recipients.cc);
-    return `mailto:${encodeURIComponent(recipients.to)}?${params.toString()}`;
+    return buildMailto(recipients.to, {
+      subject: email.subject,
+      body: email.body,
+      cc: recipients.cc,
+    });
   }, [email, recipients]);
 
   const mailtoTooLong = mailtoHref.length > MAILTO_SAFE_LENGTH;
