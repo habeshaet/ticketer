@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { NavBar } from "@/components/NavBar";
+import { SetupGate } from "@/components/SetupGate";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +34,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className="text-slate-900 antialiased">
         <NavBar />
-        <main className="mx-auto max-w-[1600px] px-4 py-6">{children}</main>
+        <main className="mx-auto max-w-[1600px] px-4 py-6">
+          <SetupGate>{children}</SetupGate>
+        </main>
       </body>
     </html>
   );

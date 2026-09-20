@@ -61,15 +61,13 @@ Vercel's free plan does not include a database, so use **Neon** (free tier):
 
 ### 4. Create the tables (once)
 
-Open a terminal and run this once, with your own Vercel address:
+Open your Vercel address in a browser. The app notices the tables are missing
+and shows a **“Finish the setup”** screen with one button —
+**Create the tables now**. Press it and you are done.
 
-```bash
-curl -X POST https://your-app.vercel.app/api/setup
-```
+(If you prefer a terminal: `curl -X POST https://your-app.vercel.app/api/setup`.)
 
-You should see `{"ok":true,"flights":18,"people":13}`. This creates the tables
-and loads the starting lists. Running it again is harmless — it never
-overwrites data you have entered.
+Running it twice is harmless — it never overwrites data you have entered.
 
 ### 5. Set it up for your team
 
@@ -92,6 +90,36 @@ Then load your real people on **Directory** and your real flights on
 Tap **Open in Outlook** to hand the finished mail to the Outlook app. For a
 long message use **Copy body** and paste into Outlook instead — iOS truncates
 very long `mailto:` links, and the app warns you when that is likely.
+
+---
+
+## If the deployment fails
+
+**`Error: DATABASE_URL is not set` during the build**
+
+The variable is missing, or it was added *after* the last deployment.
+Environment variables are only picked up by a **new** build.
+
+1. Vercel → your project → **Settings → Environment Variables**
+2. Add `DATABASE_URL` with the Neon string
+3. Tick **Production**, **Preview** *and* **Development** — Vercel keeps them
+   separate, and a missing tick is the usual cause of this error coming back
+4. **Deployments** → the most recent one → the **⋯** menu → **Redeploy**
+
+**`password authentication failed` or `connection refused`**
+
+The string was copied incompletely. Neon shows it in one line — take the whole
+thing, including `?sslmode=require` at the end. In Neon use the connection
+string **with a password shown**, not the one with `[YOUR-PASSWORD]` as a
+placeholder.
+
+**The site loads but says “Connect a database”**
+
+The build succeeded without the variable. Follow the four steps above.
+
+**The site loads but says “Finish the setup”**
+
+Normal on a brand-new database. Press **Create the tables now**.
 
 ---
 

@@ -28,7 +28,7 @@ import urllib.parse
 import webbrowser
 
 APP_NAME = "Ticket Mailer"
-APP_VERSION = "2.1"
+APP_VERSION = "4.2"
 DATA_FILENAME = "ticket_mailer_data.json"
 NL = chr(10)
 
@@ -576,7 +576,7 @@ def format_date(iso):
     day = to_date(iso)
     if day is None:
         return str(iso)
-    return MONTHS[day.month - 1] + " " + str(day.day) + ", " + str(day.year)
+    return MONTHS[day.month - 1] + " " + str(day.day) + "," + str(day.year)
 
 
 def date_phrase(iso, today=None):

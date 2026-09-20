@@ -108,6 +108,32 @@ check("the readme is honest about there being no login",
 check("a missing DATABASE_URL is explained clearly",
       "Environment Variables" in read("src", "db", "index.ts"))
 
+print("\nA fresh deployment cannot fail at build time")
+DBINDEX = read("src", "db", "index.ts")
+check("the database client is built lazily, not on import",
+      "new Proxy" in DBINDEX and "function makePool" in DBINDEX)
+check("nothing throws while the module is being imported",
+      not re.search(r"^\s*throw new Error", DBINDEX, re.M)
+      or "function makePool" in DBINDEX.split("throw new Error")[0])
+check("TLS is switched on for hosted Postgres",
+      "sslmode=require" in DBINDEX and "neon" in DBINDEX
+      and "ssl:" in DBINDEX)
+check("the pool is kept small for serverless", "max: 3" in DBINDEX)
+check("a status endpoint reports what is wrong",
+      os.path.exists(os.path.join(ROOT, "src", "app", "api", "status", "route.ts")))
+STATUS = read("src", "app", "api", "status", "route.ts")
+check("it tells apart: no variable, no tables, cannot connect",
+      all(s in STATUS for s in ('"env"', '"setup"', '"connect"', '"ready"')))
+check("a setup screen is shown instead of a crash",
+      os.path.exists(os.path.join(ROOT, "src", "components", "SetupGate.tsx"))
+      and "SetupGate" in read("src", "app", "layout.tsx"))
+check("the setup screen can create the tables itself",
+      "/api/setup" in read("src", "components", "SetupGate.tsx"))
+check("the readme covers the build error",
+      "DATABASE_URL is not set" in README and "Redeploy" in README)
+check("the readme warns about ticking all three environments",
+      "Production" in README and "Preview" in README and "Development" in README)
+
 print("\nBranding carried over")
 check("the airline logo is served", os.path.exists(os.path.join(ROOT, "public", "logo.png")))
 check("the logo is in the header", 'src="/logo.png"' in read("src", "components", "NavBar.tsx"))
