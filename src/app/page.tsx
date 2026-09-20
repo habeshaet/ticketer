@@ -277,6 +277,7 @@ export default function ComposePage() {
         return;
       }
     }
+    saveToHistory(true);
   }
 
   function toggleFlight(no: string) {
@@ -361,31 +362,31 @@ export default function ComposePage() {
     }
   }
 
-  async function saveToHistory() {
-    if (hasNoNames) {
-      const confirmed = window.confirm(
-        `Warning: No ${missingLabel} have been added.\n\nSave to history anyway?`
-      );
-      if (!confirmed) {
-        setToast(`⚠️ Please add ${missingLabel} first.`);
-        return;
-      }
+  async function saveToHistory(silent = false) {
+    try {
+      await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind,
+          reasonKey: kind === "new_ticket" ? reasonKey : "",
+          reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
+          origin: isMulti ? route.split("-")[0] : origin,
+          destination: isMulti ? route.split("-").slice(-1)[0] : destination,
+          departureDate,
+          daypart: daypart === "any" ? "" : daypart,
+          chargeCode,
+          flightNos: isMulti ? legs.flatMap((l) => l.flights) : flightNos,
+          ticketNumbers,
+          passengers,
+          subject: email.subject,
+          body: email.body,
+        }),
+      });
+      if (!silent) setToast("Saved to history ✔");
+    } catch {
+      if (!silent) setToast("Could not save to history");
     }
-    const res = await fetch("/api/requests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind, reasonKey: kind === "new_ticket" ? reasonKey : "",
-        reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
-        origin: isMulti ? route.split("-")[0] : origin,
-        destination: isMulti ? route.split("-").slice(-1)[0] : destination,
-        departureDate, daypart: daypart === "any" ? "" : daypart,
-        chargeCode, flightNos: isMulti ? legs.flatMap((l) => l.flights) : flightNos,
-        ticketNumbers, passengers,
-        subject: email.subject, body: email.body,
-      }),
-    });
-    setToast(res.ok ? "Saved to history ✔" : "Could not save");
   }
 
   if (!data) {
@@ -782,22 +783,27 @@ export default function ComposePage() {
         ) : null}
         <div className="mt-3 grid grid-cols-2 gap-2">
           <a
-            className={`${btn} min-h-[48px]`}
+            className={`${btn} col-span-2 min-h-[48px]`}
             href={mailtoHref}
             onClick={handleOpenOutlook}
           >
             ✉ Open in Outlook
           </a>
-          <button type="button" className={`${btnGhost} min-h-[48px]`}
-                  onClick={() => copy(email.body, "Body")}>
+          <button
+            type="button"
+            className={`${btnGhost} min-h-[44px]`}
+            onClick={() => copy(email.body, "Body")}
+          >
             Copy body
           </button>
-          <button type="button" className={btnGhost}
-                  onClick={() => copy(`Subject: ${email.subject}\n\n${email.body}`, "Subject + body")}>
+          <button
+            type="button"
+            className={`${btnGhost} min-h-[44px]`}
+            onClick={() =>
+              copy(`Subject: ${email.subject}\n\n${email.body}`, "Subject + body")
+            }
+          >
             Copy all
-          </button>
-          <button type="button" className={btnGhost} onClick={saveToHistory}>
-            Save to history
           </button>
         </div>
         {mailtoTooLong ? (
