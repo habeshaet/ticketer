@@ -11,30 +11,77 @@ const LINKS = [
   { href: "/history", label: "History" },
 ];
 
+export const THEMES = [
+  {
+    id: "emerald",
+    name: "Emerald",
+    color: "#059669",
+    description: "Classic aviation green",
+  },
+  {
+    id: "indigo",
+    name: "Indigo",
+    color: "#4f46e5",
+    description: "Royal navy & indigo",
+  },
+  {
+    id: "amber",
+    name: "Amber",
+    color: "#d97706",
+    description: "Warm gold & amber",
+  },
+  {
+    id: "rose",
+    name: "Rose",
+    color: "#e11d48",
+    description: "Vibrant ruby crimson",
+  },
+] as const;
+
+export type ThemeId = (typeof THEMES)[number]["id"];
+
 export function NavBar() {
   const pathname = usePathname();
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [colorTheme, setColorTheme] = useState<ThemeId>("emerald");
+  const [mode, setMode] = useState<"light" | "dark">("light");
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
 
-    const saved = localStorage.getItem("tm_theme");
+    // Load color theme
+    const savedTheme = localStorage.getItem("tm_color_theme") as ThemeId;
+    if (savedTheme && THEMES.some((t) => t.id === savedTheme)) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      setColorTheme(savedTheme);
+    } else {
+      document.documentElement.setAttribute("data-theme", "emerald");
+      setColorTheme("emerald");
+    }
+
+    // Load light/dark mode
+    const savedMode = localStorage.getItem("tm_theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = saved === "dark" || (!saved && prefersDark);
+    const isDark = savedMode === "dark" || (!savedMode && prefersDark);
     if (isDark) {
       document.documentElement.classList.add("dark");
-      setTheme("dark");
+      setMode("dark");
     } else {
       document.documentElement.classList.remove("dark");
-      setTheme("light");
+      setMode("light");
     }
   }, []);
 
-  function toggleTheme() {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
+  function selectTheme(themeId: ThemeId) {
+    setColorTheme(themeId);
+    document.documentElement.setAttribute("data-theme", themeId);
+    localStorage.setItem("tm_color_theme", themeId);
+  }
+
+  function toggleMode() {
+    const next = mode === "light" ? "dark" : "light";
+    setMode(next);
     if (next === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem("tm_theme", "dark");
@@ -90,14 +137,53 @@ export function NavBar() {
               );
             })}
           </nav>
+
+          {/* Theme selector (maximum 4 contrasting themes) */}
+          <div
+            className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50/90 p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900/90"
+            role="radiogroup"
+            aria-label="Color themes"
+          >
+            {THEMES.map((t) => {
+              const isSelected = colorTheme === t.id;
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={isSelected}
+                  onClick={() => selectTheme(t.id)}
+                  aria-label={`${t.name} theme: ${t.description}`}
+                  title={`${t.name} theme - ${t.description}`}
+                  className={`relative flex h-7 w-7 items-center justify-center rounded-lg transition-all ${
+                    isSelected
+                      ? "scale-110 shadow-sm ring-2 ring-slate-400 dark:ring-slate-300"
+                      : "opacity-60 hover:scale-105 hover:opacity-100"
+                  }`}
+                >
+                  <span
+                    className="h-4 w-4 rounded-full shadow-inner transition-transform"
+                    style={{ backgroundColor: t.color }}
+                  />
+                  {isSelected ? (
+                    <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow">
+                      ✓
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Dark / Light mode toggle */}
           <button
             type="button"
-            onClick={toggleTheme}
-            aria-label="Toggle theme"
-            title={theme === "light" ? "Switch to dark theme" : "Switch to light theme"}
+            onClick={toggleMode}
+            aria-label="Toggle dark mode"
+            title={mode === "light" ? "Switch to dark theme" : "Switch to light theme"}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-600 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 hover:text-slate-900"
           >
-            {theme === "light" ? (
+            {mode === "light" ? (
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
