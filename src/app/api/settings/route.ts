@@ -28,6 +28,8 @@ export async function PUT(request: Request) {
     defaultChargeCode: str(body.defaultChargeCode).toUpperCase(),
     toEmails: str(body.toEmails),
     ccEmails: str(body.ccEmails),
+    rebookToEmails: str(body.rebookToEmails),
+    rebookCcEmails: str(body.rebookCcEmails),
     dormToEmails: str(body.dormToEmails),
     dormCcEmails: str(body.dormCcEmails),
     myEmail: str(body.myEmail),

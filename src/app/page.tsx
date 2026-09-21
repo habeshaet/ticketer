@@ -238,14 +238,26 @@ export default function ComposePage() {
   const recipients = useMemo(() => {
     const s = data?.settings;
     if (!s) return { to: "", cc: "", label: "Ticketing group" };
-    const to = isDorm ? s.dormToEmails : s.toEmails;
-    const cc = isDorm ? s.dormCcEmails : s.ccEmails;
+    const to = isDorm
+      ? s.dormToEmails
+      : isRebook
+      ? (s.rebookToEmails || s.toEmails)
+      : s.toEmails;
+    const cc = isDorm
+      ? s.dormCcEmails
+      : isRebook
+      ? (s.rebookCcEmails || s.ccEmails)
+      : s.ccEmails;
     return {
       to: stripSelf(to, s.myEmail),
       cc: stripSelf(cc, s.myEmail),
-      label: isDorm ? "Dormitory group" : "Ticketing group",
+      label: isDorm
+        ? "Dormitory group"
+        : isRebook
+        ? "Rebooking group"
+        : "Ticketing group",
     };
-  }, [data, isDorm]);
+  }, [data, isDorm, isRebook]);
 
   const mailtoHref = useMemo(() => {
     return buildMailto(recipients.to, {

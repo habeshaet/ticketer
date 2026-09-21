@@ -122,6 +122,8 @@ export const SEED_SETTINGS = {
   defaultChargeCode: "EAAMG969",
   toEmails: "",
   ccEmails: "",
+  rebookToEmails: "",
+  rebookCcEmails: "",
   dormToEmails: "",
   dormCcEmails: "",
   myEmail: "",

@@ -26,6 +26,12 @@ export async function ensureDatabaseColumns() {
     await db.execute(
       sql`alter table settings add column if not exists admin_password text not null default 'admin123'`,
     );
+    await db.execute(
+      sql`alter table settings add column if not exists rebook_to_emails text not null default ''`,
+    );
+    await db.execute(
+      sql`alter table settings add column if not exists rebook_cc_emails text not null default ''`,
+    );
     columnsChecked = true;
   } catch {
     // ignore if table doesn't exist yet (e.g. before initial setup)

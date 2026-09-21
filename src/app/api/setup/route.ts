@@ -83,6 +83,8 @@ export async function POST() {
     // Columns added after the first release. Running this on an older
     // database upgrades it in place without losing anything.
     const laterColumns = [
+      "rebook_to_emails text not null default ''",
+      "rebook_cc_emails text not null default ''",
       "dorm_to_emails text not null default ''",
       "dorm_cc_emails text not null default ''",
       "my_email text not null default ''",

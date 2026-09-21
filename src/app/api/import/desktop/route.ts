@@ -25,6 +25,8 @@ const SETTINGS_FIELDS = [
   "defaultChargeCode",
   "toEmails",
   "ccEmails",
+  "rebookToEmails",
+  "rebookCcEmails",
   "dormToEmails",
   "dormCcEmails",
   "myEmail",

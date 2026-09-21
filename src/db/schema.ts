@@ -54,9 +54,12 @@ export const reasons = pgTable("reasons", {
 export const settings = pgTable("settings", {
   id: integer("id").primaryKey().default(1),
   defaultChargeCode: text("default_charge_code").notNull().default("EAAMG969"),
-  // ticketing group - new tickets and rebooking
+  // ticketing group - new tickets
   toEmails: text("to_emails").notNull().default(""),
   ccEmails: text("cc_emails").notNull().default(""),
+  // rebooking group - rebooking requests
+  rebookToEmails: text("rebook_to_emails").notNull().default(""),
+  rebookCcEmails: text("rebook_cc_emails").notNull().default(""),
   // dormitory group - dormitory requests only
   dormToEmails: text("dorm_to_emails").notNull().default(""),
   dormCcEmails: text("dorm_cc_emails").notNull().default(""),

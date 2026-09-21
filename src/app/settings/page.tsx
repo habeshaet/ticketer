@@ -154,7 +154,7 @@ export default function SettingsPage() {
           </Field>
           <div className="rounded-xl border border-slate-200 p-3">
             <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
-              Ticketing group — new tickets &amp; rebooking
+              New ticket group — new tickets only
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Send to">
@@ -169,6 +169,31 @@ export default function SettingsPage() {
                   value={settings.ccEmails}
                   onChange={(e) => setSettings({ ...settings, ccEmails: e.target.value })}
                   placeholder="supervisor@example.com"
+                />
+              </Field>
+            </div>
+          </div>
+          <div className="rounded-xl border border-slate-200 p-3">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wide text-slate-500">
+              Rebooking group — rebooking requests only
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="Send to" hint="Leave empty to use the New Ticket address">
+                <TextInput
+                  value={settings.rebookToEmails ?? ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, rebookToEmails: e.target.value })
+                  }
+                  placeholder="rebooking@example.com"
+                />
+              </Field>
+              <Field label="Cc" hint="Leave empty to use the New Ticket Cc">
+                <TextInput
+                  value={settings.rebookCcEmails ?? ""}
+                  onChange={(e) =>
+                    setSettings({ ...settings, rebookCcEmails: e.target.value })
+                  }
+                  placeholder="rebook-supervisor@example.com"
                 />
               </Field>
             </div>
@@ -189,6 +214,7 @@ export default function SettingsPage() {
                 <TextInput
                   value={settings.dormCcEmails}
                   onChange={(e) => setSettings({ ...settings, dormCcEmails: e.target.value })}
+                  placeholder="dormitory-warden@example.com"
                 />
               </Field>
             </div>

@@ -41,6 +41,8 @@ export type Settings = {
   defaultChargeCode: string;
   toEmails: string;
   ccEmails: string;
+  rebookToEmails?: string;
+  rebookCcEmails?: string;
   dormToEmails: string;
   dormCcEmails: string;
   myEmail: string;
