@@ -383,7 +383,7 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
 
   if (input.kind === "new_ticket") {
     bodyTemplate = bodyTemplate.replace(
-      /(?:Please\s+)?process\s+(?:(?:one-way|one way|two-way|two way|2-way|round-trip|round trip)\s+)?ticket/gi,
+      /(?:Please\s+)?process\s+(?:(?:one-way|one way|two-way|two way|2-way|round-trip|round trip|roundtrip)\s+)?ticket/gi,
       (match) => {
         const hasPlease = /^please\s+/i.test(match);
         return hasPlease ? `Please process ${ticketType}` : `process ${ticketType}`;
