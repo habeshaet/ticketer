@@ -2,11 +2,15 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { flights } from "@/db/schema";
 import { parseFlightsText } from "@/lib/parseFlights";
-import { badRequest, json, str } from "@/lib/server";
+import { badRequest, json, str, unauthorized, verifyAdmin } from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to import flights");
+  }
+
   const body = await request.json().catch(() => null);
   if (!body) return badRequest("Invalid JSON body");
   const text = str(body.text);

@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import { flights, people } from "@/db/schema";
 import { card } from "@/components/uiServer";
+import { DesktopImportCard } from "@/components/DesktopImportCard";
 
 export const dynamic = "force-dynamic";
 
@@ -89,6 +90,8 @@ export default async function ToolsPage() {
           ))}
         </div>
       </section>
+
+      <DesktopImportCard />
 
       <section className={`${card} p-6`}>
         <h2 className="mb-4 text-lg font-bold text-slate-900">

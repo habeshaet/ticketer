@@ -46,7 +46,293 @@ header::after {
   /* iOS zooms the page when a font under 16px gets focus */
   input, select, textarea { font-size: 16px; }
   /* comfortable tap targets */
-  button, a.inline-flex, .chip { min-height: 40px; }
+  button, a.inline-flex, .chip { min-height: 44px; }
 }
 /* respect the notch / home indicator when added to the home screen */
 body { padding-bottom: env(safe-area-inset-bottom); }
+
+/* ========================================================
+   THEME 1: Emerald (Default Aviation Green)
+   ======================================================== */
+html[data-theme="emerald"] body,
+html:not([data-theme]) body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #e2f0e7 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #eef4f0 0%, transparent 55%),
+    #f1f5f2;
+}
+
+/* ========================================================
+   THEME 2: Indigo (Royal Navy & Indigo Blue)
+   ======================================================== */
+html[data-theme="indigo"] body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #e0e7ff 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #eef2ff 0%, transparent 55%),
+    #f3f4f9;
+}
+html[data-theme="indigo"] .bg-emerald-700 { background-color: #4338ca !important; }
+html[data-theme="indigo"] .hover\:bg-emerald-800:hover { background-color: #3730a3 !important; }
+html[data-theme="indigo"] .bg-emerald-600 { background-color: #4f46e5 !important; }
+html[data-theme="indigo"] .hover\:bg-emerald-700:hover { background-color: #4338ca !important; }
+html[data-theme="indigo"] .bg-emerald-500 { background-color: #6366f1 !important; }
+html[data-theme="indigo"] .hover\:bg-emerald-400:hover { background-color: #818cf8 !important; }
+html[data-theme="indigo"] .bg-emerald-50 { background-color: #eef2ff !important; }
+html[data-theme="indigo"] .bg-emerald-100 { background-color: #e0e7ff !important; }
+html[data-theme="indigo"] .hover\:bg-emerald-100:hover { background-color: #e0e7ff !important; }
+html[data-theme="indigo"] .text-emerald-700 { color: #4338ca !important; }
+html[data-theme="indigo"] .text-emerald-800 { color: #3730a3 !important; }
+html[data-theme="indigo"] .text-emerald-900 { color: #312e81 !important; }
+html[data-theme="indigo"] .border-emerald-600 { border-color: #4f46e5 !important; }
+html[data-theme="indigo"] .border-emerald-500 { border-color: #6366f1 !important; }
+html[data-theme="indigo"] .border-emerald-300 { border-color: #a5b4fc !important; }
+html[data-theme="indigo"] .border-emerald-200 { border-color: #c7d2fe !important; }
+html[data-theme="indigo"] .hover\:border-emerald-400:hover { border-color: #818cf8 !important; }
+html[data-theme="indigo"] .hover\:text-emerald-700:hover { color: #4338ca !important; }
+html[data-theme="indigo"] .ring-emerald-500 { --tw-ring-color: #6366f1 !important; }
+html[data-theme="indigo"] .ring-emerald-600\/20 { --tw-ring-color: rgba(79, 70, 229, 0.2) !important; }
+html[data-theme="indigo"] .focus\:border-emerald-500:focus { border-color: #6366f1 !important; }
+html[data-theme="indigo"] .focus\:ring-emerald-100:focus { --tw-ring-color: #e0e7ff !important; }
+
+/* ========================================================
+   THEME 3: Amber (Warm Gold & Amber Sunset)
+   ======================================================== */
+html[data-theme="amber"] body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #fef3c7 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #fffbeb 0%, transparent 55%),
+    #faf7f0;
+}
+html[data-theme="amber"] .bg-emerald-700 { background-color: #b45309 !important; }
+html[data-theme="amber"] .hover\:bg-emerald-800:hover { background-color: #92400e !important; }
+html[data-theme="amber"] .bg-emerald-600 { background-color: #d97706 !important; }
+html[data-theme="amber"] .hover\:bg-emerald-700:hover { background-color: #b45309 !important; }
+html[data-theme="amber"] .bg-emerald-500 { background-color: #f59e0b !important; }
+html[data-theme="amber"] .hover\:bg-emerald-400:hover { background-color: #fbbf24 !important; }
+html[data-theme="amber"] .bg-emerald-50 { background-color: #fffbeb !important; }
+html[data-theme="amber"] .bg-emerald-100 { background-color: #fef3c7 !important; }
+html[data-theme="amber"] .hover\:bg-emerald-100:hover { background-color: #fef3c7 !important; }
+html[data-theme="amber"] .text-emerald-700 { color: #b45309 !important; }
+html[data-theme="amber"] .text-emerald-800 { color: #92400e !important; }
+html[data-theme="amber"] .text-emerald-900 { color: #78350f !important; }
+html[data-theme="amber"] .border-emerald-600 { border-color: #d97706 !important; }
+html[data-theme="amber"] .border-emerald-500 { border-color: #f59e0b !important; }
+html[data-theme="amber"] .border-emerald-300 { border-color: #fcd34d !important; }
+html[data-theme="amber"] .border-emerald-200 { border-color: #fde68a !important; }
+html[data-theme="amber"] .hover\:border-emerald-400:hover { border-color: #fbbf24 !important; }
+html[data-theme="amber"] .hover\:text-emerald-700:hover { color: #b45309 !important; }
+html[data-theme="amber"] .ring-emerald-500 { --tw-ring-color: #f59e0b !important; }
+html[data-theme="amber"] .ring-emerald-600\/20 { --tw-ring-color: rgba(217, 119, 6, 0.2) !important; }
+html[data-theme="amber"] .focus\:border-emerald-500:focus { border-color: #f59e0b !important; }
+html[data-theme="amber"] .focus\:ring-emerald-100:focus { --tw-ring-color: #fef3c7 !important; }
+
+/* ========================================================
+   THEME 4: Rose (Vibrant Ruby Crimson)
+   ======================================================== */
+html[data-theme="rose"] body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #ffe4e6 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #fff1f2 0%, transparent 55%),
+    #faf4f5;
+}
+html[data-theme="rose"] .bg-emerald-700 { background-color: #be123c !important; }
+html[data-theme="rose"] .hover\:bg-emerald-800:hover { background-color: #9f1239 !important; }
+html[data-theme="rose"] .bg-emerald-600 { background-color: #e11d48 !important; }
+html[data-theme="rose"] .hover\:bg-emerald-700:hover { background-color: #be123c !important; }
+html[data-theme="rose"] .bg-emerald-500 { background-color: #f43f5e !important; }
+html[data-theme="rose"] .hover\:bg-emerald-400:hover { background-color: #fb7185 !important; }
+html[data-theme="rose"] .bg-emerald-50 { background-color: #fff1f2 !important; }
+html[data-theme="rose"] .bg-emerald-100 { background-color: #ffe4e6 !important; }
+html[data-theme="rose"] .hover\:bg-emerald-100:hover { background-color: #ffe4e6 !important; }
+html[data-theme="rose"] .text-emerald-700 { color: #be123c !important; }
+html[data-theme="rose"] .text-emerald-800 { color: #9f1239 !important; }
+html[data-theme="rose"] .text-emerald-900 { color: #881337 !important; }
+html[data-theme="rose"] .border-emerald-600 { border-color: #e11d48 !important; }
+html[data-theme="rose"] .border-emerald-500 { border-color: #f43f5e !important; }
+html[data-theme="rose"] .border-emerald-300 { border-color: #fda4af !important; }
+html[data-theme="rose"] .border-emerald-200 { border-color: #fecdd3 !important; }
+html[data-theme="rose"] .hover\:border-emerald-400:hover { border-color: #fb7185 !important; }
+html[data-theme="rose"] .hover\:text-emerald-700:hover { color: #be123c !important; }
+html[data-theme="rose"] .ring-emerald-500 { --tw-ring-color: #f43f5e !important; }
+html[data-theme="rose"] .ring-emerald-600\/20 { --tw-ring-color: rgba(225, 29, 72, 0.2) !important; }
+html[data-theme="rose"] .focus\:border-emerald-500:focus { border-color: #f43f5e !important; }
+html[data-theme="rose"] .focus\:ring-emerald-100:focus { --tw-ring-color: #ffe4e6 !important; }
+
+/* ========================================================
+   Dark Mode Support across all 4 themes
+   ======================================================== */
+html.dark {
+  color-scheme: dark;
+}
+
+html[data-theme="emerald"].dark body,
+html:not([data-theme]).dark body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #0a261a 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #0c1c2e 0%, transparent 55%),
+    #0b1320;
+  color: #f1f5f9;
+}
+
+html[data-theme="indigo"].dark body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #1e1b4b 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #0f172a 0%, transparent 55%),
+    #090d19;
+  color: #f1f5f9;
+}
+
+html[data-theme="amber"].dark body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #451a03 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #1e130a 0%, transparent 55%),
+    #0f0d0a;
+  color: #f1f5f9;
+}
+
+html[data-theme="rose"].dark body {
+  background:
+    radial-gradient(1100px 500px at 100% -10%, #4c0519 0%, transparent 60%),
+    radial-gradient(900px 400px at -10% 0%, #1f0810 0%, transparent 55%),
+    #11080d;
+  color: #f1f5f9;
+}
+
+html.dark header {
+  background-color: rgba(15, 23, 42, 0.92) !important;
+  border-color: #243447 !important;
+}
+
+html.dark header span.block.text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark header span.block.text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark [class*="rounded-2xl border"] {
+  background-color: rgba(21, 32, 48, 0.95) !important;
+  border-color: #24354c !important;
+  color: #f1f5f9;
+}
+
+html.dark h2[class*="text-slate-700"],
+html.dark h3[class*="text-slate-800"],
+html.dark span[class*="text-slate-900"],
+html.dark p[class*="text-slate-900"] {
+  color: #f8fafc !important;
+}
+
+html.dark [class*="text-slate-500"],
+html.dark [class*="text-slate-600"] {
+  color: #94a3b8 !important;
+}
+
+html.dark [class*="text-slate-700"] {
+  color: #cbd5e1 !important;
+}
+
+html.dark [class*="bg-slate-50"],
+html.dark [class*="bg-slate-100"] {
+  background-color: #121c2b !important;
+  border-color: #24354c !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #0d1522 !important;
+  border-color: #2a3d56 !important;
+  color: #f8fafc !important;
+}
+
+html.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.75;
+}
+
+html.dark button[class*="border-slate-300"],
+html.dark a[class*="border-slate-300"] {
+  background-color: #162234 !important;
+  border-color: #2e435f !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark button[class*="border-slate-300"]:hover,
+html.dark a[class*="border-slate-300"]:hover {
+  background-color: #1f2e46 !important;
+}
+
+html.dark button[class*="border-slate-200"],
+html.dark div[class*="border-slate-200"] {
+  border-color: #24354c !important;
+}
+
+html.dark .mail-preview {
+  background-color: #0d1522 !important;
+  color: #e2e8f0 !important;
+  border-color: #2a3d56 !important;
+}
+
+html.dark tr[class*="border-slate-100"],
+html.dark tr[class*="border-slate-200"] {
+  border-color: #1e2c3e !important;
+}
+
+html.dark tr:hover {
+  background-color: #182537 !important;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334760;
+}
+
+/* Dark mode tints for Emerald */
+html[data-theme="emerald"].dark .bg-emerald-50,
+html:not([data-theme]).dark .bg-emerald-50,
+html[data-theme="emerald"].dark [class*="bg-emerald-50/"],
+html:not([data-theme]).dark [class*="bg-emerald-50/"] {
+  background-color: rgba(5, 150, 105, 0.16) !important;
+}
+html[data-theme="emerald"].dark .text-emerald-700,
+html:not([data-theme]).dark .text-emerald-700,
+html[data-theme="emerald"].dark .text-emerald-800,
+html:not([data-theme]).dark .text-emerald-800,
+html[data-theme="emerald"].dark .text-emerald-900,
+html:not([data-theme]).dark .text-emerald-900 {
+  color: #6ee7b7 !important;
+}
+
+/* Dark mode tints for Indigo */
+html[data-theme="indigo"].dark .bg-emerald-50,
+html[data-theme="indigo"].dark [class*="bg-emerald-50/"] {
+  background-color: rgba(79, 70, 229, 0.16) !important;
+}
+html[data-theme="indigo"].dark .text-emerald-700,
+html[data-theme="indigo"].dark .text-emerald-800,
+html[data-theme="indigo"].dark .text-emerald-900 {
+  color: #a5b4fc !important;
+}
+
+/* Dark mode tints for Amber */
+html[data-theme="amber"].dark .bg-emerald-50,
+html[data-theme="amber"].dark [class*="bg-emerald-50/"] {
+  background-color: rgba(217, 119, 6, 0.16) !important;
+}
+html[data-theme="amber"].dark .text-emerald-700,
+html[data-theme="amber"].dark .text-emerald-800,
+html[data-theme="amber"].dark .text-emerald-900 {
+  color: #fcd34d !important;
+}
+
+/* Dark mode tints for Rose */
+html[data-theme="rose"].dark .bg-emerald-50,
+html[data-theme="rose"].dark [class*="bg-emerald-50/"] {
+  background-color: rgba(225, 29, 72, 0.16) !important;
+}
+html[data-theme="rose"].dark .text-emerald-700,
+html[data-theme="rose"].dark .text-emerald-800,
+html[data-theme="rose"].dark .text-emerald-900 {
+  color: #fda4af !important;
+}

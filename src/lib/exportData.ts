@@ -9,6 +9,10 @@ export type ExportPayload = {
     defaultChargeCode: string;
     toEmails: string;
     ccEmails: string;
+    rebookToEmails?: string;
+    rebookCcEmails?: string;
+    dormToEmails?: string;
+    dormCcEmails?: string;
     signOff: string;
     signature: string;
     newTicketTemplate: string;
@@ -61,6 +65,10 @@ export async function loadExportPayload(): Promise<ExportPayload> {
       defaultChargeCode: settingsRow.defaultChargeCode,
       toEmails: settingsRow.toEmails,
       ccEmails: settingsRow.ccEmails,
+      rebookToEmails: settingsRow.rebookToEmails ?? "",
+      rebookCcEmails: settingsRow.rebookCcEmails ?? "",
+      dormToEmails: settingsRow.dormToEmails ?? "",
+      dormCcEmails: settingsRow.dormCcEmails ?? "",
       signOff: settingsRow.signOff,
       signature: settingsRow.signature,
       newTicketTemplate: settingsRow.newTicketTemplate,

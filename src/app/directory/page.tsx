@@ -13,6 +13,7 @@ import {
   card,
 } from "@/components/ui";
 import { classifyId, normalizeId } from "@/lib/classify";
+import { getAdminHeaders, useAdmin } from "@/lib/useAdmin";
 import type { Person } from "@/lib/types";
 
 type ImportResult = {
@@ -38,10 +39,12 @@ function KindBadge({ kind }: { kind: string }) {
 }
 
 export default function DirectoryPage() {
+  const { isAdmin, requestAdminAccess, lockAdmin } = useAdmin();
   const [people, setPeople] = useState<Person[]>([]);
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState("all");
-  const [form, setForm] = useState({ staffNo: "", fullName: "", idNo: "" });
+  const [batchFilter, setBatchFilter] = useState("all");
+  const [form, setForm] = useState({ staffNo: "", fullName: "", idNo: "", batch: "" });
   const [editing, setEditing] = useState<Person | null>(null);
   const [importText, setImportText] = useState("");
   const [replaceAll, setReplaceAll] = useState(false);
@@ -51,7 +54,7 @@ export default function DirectoryPage() {
 
   async function load() {
     const res = await fetch("/api/people");
-    setPeople(await res.json());
+    if (res.ok) setPeople(await res.json());
   }
 
   useEffect(() => {
@@ -66,14 +69,27 @@ export default function DirectoryPage() {
     [people],
   );
 
+  const batches = useMemo(() => {
+    const set = new Set<string>();
+    people.forEach((p) => {
+      if (p.batch && p.batch.trim()) set.add(p.batch.trim());
+    });
+    return Array.from(set).sort();
+  }, [people]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return people
       .filter((p) => (kindFilter === "all" ? true : p.kind === kindFilter))
+      .filter((p) => (batchFilter === "all" ? true : (p.batch || "").trim() === batchFilter))
       .filter((p) =>
-        q ? `${p.staffNo} ${p.fullName} ${p.idNo}`.toLowerCase().includes(q) : true,
+        q
+          ? `${p.staffNo} ${p.fullName} ${p.idNo} ${p.batch ?? ""}`
+              .toLowerCase()
+              .includes(q)
+          : true,
       );
-  }, [people, query, kindFilter]);
+  }, [people, query, kindFilter, batchFilter]);
 
   const verdict = useMemo(() => classifyId(form.staffNo), [form.staffNo]);
 
@@ -87,47 +103,88 @@ export default function DirectoryPage() {
       flash("Type the name first");
       return;
     }
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
     setBusy(true);
     const res = await fetch("/api/people", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify({ ...form, staffNo: normalizeId(form.staffNo) }),
     });
     setBusy(false);
     if (res.ok) {
-      setForm({ staffNo: "", fullName: "", idNo: "" });
+      setForm({ staffNo: "", fullName: "", idNo: "", batch: "" });
       flash("Added ✔");
       load();
     } else {
-      flash("Could not add this person");
+      const err = await res.json().catch(() => ({}));
+      flash(err.error ?? "Could not add this person");
     }
   }
 
   async function saveEdit() {
     if (!editing) return;
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
     setBusy(true);
-    await fetch(`/api/people/${editing.id}`, {
+    const res = await fetch(`/api/people/${editing.id}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify(editing),
     });
     setBusy(false);
-    setEditing(null);
-    flash("Saved ✔");
-    load();
+    if (res.ok) {
+      setEditing(null);
+      flash("Saved ✔");
+      load();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      flash(err.error ?? "Could not save edit");
+    }
   }
 
   async function removePerson(id: number) {
-    await fetch(`/api/people/${id}`, { method: "DELETE" });
-    load();
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
+    if (!window.confirm("Are you sure you want to delete this person?")) return;
+    const res = await fetch(`/api/people/${id}`, {
+      method: "DELETE",
+      headers: getAdminHeaders(),
+    });
+    if (res.ok) {
+      flash("Deleted ✔");
+      load();
+    } else {
+      const err = await res.json().catch(() => ({}));
+      flash(err.error ?? "Could not delete");
+    }
   }
 
   async function runImport() {
+    if (!isAdmin) {
+      const ok = await requestAdminAccess();
+      if (!ok) return;
+    }
     setBusy(true);
     setResult(null);
     const res = await fetch("/api/people/import", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...getAdminHeaders(),
+      },
       body: JSON.stringify({ text: importText, replaceAll }),
     });
     const payload = await res.json();
@@ -145,17 +202,37 @@ export default function DirectoryPage() {
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_380px]">
       <section className={`${card} p-4`}>
-        <SectionTitle
-          title="Employees & trainees"
-          right={
-            <span className="text-xs text-slate-500">
-              {counts.employees} employees · {counts.trainees} trainees
-            </span>
-          }
-        />
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <SectionTitle
+            title="Employees & trainees"
+            right={
+              <span className="text-xs text-slate-500">
+                {counts.employees} employees · {counts.trainees} trainees
+              </span>
+            }
+          />
+          {isAdmin ? (
+            <button
+              onClick={lockAdmin}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-800 hover:bg-emerald-100"
+              title="Admin access active. Click to lock."
+            >
+              🔓 Admin unlocked (click to lock)
+            </button>
+          ) : (
+            <button
+              onClick={requestAdminAccess}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+              title="Click to enter admin password"
+            >
+              🔒 Admin locked (click to edit)
+            </button>
+          )}
+        </div>
+
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <TextInput
-            placeholder="Search by ID number or name…"
+            placeholder="Search by ID, name, or batch…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="sm:max-w-sm"
@@ -175,12 +252,27 @@ export default function DirectoryPage() {
           ))}
         </div>
 
+        {batches.length > 0 && (
+          <div className="mb-3 flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-2 text-xs">
+            <span className="font-semibold text-slate-600">Batch:</span>
+            <Chip active={batchFilter === "all"} onClick={() => setBatchFilter("all")}>
+              All
+            </Chip>
+            {batches.map((b) => (
+              <Chip key={b} active={batchFilter === b} onClick={() => setBatchFilter(b)}>
+                {b}
+              </Chip>
+            ))}
+          </div>
+        )}
+
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-slate-200 text-[11px] uppercase tracking-wide text-slate-500">
                 <th className="py-2 pr-2">ID</th>
                 <th className="py-2 pr-2">Name</th>
+                <th className="py-2 pr-2">Batch</th>
                 <th className="py-2 pr-2">Type (from ID)</th>
                 <th className="py-2 pr-2">Passport / doc</th>
                 <th className="py-2" />
@@ -208,6 +300,15 @@ export default function DirectoryPage() {
                           value={editing.fullName}
                           onChange={(e) =>
                             setEditing({ ...editing, fullName: e.target.value })
+                          }
+                        />
+                      </td>
+                      <td className="py-1 pr-2">
+                        <TextInput
+                          value={editing.batch ?? ""}
+                          placeholder="Batch 12"
+                          onChange={(e) =>
+                            setEditing({ ...editing, batch: e.target.value })
                           }
                         />
                       </td>
@@ -251,6 +352,15 @@ export default function DirectoryPage() {
                     </td>
                     <td className="py-2 pr-2 font-medium">{person.fullName}</td>
                     <td className="py-2 pr-2">
+                      {person.batch ? (
+                        <span className="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs font-semibold text-slate-700">
+                          {person.batch}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-slate-400">—</span>
+                      )}
+                    </td>
+                    <td className="py-2 pr-2">
                       <KindBadge kind={person.kind} />
                       {!ruleMatch.confident && person.staffNo ? (
                         <span
@@ -267,7 +377,13 @@ export default function DirectoryPage() {
                     <td className="py-2 text-right whitespace-nowrap">
                       <button
                         className="mr-2 text-xs font-semibold text-emerald-700 hover:underline"
-                        onClick={() => setEditing(person)}
+                        onClick={async () => {
+                          if (!isAdmin) {
+                            const ok = await requestAdminAccess();
+                            if (!ok) return;
+                          }
+                          setEditing(person);
+                        }}
                       >
                         edit
                       </button>
@@ -293,10 +409,9 @@ export default function DirectoryPage() {
 
       <div className="space-y-4">
         <section className={`${card} p-4`}>
-          <SectionTitle title="Paste your sheet (ID + Name)" />
+          <SectionTitle title="Paste your sheet (ID + Name + Batch)" />
           <p className="mb-2 text-xs text-slate-500">
-            Copy the two columns straight from Excel. Tabs, commas or a single
-            space all work — and the type is decided by the ID:
+            Copy columns straight from Excel (ID, Name, and optional Batch). Tabs or commas both work — and the type is decided by the ID:
           </p>
           <ul className="mb-3 space-y-1 rounded-xl bg-slate-900 p-3 text-[11px] text-slate-200">
             <li>
@@ -317,7 +432,7 @@ export default function DirectoryPage() {
             value={importText}
             onChange={(e) => setImportText(e.target.value)}
             placeholder={
-              "36154\tGETNET GEZAHEGN ENGIDA\n104112\tNATNAEL BIRHANU ASSEFA\n210447\tMEKDES GIRMA WOLDE"
+              "104112\tNATNAEL BIRHANU ASSEFA\tBatch 12\n104263\tHELEN TESHOME ABERA\tBatch 12\n36154\tGETNET GEZAHEGN ENGIDA"
             }
             className="mail-preview"
           />
@@ -361,7 +476,7 @@ export default function DirectoryPage() {
               <TextInput
                 value={form.staffNo}
                 onChange={(e) => setForm({ ...form, staffNo: e.target.value })}
-                placeholder="36154"
+                placeholder="104112"
               />
             </Field>
             {form.staffNo ? (
@@ -377,7 +492,17 @@ export default function DirectoryPage() {
               <TextInput
                 value={form.fullName}
                 onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                placeholder="GETNET GEZAHEGN ENGIDA"
+                placeholder="NATNAEL BIRHANU ASSEFA"
+              />
+            </Field>
+            <Field
+              label="Batch (for trainees)"
+              hint="e.g. Batch 12 or B-24, allows filtering easily"
+            >
+              <TextInput
+                value={form.batch}
+                onChange={(e) => setForm({ ...form, batch: e.target.value })}
+                placeholder="Batch 12"
               />
             </Field>
             <Field

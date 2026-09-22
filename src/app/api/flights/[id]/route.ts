@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { flights } from "@/db/schema";
-import { badRequest, json, str } from "@/lib/server";
+import { badRequest, json, str, unauthorized, verifyAdmin } from "@/lib/server";
 import { daypartOf } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +9,10 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: Request, ctx: Ctx) {
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to edit flight");
+  }
+
   const { id } = await ctx.params;
   const flightId = Number(id);
   if (!Number.isFinite(flightId)) return badRequest("Invalid id");
@@ -39,7 +43,11 @@ export async function PATCH(request: Request, ctx: Ctx) {
   return json(row);
 }
 
-export async function DELETE(_request: Request, ctx: Ctx) {
+export async function DELETE(request: Request, ctx: Ctx) {
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to delete flight");
+  }
+
   const { id } = await ctx.params;
   const flightId = Number(id);
   if (!Number.isFinite(flightId)) return badRequest("Invalid id");

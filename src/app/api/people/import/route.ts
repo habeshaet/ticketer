@@ -2,7 +2,14 @@ import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import { people } from "@/db/schema";
 import { classifyId, normalizeId } from "@/lib/classify";
-import { badRequest, json, str } from "@/lib/server";
+import {
+  badRequest,
+  ensureDatabaseColumns,
+  json,
+  str,
+  unauthorized,
+  verifyAdmin,
+} from "@/lib/server";
 
 export const dynamic = "force-dynamic";
 
@@ -10,15 +17,16 @@ type ParsedRow = {
   staffNo: string;
   fullName: string;
   idNo: string;
+  batch: string;
   kind: string;
   ruleNote: string;
 };
 
-const HEADER_WORDS = ["id", "name", "staff", "full name", "no", "employee", "trainee"];
+const HEADER_WORDS = ["id", "name", "staff", "full name", "no", "employee", "trainee", "batch"];
 const HEADER_TOKENS = [
   "id", "id no", "id number", "idno", "name", "full name", "fullname",
   "staff", "staff no", "staff number", "staffno", "type", "kind",
-  "category", "no", "s/n", "sn", "remark", "employee/trainee",
+  "category", "no", "s/n", "sn", "remark", "employee/trainee", "batch",
 ];
 
 /** True for a spreadsheet header row such as `ID,NAME,TYPE`. */
@@ -43,12 +51,14 @@ function splitLine(line: string): string[] {
   return [line.trim()];
 }
 
-/** Works out which cell is the ID, which is the name, which is a passport. */
+/** Works out which cell is the ID, which is the name, which is passport or batch. */
 export function parseRow(cells: string[], fallbackKind: string): ParsedRow | null {
   let staffNo = "";
   let fullName = "";
   let idNo = "";
+  let batch = "";
   let explicitKind = "";
+  const extraWords: string[] = [];
 
   cells.forEach((cell) => {
     const value = (cell ?? "").trim();
@@ -60,6 +70,10 @@ export function parseRow(cells: string[], fallbackKind: string): ParsedRow | nul
     }
     if (lower === "employee" || lower === "emp" || lower === "staff") {
       explicitKind = "employee";
+      return;
+    }
+    if (/^(?:batch|b)[\s-]*\d+$/i.test(value)) {
+      batch = value;
       return;
     }
     const digits = normalizeId(value);
@@ -79,10 +93,16 @@ export function parseRow(cells: string[], fallbackKind: string): ParsedRow | nul
       }
       return;
     }
-    if (/[a-z]/i.test(value) && value.length > fullName.length) {
-      fullName = value;
-    }
+    extraWords.push(value);
   });
+
+  if (extraWords.length > 0) {
+    extraWords.sort((a, b) => b.length - a.length);
+    fullName = extraWords[0] ?? "";
+    if (!batch && extraWords.length > 1) {
+      batch = extraWords[1] ?? "";
+    }
+  }
 
   if (!fullName) return null;
   const verdict = classifyId(staffNo);
@@ -90,12 +110,18 @@ export function parseRow(cells: string[], fallbackKind: string): ParsedRow | nul
     staffNo,
     fullName: fullName.toUpperCase().replace(/\s+/g, " "),
     idNo,
+    batch,
     kind: explicitKind || (staffNo ? verdict.kind : fallbackKind),
     ruleNote: verdict.reason,
   };
 }
 
 export async function POST(request: Request) {
+  await ensureDatabaseColumns();
+  if (!(await verifyAdmin(request))) {
+    return unauthorized("Admin password required to import directory");
+  }
+
   const body = await request.json().catch(() => null);
   if (!body) return badRequest("Invalid JSON body");
   const text = str(body.text);
@@ -144,6 +170,7 @@ export async function POST(request: Request) {
           fullName: row.fullName,
           kind: row.kind,
           idNo: row.idNo || sql`${people.idNo}`,
+          batch: row.batch || sql`${people.batch}`,
           active: true,
         })
         .where(sql`${people.id} = ${current}`);
@@ -154,6 +181,7 @@ export async function POST(request: Request) {
         staffNo: row.staffNo,
         fullName: row.fullName,
         idNo: row.idNo,
+        batch: row.batch,
         chargeCode: defaultChargeCode,
         station: "",
         note: "",

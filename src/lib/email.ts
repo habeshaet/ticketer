@@ -15,12 +15,12 @@ export const MONTHS = [
   "Dec",
 ];
 
-/** "2026-09-18" -> "Sep 18,2026" (exact house style, no space after the comma). */
+/** "2026-09-18" -> "Sep 18, 2026" (space after the comma). */
 export function formatTicketDate(iso: string): string {
   if (!iso) return "";
   const [y, m, d] = iso.split("-").map((part) => Number(part));
   if (!y || !m || !d) return iso;
-  return `${MONTHS[m - 1]} ${d},${y}`;
+  return `${MONTHS[m - 1]} ${d}, ${y}`;
 }
 
 export function todayISO(): string {
@@ -53,7 +53,7 @@ export function datePhrase(iso: string, today = todayISO()): string {
 export const DEFAULT_NEW_TICKET_TEMPLATE = `Dear Team
 Greetings!
 
-Please process ticket and charge cc {CHARGE_CODE}
+Please process {TICKET_TYPE} and charge cc {CHARGE_CODE}
 
 {PASSENGERS}
 
@@ -192,7 +192,9 @@ export type BuildInput = {
   kind: EmailKind;
   legs?: Leg[];
   dormReason?: string;
+  reasonKey?: string;
   reasonLabel?: string;
+  ticketType?: string;
   purposeLine?: string;
   origin: string;
   destination: string;
@@ -327,8 +329,23 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
     .replace(/\{SECTOR\}/g, sector)
     .replace(/\{DATE\}/g, prettyDate);
 
+  const isFerry =
+    (input.reasonKey ?? "").toLowerCase().includes("ferry") ||
+    (input.reasonLabel ?? "").toLowerCase().includes("ferry") ||
+    (input.purposeLine ?? "").toLowerCase().includes("ferry");
+
+  const ticketType = input.ticketType
+    ? input.ticketType
+    : isFerry
+    ? "one-way ticket"
+    : "round-trip ticket";
+
+  const tripType = isFerry ? "one-way" : "round-trip";
+
   const values: Record<string, string> = {
     CHARGE_CODE: input.chargeCode ?? "",
+    TICKET_TYPE: ticketType,
+    TRIP_TYPE: tripType,
     PASSENGERS: passengerBlock(input.passengers),
     TICKETS: ticketBlock(input.ticketNumbers, input.passengers),
     SECTOR: sector,
@@ -357,12 +374,23 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
       key in values ? values[key] : match,
     );
 
-  const bodyTemplate =
+  let bodyTemplate =
     input.kind === "dormitory"
       ? input.templates?.dorm || DEFAULT_DORM_TEMPLATE
       : input.kind === "rebooking"
         ? input.templates?.rebook || DEFAULT_REBOOK_TEMPLATE
         : input.templates?.newTicket || DEFAULT_NEW_TICKET_TEMPLATE;
+
+  if (
+    input.kind === "new_ticket" &&
+    bodyTemplate.includes("Please process ticket and charge cc") &&
+    !bodyTemplate.includes("{TICKET_TYPE}")
+  ) {
+    bodyTemplate = bodyTemplate.replace(
+      "Please process ticket and charge cc",
+      `Please process ${ticketType} and charge cc`,
+    );
+  }
   const subjectTemplate =
     input.kind === "dormitory"
       ? input.templates?.dormSubject || DEFAULT_DORM_SUBJECT

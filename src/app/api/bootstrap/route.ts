@@ -7,6 +7,7 @@ import { multiCityRoutes } from "@/lib/email";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  await getSettingsRow();
   const [settingsRow, reasonRows, flightRows, peopleRows] = await Promise.all([
     getSettingsRow(),
     db.select().from(reasons).orderBy(asc(reasons.sortOrder), asc(reasons.id)),

@@ -25,7 +25,7 @@ import {
   type Leg,
 } from "@/lib/email";
 import type { Flight, PassengerLine, Person, Reason, Settings } from "@/lib/types";
-import { DAYPARTS } from "@/lib/types";
+import { AIRPORTS, DAYPARTS } from "@/lib/types";
 
 type Bootstrap = {
   settings: Settings;
@@ -79,6 +79,9 @@ export default function ComposePage() {
   const [remarks, setRemarks] = useState("");
   const [query, setQuery] = useState("");
   const [kindFilter, setKindFilter] = useState("all");
+  const [batchFilter, setBatchFilter] = useState("all");
+  const [showBatchList, setShowBatchList] = useState(false);
+  const [ticketType, setTicketType] = useState<"one-way ticket" | "round-trip ticket">("round-trip ticket");
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -161,6 +164,26 @@ export default function ComposePage() {
     [data, reasonKey],
   );
 
+  useEffect(() => {
+    if (!reasonKey) return;
+    const isFerry =
+      reasonKey.toLowerCase().includes("ferry") ||
+      (activeReason?.label ?? "").toLowerCase().includes("ferry");
+    setTicketType(isFerry ? "one-way ticket" : "round-trip ticket");
+  }, [reasonKey, activeReason]);
+
+  const availableBatches = useMemo(() => {
+    if (!data) return [] as string[];
+    const set = new Set<string>();
+    data.people.forEach((p) => {
+      if (p.batch && p.batch.trim()) {
+        if (isDorm && p.kind !== "trainee") return;
+        set.add(p.batch.trim());
+      }
+    });
+    return Array.from(set).sort();
+  }, [data, isDorm]);
+
   const searchResults = useMemo(() => {
     if (!data) return [] as Person[];
     const q = query.trim().toLowerCase();
@@ -168,10 +191,17 @@ export default function ComposePage() {
     return data.people
       .filter((p) => (wanted === "all" ? true : p.kind === wanted))
       .filter((p) =>
-        q ? `${p.staffNo} ${p.fullName} ${p.idNo}`.toLowerCase().includes(q) : true,
+        batchFilter === "all" ? true : (p.batch || "").trim() === batchFilter,
       )
-      .slice(0, 40);
-  }, [data, query, kindFilter, isDorm]);
+      .filter((p) =>
+        q
+          ? `${p.staffNo} ${p.fullName} ${p.idNo} ${p.batch ?? ""}`
+              .toLowerCase()
+              .includes(q)
+          : true,
+      )
+      .slice(0, 50);
+  }, [data, query, kindFilter, isDorm, batchFilter]);
 
   // switching to dormitory must drop anyone who is not a trainee
   useEffect(() => {
@@ -184,7 +214,9 @@ export default function ComposePage() {
     return buildEmail({
       kind,
       legs: isMulti ? legs : undefined,
+      reasonKey: kind === "new_ticket" ? reasonKey : "",
       reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
+      ticketType: kind === "new_ticket" ? ticketType : undefined,
       purposeLine: kind === "new_ticket" ? activeReason?.purposeLine ?? "" : "",
       origin: isMulti || isDorm ? "" : origin,
       destination: isMulti || isDorm ? "" : destination,
@@ -209,7 +241,7 @@ export default function ComposePage() {
       },
     });
   }, [
-    data, kind, isMulti, isDorm, legs, activeReason, origin, destination,
+    data, kind, isMulti, isDorm, legs, reasonKey, activeReason, ticketType, origin, destination,
     departureDate, daypart, flightNos, ticketNumbers, passengers, chargeCode,
     dormReason, remarks,
   ]);
@@ -217,24 +249,60 @@ export default function ComposePage() {
   const recipients = useMemo(() => {
     const s = data?.settings;
     if (!s) return { to: "", cc: "", label: "Ticketing group" };
-    const to = isDorm ? s.dormToEmails : s.toEmails;
-    const cc = isDorm ? s.dormCcEmails : s.ccEmails;
+    const to = isDorm
+      ? s.dormToEmails
+      : isRebook
+      ? (s.rebookToEmails || s.toEmails)
+      : s.toEmails;
+    const cc = isDorm
+      ? s.dormCcEmails
+      : isRebook
+      ? (s.rebookCcEmails || s.ccEmails)
+      : s.ccEmails;
     return {
       to: stripSelf(to, s.myEmail),
       cc: stripSelf(cc, s.myEmail),
-      label: isDorm ? "Dormitory group" : "Ticketing group",
+      label: isDorm
+        ? "Dormitory group"
+        : isRebook
+        ? "Rebooking group"
+        : "Ticketing group",
     };
-  }, [data, isDorm]);
+  }, [data, isDorm, isRebook]);
 
   const mailtoHref = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set("subject", email.subject);
-    params.set("body", email.body);
-    if (recipients.cc) params.set("cc", recipients.cc);
-    return `mailto:${encodeURIComponent(recipients.to)}?${params.toString()}`;
+    return buildMailto(recipients.to, {
+      subject: email.subject,
+      body: email.body,
+      cc: recipients.cc,
+    });
   }, [email, recipients]);
 
   const mailtoTooLong = mailtoHref.length > MAILTO_SAFE_LENGTH;
+
+  const hasNoNames = isRebook
+    ? ticketNumbers.length === 0
+    : passengers.length === 0;
+
+  const missingLabel = isDorm
+    ? "trainees"
+    : isRebook
+      ? "ticket numbers"
+      : "passengers";
+
+  function handleOpenOutlook(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (hasNoNames) {
+      const confirmed = window.confirm(
+        `Warning: No ${missingLabel} have been added.\n\nDo you want to open Outlook anyway?`
+      );
+      if (!confirmed) {
+        e.preventDefault();
+        setToast(`⚠️ Please add ${missingLabel} before sending.`);
+        return;
+      }
+    }
+    saveToHistory(true);
+  }
 
   function toggleFlight(no: string) {
     setFlightNos((cur) =>
@@ -269,6 +337,7 @@ export default function ComposePage() {
               staffNo: person.staffNo,
               fullName: person.fullName,
               idNo: person.idNo,
+              batch: person.batch,
               kind: person.kind,
               ticketNo: "",
             },
@@ -276,31 +345,72 @@ export default function ComposePage() {
     );
   }
 
+  function addAllInBatch(batchName: string) {
+    if (!data) return;
+    const matching = data.people.filter(
+      (p) =>
+        (isDorm ? p.kind === "trainee" : true) &&
+        (p.batch || "").trim() === batchName,
+    );
+    if (matching.length === 0) return;
+    setPassengers((cur) => {
+      const next = [...cur];
+      matching.forEach((person) => {
+        if (!next.some((p) => p.personId === person.id)) {
+          next.push({
+            personId: person.id,
+            staffNo: person.staffNo,
+            fullName: person.fullName,
+            idNo: person.idNo,
+            batch: person.batch,
+            kind: person.kind,
+            ticketNo: "",
+          });
+        }
+      });
+      return next;
+    });
+    setToast(`Added ${matching.length} from ${batchName} ✔`);
+  }
+
   async function copy(text: string, what: string) {
     try {
       await navigator.clipboard.writeText(text);
-      setToast(`${what} copied ✔`);
+      if (hasNoNames) {
+        setToast(`⚠️ ${what} copied, but warning: no ${missingLabel} added!`);
+      } else {
+        setToast(`${what} copied ✔`);
+      }
     } catch {
       setToast("Copy blocked — select the text and copy manually");
     }
   }
 
-  async function saveToHistory() {
-    const res = await fetch("/api/requests", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind, reasonKey: kind === "new_ticket" ? reasonKey : "",
-        reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
-        origin: isMulti ? route.split("-")[0] : origin,
-        destination: isMulti ? route.split("-").slice(-1)[0] : destination,
-        departureDate, daypart: daypart === "any" ? "" : daypart,
-        chargeCode, flightNos: isMulti ? legs.flatMap((l) => l.flights) : flightNos,
-        ticketNumbers, passengers,
-        subject: email.subject, body: email.body,
-      }),
-    });
-    setToast(res.ok ? "Saved to history ✔" : "Could not save");
+  async function saveToHistory(silent = false) {
+    try {
+      await fetch("/api/requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind,
+          reasonKey: kind === "new_ticket" ? reasonKey : "",
+          reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
+          origin: isMulti ? route.split("-")[0] : origin,
+          destination: isMulti ? route.split("-").slice(-1)[0] : destination,
+          departureDate,
+          daypart: daypart === "any" ? "" : daypart,
+          chargeCode,
+          flightNos: isMulti ? legs.flatMap((l) => l.flights) : flightNos,
+          ticketNumbers,
+          passengers,
+          subject: email.subject,
+          body: email.body,
+        }),
+      });
+      if (!silent) setToast("Saved to history ✔");
+    } catch {
+      if (!silent) setToast("Could not save to history");
+    }
   }
 
   if (!data) {
@@ -364,13 +474,33 @@ export default function ComposePage() {
                 ))}
               </Select>
             </Field>
-            <Field label="Charge cc">
-              <TextInput
-                value={chargeCode}
-                onChange={(e) => setChargeCode(e.target.value.toUpperCase())}
-                className="uppercase"
-              />
-            </Field>
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs">
+              <span className="font-semibold text-slate-600">Ticket type:</span>
+              <div className="flex gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setTicketType("round-trip ticket")}
+                  className={`rounded-lg px-2.5 py-1 font-semibold transition ${
+                    ticketType === "round-trip ticket"
+                      ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  Round-trip ticket
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTicketType("one-way ticket")}
+                  className={`rounded-lg px-2.5 py-1 font-semibold transition ${
+                    ticketType === "one-way ticket"
+                      ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  One-way ticket
+                </button>
+              </div>
+            </div>
           </div>
         ) : null}
 
@@ -485,46 +615,123 @@ export default function ComposePage() {
                 ))}
               </>
             ) : (
-              <>
-                <Field label="Sector">
-                  <div className="flex flex-wrap gap-1.5">
-                    {sectors.map((s) => (
-                      <Chip key={s} active={s === sector} onClick={() => setSector(s)}>{s}</Chip>
-                    ))}
+              <div className="space-y-4">
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Sector
+                    </span>
+                    {origin && destination ? (
+                      <span className="text-xs font-medium text-emerald-700">
+                        {AIRPORTS[origin] ?? origin} → {AIRPORTS[destination] ?? destination}
+                      </span>
+                    ) : null}
                   </div>
-                </Field>
-                <Field label="Time of day">
-                  <div className="flex flex-wrap gap-1.5">
-                    <Chip active={daypart === "any"} onClick={() => setDaypart("any")}>Any</Chip>
-                    {DAYPARTS.map((p) => (
-                      <Chip key={p.value} active={daypart === p.value} onClick={() => setDaypart(p.value)}>
-                        {p.label}
+                  <div className="flex flex-wrap gap-2">
+                    {sectors.map((s) => (
+                      <Chip
+                        key={s}
+                        active={s === sector}
+                        onClick={() => {
+                          setSector(s);
+                          if (s !== sector) setFlightNos([]);
+                        }}
+                      >
+                        {s}
                       </Chip>
                     ))}
                   </div>
-                </Field>
-                {visibleFlights.map((f) => {
-                  const on = flightNos.includes(f.flightNo);
-                  return (
+                </div>
+
+                <div>
+                  <span className="mb-2 block text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Time of day
+                  </span>
+                  <div className="grid grid-cols-4 gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-1">
                     <button
-                      key={f.id}
                       type="button"
-                      onClick={() => toggleFlight(f.flightNo)}
-                      className={`mb-1.5 flex min-h-[44px] w-full items-center gap-3 rounded-xl border px-3 text-left text-sm ${
-                        on ? "border-emerald-500 bg-emerald-50" : "border-slate-200 bg-white"
+                      onClick={() => setDaypart("any")}
+                      className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                        daypart === "any"
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-600 hover:text-slate-900"
                       }`}
                     >
-                      <span className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] ${
-                        on ? "border-emerald-600 bg-emerald-600 text-white" : "border-slate-300 text-transparent"
-                      }`}>✓</span>
-                      <span className="font-mono font-bold">{f.flightNo}</span>
-                      <span className="ml-auto text-xs text-slate-500">
-                        {f.depTime}{f.arrTime ? ` → ${f.arrTime}` : ""} · {f.daypart}
-                      </span>
+                      Any
                     </button>
-                  );
-                })}
-              </>
+                    {DAYPARTS.map((p) => (
+                      <button
+                        key={p.value}
+                        type="button"
+                        onClick={() => setDaypart(p.value)}
+                        className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                          daypart === p.value
+                            ? "bg-white text-slate-900 shadow-sm"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-slate-500">
+                    <span className="font-bold uppercase tracking-wider">
+                      Available Flights ({visibleFlights.length})
+                    </span>
+                    <span>{flightNos.length} selected</span>
+                  </div>
+                  {visibleFlights.map((f) => {
+                    const on = flightNos.includes(f.flightNo);
+                    return (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() => toggleFlight(f.flightNo)}
+                        className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                          on
+                            ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                            : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                            on
+                              ? "border-emerald-600 bg-emerald-600 text-white"
+                              : "border-slate-300 bg-white text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <div className="flex flex-col">
+                          <span className="font-mono text-sm font-bold text-slate-900">
+                            {f.flightNo}
+                          </span>
+                          <span className="text-[11px] font-medium text-slate-400">
+                            {f.days || "Daily"}
+                          </span>
+                        </div>
+                        <div className="ml-auto flex items-center gap-2">
+                          <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                            {f.daypart}
+                          </span>
+                          <span className="font-mono text-xs font-medium text-slate-700">
+                            {f.depTime}
+                            {f.arrTime ? ` → ${f.arrTime}` : ""}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                  {visibleFlights.length === 0 ? (
+                    <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center text-xs text-slate-500">
+                      No flights scheduled for this sector in the {daypart} slot.
+                    </p>
+                  ) : null}
+                </div>
+              </div>
             )}
           </>
         ) : null}
@@ -540,6 +747,12 @@ export default function ComposePage() {
               placeholder={"0712162366863\n0712156444358"}
               className="mail-preview"
             />
+            {ticketNumbers.length === 0 ? (
+              <p className="mt-1.5 flex items-center gap-1.5 text-xs font-medium text-amber-700">
+                <span>⚠️</span>
+                <span>No ticket numbers entered yet. Add at least one ticket to rebook.</span>
+              </p>
+            ) : null}
           </div>
         ) : null}
 
@@ -551,10 +764,16 @@ export default function ComposePage() {
               right={<span className="text-xs text-slate-400">{passengers.length} chosen</span>}
             />
             <TextInput
-              placeholder="Search ID or name…"
+              placeholder="Search ID, name, or batch…"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
+            {passengers.length === 0 ? (
+              <p className="mt-2 flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
+                <span>⚠️</span>
+                <span>No {isDorm ? "trainees" : "passengers"} chosen yet. Search and click to add people to the email.</span>
+              </p>
+            ) : null}
             {!isDorm ? (
               <div className="mt-2 flex gap-1.5">
                 {[["all", "All"], ["employee", "Employees"], ["trainee", "Trainees"]].map(
@@ -564,19 +783,86 @@ export default function ComposePage() {
                 )}
               </div>
             ) : null}
+            {availableBatches.length > 0 ? (
+              <div className="mt-2 overflow-hidden rounded-xl border border-slate-200 bg-slate-50/70 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setShowBatchList((prev) => !prev)}
+                  className="flex w-full items-center justify-between px-3 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-slate-700">Filter by Batch</span>
+                    <span className="rounded-full bg-slate-200 px-2 py-0.5 text-[11px] font-bold text-slate-600">
+                      {availableBatches.length} batches
+                    </span>
+                    {batchFilter !== "all" ? (
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
+                        Selected: {batchFilter}
+                      </span>
+                    ) : null}
+                  </div>
+                  <span className="font-mono text-xs text-slate-400">
+                    {showBatchList ? "▲ Hide" : "▼ Expand"}
+                  </span>
+                </button>
+                {showBatchList ? (
+                  <div className="border-t border-slate-200 p-2.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <Chip
+                        active={batchFilter === "all"}
+                        onClick={() => setBatchFilter("all")}
+                      >
+                        All Batches
+                      </Chip>
+                      {availableBatches.map((b) => (
+                        <Chip
+                          key={b}
+                          active={batchFilter === b}
+                          onClick={() => setBatchFilter(b)}
+                        >
+                          {b}
+                        </Chip>
+                      ))}
+                    </div>
+                    {batchFilter !== "all" ? (
+                      <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/60 pt-2">
+                        <span className="text-[11px] text-slate-500">
+                          Quick add all trainees from batch {batchFilter}
+                        </span>
+                        <button
+                          type="button"
+                          className="rounded-lg bg-emerald-600 px-2.5 py-1 text-xs font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+                          onClick={() => addAllInBatch(batchFilter)}
+                        >
+                          + Add all in {batchFilter}
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
             <div className="mt-2 max-h-52 overflow-y-auto rounded-xl border border-slate-200">
               {searchResults.map((p) => (
                 <button
                   key={p.id}
                   type="button"
                   onClick={() => addPerson(p)}
-                  className="flex min-h-[44px] w-full items-center gap-3 border-b border-slate-100 px-3 text-left text-sm last:border-0"
+                  className="flex min-h-[44px] w-full items-center gap-2.5 border-b border-slate-100 px-3 text-left text-sm last:border-0 hover:bg-slate-50"
                 >
                   <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
                     p.kind === "trainee" ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
                   }`}>{p.kind === "trainee" ? "TRN" : "EMP"}</span>
+                  {p.batch ? (
+                    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-700">
+                      {p.batch}
+                    </span>
+                  ) : null}
                   <span className="w-14 shrink-0 font-mono text-xs text-slate-500">{p.staffNo}</span>
                   <span className="flex-1 truncate">{p.fullName}</span>
+                  <span className="ml-auto inline-flex items-center gap-1 rounded-lg border border-emerald-600/30 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-100">
+                    + Add
+                  </span>
                 </button>
               ))}
               {searchResults.length === 0 ? (
@@ -589,7 +875,14 @@ export default function ComposePage() {
                     className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm">
                   <span className="text-xs font-bold text-slate-400">{i + 1}</span>
                   <span className="font-mono text-xs text-slate-500">{p.staffNo}</span>
-                  <span className="flex-1 truncate">{p.fullName}</span>
+                  <span className="flex-1 truncate">
+                    {p.fullName}
+                    {p.batch ? (
+                      <span className="ml-1.5 rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-600">
+                        {p.batch}
+                      </span>
+                    ) : null}
+                  </span>
                   <button
                     type="button"
                     className="text-xs font-semibold text-rose-600"
@@ -622,18 +915,40 @@ export default function ComposePage() {
           rows={16}
           className="mail-preview w-full rounded-xl border border-slate-200 p-3 text-sm"
         />
+        {hasNoNames ? (
+          <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-amber-300 bg-amber-50 p-3 text-xs text-amber-900">
+            <span className="text-base leading-none">⚠️</span>
+            <div>
+              <p className="font-bold">No {missingLabel} added</p>
+              <p className="mt-0.5 text-amber-800">
+                This email currently contains no {isDorm ? "trainee names" : isRebook ? "ticket numbers" : "passenger names"}. Please add {missingLabel} before sending.
+              </p>
+            </div>
+          </div>
+        ) : null}
         <div className="mt-3 grid grid-cols-2 gap-2">
-          <a className={`${btn} min-h-[48px]`} href={mailtoHref}>✉ Open in Outlook</a>
-          <button type="button" className={`${btnGhost} min-h-[48px]`}
-                  onClick={() => copy(email.body, "Body")}>
+          <a
+            className={`${btn} col-span-2 min-h-[48px]`}
+            href={mailtoHref}
+            onClick={handleOpenOutlook}
+          >
+            ✉ Open in Outlook
+          </a>
+          <button
+            type="button"
+            className={`${btnGhost} min-h-[44px]`}
+            onClick={() => copy(email.body, "Body")}
+          >
             Copy body
           </button>
-          <button type="button" className={btnGhost}
-                  onClick={() => copy(`Subject: ${email.subject}\n\n${email.body}`, "Subject + body")}>
+          <button
+            type="button"
+            className={`${btnGhost} min-h-[44px]`}
+            onClick={() =>
+              copy(`Subject: ${email.subject}\n\n${email.body}`, "Subject + body")
+            }
+          >
             Copy all
-          </button>
-          <button type="button" className={btnGhost} onClick={saveToHistory}>
-            Save to history
           </button>
         </div>
         {mailtoTooLong ? (
