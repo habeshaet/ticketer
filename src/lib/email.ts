@@ -381,14 +381,13 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
         ? input.templates?.rebook || DEFAULT_REBOOK_TEMPLATE
         : input.templates?.newTicket || DEFAULT_NEW_TICKET_TEMPLATE;
 
-  if (
-    input.kind === "new_ticket" &&
-    bodyTemplate.includes("Please process ticket and charge cc") &&
-    !bodyTemplate.includes("{TICKET_TYPE}")
-  ) {
+  if (input.kind === "new_ticket") {
     bodyTemplate = bodyTemplate.replace(
-      "Please process ticket and charge cc",
-      `Please process ${ticketType} and charge cc`,
+      /(?:Please\s+)?process\s+(?:(?:one-way|one way|two-way|two way|2-way|round-trip|round trip)\s+)?ticket/gi,
+      (match) => {
+        const hasPlease = /^please\s+/i.test(match);
+        return hasPlease ? `Please process ${ticketType}` : `process ${ticketType}`;
+      },
     );
   }
   const subjectTemplate =
