@@ -81,6 +81,7 @@ export default function ComposePage() {
   const [kindFilter, setKindFilter] = useState("all");
   const [batchFilter, setBatchFilter] = useState("all");
   const [showBatchList, setShowBatchList] = useState(false);
+  const [ticketType, setTicketType] = useState<"one-way ticket" | "round-trip ticket">("round-trip ticket");
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -163,6 +164,14 @@ export default function ComposePage() {
     [data, reasonKey],
   );
 
+  useEffect(() => {
+    if (!reasonKey) return;
+    const isFerry =
+      reasonKey.toLowerCase().includes("ferry") ||
+      (activeReason?.label ?? "").toLowerCase().includes("ferry");
+    setTicketType(isFerry ? "one-way ticket" : "round-trip ticket");
+  }, [reasonKey, activeReason]);
+
   const availableBatches = useMemo(() => {
     if (!data) return [] as string[];
     const set = new Set<string>();
@@ -205,7 +214,9 @@ export default function ComposePage() {
     return buildEmail({
       kind,
       legs: isMulti ? legs : undefined,
+      reasonKey: kind === "new_ticket" ? reasonKey : "",
       reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
+      ticketType: kind === "new_ticket" ? ticketType : undefined,
       purposeLine: kind === "new_ticket" ? activeReason?.purposeLine ?? "" : "",
       origin: isMulti || isDorm ? "" : origin,
       destination: isMulti || isDorm ? "" : destination,
@@ -230,7 +241,7 @@ export default function ComposePage() {
       },
     });
   }, [
-    data, kind, isMulti, isDorm, legs, activeReason, origin, destination,
+    data, kind, isMulti, isDorm, legs, reasonKey, activeReason, ticketType, origin, destination,
     departureDate, daypart, flightNos, ticketNumbers, passengers, chargeCode,
     dormReason, remarks,
   ]);
@@ -463,6 +474,33 @@ export default function ComposePage() {
                 ))}
               </Select>
             </Field>
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2 text-xs">
+              <span className="font-semibold text-slate-600">Ticket type:</span>
+              <div className="flex gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setTicketType("round-trip ticket")}
+                  className={`rounded-lg px-2.5 py-1 font-semibold transition ${
+                    ticketType === "round-trip ticket"
+                      ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  Round-trip ticket
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTicketType("one-way ticket")}
+                  className={`rounded-lg px-2.5 py-1 font-semibold transition ${
+                    ticketType === "one-way ticket"
+                      ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                      : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  One-way ticket
+                </button>
+              </div>
+            </div>
           </div>
         ) : null}
 

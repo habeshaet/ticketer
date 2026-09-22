@@ -346,6 +346,9 @@ export default function SettingsPage() {
             setSettings({ ...settings, newTicketTemplate: e.target.value })
           }
         />
+        <p className="mt-1 text-xs text-slate-500">
+          Use <code className="rounded bg-slate-100 px-1 font-mono">{"{TICKET_TYPE}"}</code> to automatically output &ldquo;one-way ticket&rdquo; for ferry flights or &ldquo;round-trip ticket&rdquo; for other reasons.
+        </p>
         <button className={`${btn} mt-2`} onClick={() => save(false)}>
           Save
         </button>
