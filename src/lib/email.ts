@@ -60,6 +60,7 @@ Please process {TICKET_TYPE} and charge cc {CHARGE_CODE}
 Sector - {SECTOR_SPACED}
 Departure Date - {DATE}
 {FLIGHTS_LINE}
+{RETURN_DETAILS}
 
 {PURPOSE}
 
@@ -195,6 +196,8 @@ export type BuildInput = {
   reasonKey?: string;
   reasonLabel?: string;
   ticketType?: string;
+  returnDate?: string;
+  returnFlightNos?: string[];
   purposeLine?: string;
   origin: string;
   destination: string;
@@ -342,10 +345,30 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
 
   const tripType = isFerry ? "one-way" : "round-trip";
 
+  const prettyReturnDate = input.returnDate ? formatTicketDate(input.returnDate) : "";
+  const returnFlights = (input.returnFlightNos ?? []).filter(Boolean);
+  const returnFlightsJoined = returnFlights.join(" OR ");
+  const returnFlightsLine = returnFlightsJoined
+    ? `Preferred Return Flight - ${returnFlightsJoined}`
+    : "";
+
+  let returnDetails = "";
+  if (prettyReturnDate && returnFlightsLine) {
+    returnDetails = `Return Date - ${prettyReturnDate}\n${returnFlightsLine}`;
+  } else if (prettyReturnDate) {
+    returnDetails = `Return Date - ${prettyReturnDate}`;
+  } else if (returnFlightsLine) {
+    returnDetails = returnFlightsLine;
+  }
+
   const values: Record<string, string> = {
     CHARGE_CODE: input.chargeCode ?? "",
     TICKET_TYPE: ticketType,
     TRIP_TYPE: tripType,
+    RETURN_DATE: prettyReturnDate,
+    RETURN_FLIGHTS: returnFlightsJoined,
+    RETURN_FLIGHTS_LINE: returnFlightsLine,
+    RETURN_DETAILS: returnDetails,
     PASSENGERS: passengerBlock(input.passengers),
     TICKETS: ticketBlock(input.ticketNumbers, input.passengers),
     SECTOR: sector,
@@ -389,6 +412,40 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
         return hasPlease ? `Please process ${ticketType}` : `process ${ticketType}`;
       },
     );
+
+    if (
+      returnDetails &&
+      !bodyTemplate.includes("{RETURN_DETAILS}") &&
+      !bodyTemplate.includes("{RETURN_DATE}")
+    ) {
+      if (bodyTemplate.includes("{FLIGHTS_LINE}")) {
+        bodyTemplate = bodyTemplate.replace(
+          "{FLIGHTS_LINE}",
+          `{FLIGHTS_LINE}\n${returnDetails}`,
+        );
+      } else if (bodyTemplate.includes("{DATE}")) {
+        bodyTemplate = bodyTemplate.replace(
+          "{DATE}",
+          `{DATE}\n${returnDetails}`,
+        );
+      } else {
+        const lines = bodyTemplate.split("\n");
+        let idx = -1;
+        for (let i = 0; i < lines.length; i++) {
+          if (/^(?:Preferred Flight|Departure Date)/i.test(lines[i])) {
+            idx = i;
+          }
+        }
+        if (idx >= 0) {
+          const usesColon = /:\s*/.test(lines[idx]);
+          const adapted = usesColon
+            ? returnDetails.replace(/ - /g, ": ")
+            : returnDetails;
+          lines.splice(idx + 1, 0, adapted);
+          bodyTemplate = lines.join("\n");
+        }
+      }
+    }
   }
   const subjectTemplate =
     input.kind === "dormitory"

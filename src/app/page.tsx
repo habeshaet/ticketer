@@ -82,6 +82,10 @@ export default function ComposePage() {
   const [batchFilter, setBatchFilter] = useState("all");
   const [showBatchList, setShowBatchList] = useState(false);
   const [ticketType, setTicketType] = useState<"one-way ticket" | "round-trip ticket">("round-trip ticket");
+  const [hasReturn, setHasReturn] = useState(false);
+  const [returnDate, setReturnDate] = useState("");
+  const [returnDaypart, setReturnDaypart] = useState("any");
+  const [returnFlightNos, setReturnFlightNos] = useState<string[]>([]);
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -137,6 +141,11 @@ export default function ComposePage() {
     return [parts[0] ?? "", parts[1] ?? ""];
   }, [sector]);
 
+  const returnSector = useMemo(() => {
+    if (!origin || !destination) return "";
+    return `${destination}-${origin}`;
+  }, [origin, destination]);
+
   const visibleFlights = useMemo(() => {
     if (!data) return [] as Flight[];
     const inSector = data.flights.filter(
@@ -146,6 +155,22 @@ export default function ComposePage() {
       ? inSector
       : inSector.filter((f) => f.daypart === daypart);
   }, [data, sector, daypart]);
+
+  const visibleReturnFlights = useMemo(() => {
+    if (!data || !returnSector) return [] as Flight[];
+    const inSector = data.flights.filter(
+      (f) => `${f.origin}-${f.destination}` === returnSector,
+    );
+    return returnDaypart === "any"
+      ? inSector
+      : inSector.filter((f) => f.daypart === returnDaypart);
+  }, [data, returnSector, returnDaypart]);
+
+  function toggleReturnFlight(no: string) {
+    setReturnFlightNos((cur) =>
+      cur.includes(no) ? cur.filter((x) => x !== no) : [...cur, no],
+    );
+  }
 
   function flightsForLeg(sec: string) {
     if (!data) return [] as Flight[];
@@ -171,6 +196,19 @@ export default function ComposePage() {
       (activeReason?.label ?? "").toLowerCase().includes("ferry");
     setTicketType(isFerry ? "one-way ticket" : "round-trip ticket");
   }, [reasonKey, activeReason]);
+
+  useEffect(() => {
+    if (ticketType === "one-way ticket") {
+      setHasReturn(false);
+    }
+  }, [ticketType]);
+
+  function toggleReturnOption(enable: boolean) {
+    setHasReturn(enable);
+    if (enable && !returnDate) {
+      setReturnDate(addDaysISO(departureDate || todayISO(), 7));
+    }
+  }
 
   const availableBatches = useMemo(() => {
     if (!data) return [] as string[];
@@ -217,6 +255,8 @@ export default function ComposePage() {
       reasonKey: kind === "new_ticket" ? reasonKey : "",
       reasonLabel: kind === "new_ticket" ? activeReason?.label ?? "" : "",
       ticketType: kind === "new_ticket" ? ticketType : undefined,
+      returnDate: hasReturn && kind === "new_ticket" && ticketType === "round-trip ticket" ? returnDate : "",
+      returnFlightNos: hasReturn && kind === "new_ticket" && ticketType === "round-trip ticket" ? returnFlightNos : [],
       purposeLine: kind === "new_ticket" ? activeReason?.purposeLine ?? "" : "",
       origin: isMulti || isDorm ? "" : origin,
       destination: isMulti || isDorm ? "" : destination,
@@ -241,7 +281,7 @@ export default function ComposePage() {
       },
     });
   }, [
-    data, kind, isMulti, isDorm, legs, reasonKey, activeReason, ticketType, origin, destination,
+    data, kind, isMulti, isDorm, legs, reasonKey, activeReason, ticketType, hasReturn, returnDate, returnFlightNos, origin, destination,
     departureDate, daypart, flightNos, ticketNumbers, passengers, chargeCode,
     dormReason, remarks,
   ]);
@@ -400,7 +440,11 @@ export default function ComposePage() {
           departureDate,
           daypart: daypart === "any" ? "" : daypart,
           chargeCode,
-          flightNos: isMulti ? legs.flatMap((l) => l.flights) : flightNos,
+          flightNos: isMulti
+            ? legs.flatMap((l) => l.flights)
+            : hasReturn && returnFlightNos.length > 0
+            ? [...flightNos, ...returnFlightNos]
+            : flightNos,
           ticketNumbers,
           passengers,
           subject: email.subject,
@@ -501,6 +545,38 @@ export default function ComposePage() {
                 </button>
               </div>
             </div>
+
+            {ticketType === "round-trip ticket" ? (
+              <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-3 text-xs">
+                <span className="mb-2 block font-semibold text-slate-700">
+                  Select return date &amp; preferred flight?
+                </span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => toggleReturnOption(false)}
+                    className={`min-h-[38px] rounded-lg px-3 py-1.5 font-semibold transition ${
+                      !hasReturn
+                        ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-300"
+                        : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    No (departure only)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleReturnOption(true)}
+                    className={`min-h-[38px] rounded-lg px-3 py-1.5 font-semibold transition ${
+                      hasReturn
+                        ? "bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-600"
+                        : "text-slate-500 hover:text-slate-800"
+                    }`}
+                  >
+                    Yes (add return details)
+                  </button>
+                </div>
+              </div>
+            ) : null}
           </div>
         ) : null}
 
@@ -527,6 +603,32 @@ export default function ComposePage() {
             {departureDate ? formatTicketDate(departureDate) : ""}
           </p>
         </div>
+
+        {hasReturn && ticketType === "round-trip ticket" && kind === "new_ticket" ? (
+          <div className="mt-4 border-t border-slate-200/80 pt-4">
+            <SectionTitle title="Return date" />
+            <input
+              type="date"
+              className={inputClass}
+              value={returnDate}
+              onChange={(e) => setReturnDate(e.target.value)}
+            />
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <Chip onClick={() => setReturnDate(addDaysISO(departureDate || todayISO(), 3))}>
+                +3 days
+              </Chip>
+              <Chip onClick={() => setReturnDate(addDaysISO(departureDate || todayISO(), 7))}>
+                +1 week
+              </Chip>
+              <Chip onClick={() => setReturnDate(addDaysISO(departureDate || todayISO(), 14))}>
+                +2 weeks
+              </Chip>
+            </div>
+            <p className="mt-2 text-xs text-emerald-700">
+              {returnDate ? formatTicketDate(returnDate) : ""}
+            </p>
+          </div>
+        ) : null}
       </section>
 
       {/* ---------------- flight + people ---------------- */}
@@ -731,6 +833,110 @@ export default function ComposePage() {
                     </p>
                   ) : null}
                 </div>
+
+                {hasReturn && ticketType === "round-trip ticket" && kind === "new_ticket" && !isMulti ? (
+                  <div className="mt-5 border-t border-slate-200/80 pt-5">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                        Preferred Return Flight
+                      </span>
+                      {destination && origin ? (
+                        <span className="text-xs font-medium text-emerald-700">
+                          {AIRPORTS[destination] ?? destination} → {AIRPORTS[origin] ?? origin}
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="mb-3">
+                      <span className="mb-1.5 block text-xs font-semibold text-slate-500">
+                        Return time of day
+                      </span>
+                      <div className="grid grid-cols-4 gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-1">
+                        <button
+                          type="button"
+                          onClick={() => setReturnDaypart("any")}
+                          className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                            returnDaypart === "any"
+                              ? "bg-white text-slate-900 shadow-sm"
+                              : "text-slate-600 hover:text-slate-900"
+                          }`}
+                        >
+                          Any
+                        </button>
+                        {DAYPARTS.map((p) => (
+                          <button
+                            key={p.value}
+                            type="button"
+                            onClick={() => setReturnDaypart(p.value)}
+                            className={`min-h-[38px] rounded-lg py-1.5 text-xs font-semibold transition ${
+                              returnDaypart === p.value
+                                ? "bg-white text-slate-900 shadow-sm"
+                                : "text-slate-600 hover:text-slate-900"
+                            }`}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-xs text-slate-500">
+                        <span className="font-bold uppercase tracking-wider">
+                          Available Return Flights ({visibleReturnFlights.length})
+                        </span>
+                        <span>{returnFlightNos.length} selected</span>
+                      </div>
+                      {visibleReturnFlights.map((f) => {
+                        const on = returnFlightNos.includes(f.flightNo);
+                        return (
+                          <button
+                            key={f.id}
+                            type="button"
+                            onClick={() => toggleReturnFlight(f.flightNo)}
+                            className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                              on
+                                ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                            }`}
+                          >
+                            <span
+                              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                                on
+                                  ? "border-emerald-600 bg-emerald-600 text-white"
+                                  : "border-slate-300 bg-white text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                            <div className="flex flex-col">
+                              <span className="font-mono text-sm font-bold text-slate-900">
+                                {f.flightNo}
+                              </span>
+                              <span className="text-[11px] font-medium text-slate-400">
+                                {f.days || "Daily"}
+                              </span>
+                            </div>
+                            <div className="ml-auto flex items-center gap-2">
+                              <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                {f.daypart}
+                              </span>
+                              <span className="font-mono text-xs font-medium text-slate-700">
+                                {f.depTime}
+                                {f.arrTime ? ` → ${f.arrTime}` : ""}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+                      {visibleReturnFlights.length === 0 ? (
+                        <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center text-xs text-slate-500">
+                          No return flights scheduled for {returnSector} in the {returnDaypart} slot.
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
               </div>
             )}
           </>
