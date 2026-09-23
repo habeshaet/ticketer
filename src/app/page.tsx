@@ -86,6 +86,8 @@ export default function ComposePage() {
   const [returnDate, setReturnDate] = useState("");
   const [returnDaypart, setReturnDaypart] = useState("any");
   const [returnFlightNos, setReturnFlightNos] = useState<string[]>([]);
+  const [expandAnyFlights, setExpandAnyFlights] = useState(false);
+  const [expandAnyReturnFlights, setExpandAnyReturnFlights] = useState(false);
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -778,23 +780,105 @@ export default function ComposePage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span className="font-bold uppercase tracking-wider">
-                      Available Flights ({visibleFlights.length})
-                    </span>
-                    <span>{flightNos.length} selected</span>
+                {daypart === "any" ? (
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => setExpandAnyFlights((prev) => !prev)}
+                      className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50/80 px-3.5 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100"
+                    >
+                      <div className="flex flex-wrap items-center gap-2 text-left">
+                        <span className="font-bold">
+                          {expandAnyFlights
+                            ? "Hide flights list"
+                            : `Show all flights (${visibleFlights.length})`}
+                        </span>
+                        {flightNos.length > 0 ? (
+                          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-800">
+                            {flightNos.length} selected: {flightNos.join(", ")}
+                          </span>
+                        ) : (
+                          <span className="text-[11px] font-normal text-slate-400">
+                            (click to expand)
+                          </span>
+                        )}
+                      </div>
+                      <span className="ml-2 shrink-0 text-xs font-bold text-slate-400">
+                        {expandAnyFlights ? "▲" : "▼"}
+                      </span>
+                    </button>
+
+                    {expandAnyFlights ? (
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center justify-between text-xs text-slate-500">
+                          <span className="font-bold uppercase tracking-wider">
+                            All Sector Flights ({visibleFlights.length})
+                          </span>
+                          <span>{flightNos.length} selected</span>
+                        </div>
+                        {visibleFlights.map((f) => {
+                          const on = flightNos.includes(f.flightNo);
+                          return (
+                            <button
+                              key={f.id}
+                              type="button"
+                              onClick={() => toggleFlight(f.flightNo)}
+                              className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                                on
+                                  ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                              }`}
+                            >
+                              <span
+                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                                  on
+                                    ? "border-emerald-600 bg-emerald-600 text-white"
+                                    : "border-slate-300 bg-white text-transparent"
+                                }`}
+                              >
+                                ✓
+                              </span>
+                              <div className="flex flex-col">
+                                <span className="font-mono text-sm font-bold text-slate-900">
+                                  {f.flightNo}
+                                </span>
+                                <span className="text-[11px] font-medium text-slate-400">
+                                  {f.days || "Daily"}
+                                </span>
+                              </div>
+                              <div className="ml-auto flex items-center gap-2">
+                                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                  {f.daypart}
+                                </span>
+                                <span className="font-mono text-xs font-medium text-slate-700">
+                                  {f.depTime}
+                                  {f.arrTime ? ` → ${f.arrTime}` : ""}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
                   </div>
-                  {visibleFlights.map((f) => {
-                    const on = flightNos.includes(f.flightNo);
-                    return (
-                      <button
-                        key={f.id}
-                        type="button"
-                        onClick={() => toggleFlight(f.flightNo)}
-                        className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
-                          on
-                            ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                ) : (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <span className="font-bold uppercase tracking-wider">
+                        Available Flights ({visibleFlights.length})
+                      </span>
+                      <span>{flightNos.length} selected</span>
+                    </div>
+                    {visibleFlights.map((f) => {
+                      const on = flightNos.includes(f.flightNo);
+                      return (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => toggleFlight(f.flightNo)}
+                          className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                            on
+                              ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
                             : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                         }`}
                       >
@@ -833,6 +917,7 @@ export default function ComposePage() {
                     </p>
                   ) : null}
                 </div>
+                )}
 
                 {hasReturn && ticketType === "round-trip ticket" && kind === "new_ticket" && !isMulti ? (
                   <div className="mt-5 border-t border-slate-200/80 pt-5">
@@ -880,61 +965,144 @@ export default function ComposePage() {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-xs text-slate-500">
-                        <span className="font-bold uppercase tracking-wider">
-                          Available Return Flights ({visibleReturnFlights.length})
-                        </span>
-                        <span>{returnFlightNos.length} selected</span>
+                    {returnDaypart === "any" ? (
+                      <div className="space-y-2">
+                        <button
+                          type="button"
+                          onClick={() => setExpandAnyReturnFlights((prev) => !prev)}
+                          className="flex min-h-[44px] w-full items-center justify-between rounded-xl border border-dashed border-slate-300 bg-slate-50/80 px-3.5 py-2.5 text-xs font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100"
+                        >
+                          <div className="flex flex-wrap items-center gap-2 text-left">
+                            <span className="font-bold">
+                              {expandAnyReturnFlights
+                                ? "Hide return flights list"
+                                : `Show all return flights (${visibleReturnFlights.length})`}
+                            </span>
+                            {returnFlightNos.length > 0 ? (
+                              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-800">
+                                {returnFlightNos.length} selected: {returnFlightNos.join(", ")}
+                              </span>
+                            ) : (
+                              <span className="text-[11px] font-normal text-slate-400">
+                                (click to expand)
+                              </span>
+                            )}
+                          </div>
+                          <span className="ml-2 shrink-0 text-xs font-bold text-slate-400">
+                            {expandAnyReturnFlights ? "▲" : "▼"}
+                          </span>
+                        </button>
+
+                        {expandAnyReturnFlights ? (
+                          <div className="space-y-2 pt-1">
+                            <div className="flex items-center justify-between text-xs text-slate-500">
+                              <span className="font-bold uppercase tracking-wider">
+                                All Return Flights ({visibleReturnFlights.length})
+                              </span>
+                              <span>{returnFlightNos.length} selected</span>
+                            </div>
+                            {visibleReturnFlights.map((f) => {
+                              const on = returnFlightNos.includes(f.flightNo);
+                              return (
+                                <button
+                                  key={f.id}
+                                  type="button"
+                                  onClick={() => toggleReturnFlight(f.flightNo)}
+                                  className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
+                                    on
+                                      ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                                      : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+                                  }`}
+                                >
+                                  <span
+                                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                                      on
+                                        ? "border-emerald-600 bg-emerald-600 text-white"
+                                        : "border-slate-300 bg-white text-transparent"
+                                    }`}
+                                  >
+                                    ✓
+                                  </span>
+                                  <div className="flex flex-col">
+                                    <span className="font-mono text-sm font-bold text-slate-900">
+                                      {f.flightNo}
+                                    </span>
+                                    <span className="text-[11px] font-medium text-slate-400">
+                                      {f.days || "Daily"}
+                                    </span>
+                                  </div>
+                                  <div className="ml-auto flex items-center gap-2">
+                                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                      {f.daypart}
+                                    </span>
+                                    <span className="font-mono text-xs font-medium text-slate-700">
+                                      {f.depTime}
+                                      {f.arrTime ? ` → ${f.arrTime}` : ""}
+                                    </span>
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ) : null}
                       </div>
-                      {visibleReturnFlights.map((f) => {
-                        const on = returnFlightNos.includes(f.flightNo);
-                        return (
-                          <button
-                            key={f.id}
-                            type="button"
-                            onClick={() => toggleReturnFlight(f.flightNo)}
-                            className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
-                              on
-                                ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
-                                : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
-                            }`}
-                          >
-                            <span
-                              className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                    ) : (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-xs text-slate-500">
+                          <span className="font-bold uppercase tracking-wider">
+                            Available Return Flights ({visibleReturnFlights.length})
+                          </span>
+                          <span>{returnFlightNos.length} selected</span>
+                        </div>
+                        {visibleReturnFlights.map((f) => {
+                          const on = returnFlightNos.includes(f.flightNo);
+                          return (
+                            <button
+                              key={f.id}
+                              type="button"
+                              onClick={() => toggleReturnFlight(f.flightNo)}
+                              className={`flex min-h-[48px] w-full items-center gap-3.5 rounded-xl border px-3.5 py-2.5 text-left transition ${
                                 on
-                                  ? "border-emerald-600 bg-emerald-600 text-white"
-                                  : "border-slate-300 bg-white text-transparent"
+                                  ? "border-emerald-500 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-500"
+                                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
                               }`}
                             >
-                              ✓
-                            </span>
-                            <div className="flex flex-col">
-                              <span className="font-mono text-sm font-bold text-slate-900">
-                                {f.flightNo}
+                              <span
+                                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold transition ${
+                                  on
+                                    ? "border-emerald-600 bg-emerald-600 text-white"
+                                    : "border-slate-300 bg-white text-transparent"
+                                }`}
+                              >
+                                ✓
                               </span>
-                              <span className="text-[11px] font-medium text-slate-400">
-                                {f.days || "Daily"}
-                              </span>
-                            </div>
-                            <div className="ml-auto flex items-center gap-2">
-                              <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
-                                {f.daypart}
-                              </span>
-                              <span className="font-mono text-xs font-medium text-slate-700">
-                                {f.depTime}
-                                {f.arrTime ? ` → ${f.arrTime}` : ""}
-                              </span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                      {visibleReturnFlights.length === 0 ? (
-                        <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center text-xs text-slate-500">
-                          No return flights scheduled for {returnSector} in the {returnDaypart} slot.
-                        </p>
-                      ) : null}
-                    </div>
+                              <div className="flex flex-col">
+                                <span className="font-mono text-sm font-bold text-slate-900">
+                                  {f.flightNo}
+                                </span>
+                                <span className="text-[11px] font-medium text-slate-400">
+                                  {f.days || "Daily"}
+                                </span>
+                              </div>
+                              <div className="ml-auto flex items-center gap-2">
+                                <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                  {f.daypart}
+                                </span>
+                                <span className="font-mono text-xs font-medium text-slate-700">
+                                  {f.depTime}
+                                  {f.arrTime ? ` → ${f.arrTime}` : ""}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                        {visibleReturnFlights.length === 0 ? (
+                          <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-5 text-center text-xs text-slate-500">
+                            No return flights scheduled for {returnSector} in the {returnDaypart} slot.
+                          </p>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
                 ) : null}
               </div>
