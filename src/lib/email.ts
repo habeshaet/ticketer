@@ -271,6 +271,9 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
   let flightsPhrase: string;
   let flightsLine: string;
 
+  let reverseSector = "";
+  let reverseSectorSpaced = "";
+
   if (legs.length > 0) {
     // multi-city: AWA-ADD-DIR
     const stops: string[] = [];
@@ -282,6 +285,10 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
     via = stops.slice(1, -1).join(" / ");
     sector = stops.join("-");
     sectorSpaced = stops.join(" - ");
+
+    const reverseStops = [...stops].reverse();
+    reverseSector = reverseStops.join("-");
+    reverseSectorSpaced = reverseStops.join(" - ");
 
     const pieces: string[] = [];
     const labelled: string[] = [];
@@ -304,6 +311,14 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
       input.origin && input.destination
         ? `${input.origin} - ${input.destination}`
         : sector;
+    reverseSector =
+      input.destination && input.origin
+        ? `${input.destination}-${input.origin}`
+        : input.destination || input.origin || "";
+    reverseSectorSpaced =
+      input.destination && input.origin
+        ? `${input.destination} - ${input.origin}`
+        : reverseSector;
     const flights = input.flightNos.filter(Boolean);
     flightsJoined = flights.join(" OR ");
     flightsPhrase = flightsJoined ? ` on ${flightsJoined}` : "";
@@ -345,20 +360,52 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
 
   const tripType = isFerry ? "one-way" : "round-trip";
 
+  let bodyTemplate =
+    input.kind === "dormitory"
+      ? input.templates?.dorm || DEFAULT_DORM_TEMPLATE
+      : input.kind === "rebooking"
+        ? input.templates?.rebook || DEFAULT_REBOOK_TEMPLATE
+        : input.templates?.newTicket || DEFAULT_NEW_TICKET_TEMPLATE;
+
   const prettyReturnDate = input.returnDate ? formatTicketDate(input.returnDate) : "";
   const returnFlights = (input.returnFlightNos ?? []).filter(Boolean);
   const returnFlightsJoined = returnFlights.join(" OR ");
-  const returnFlightsLine = returnFlightsJoined
-    ? `Preferred Return Flight - ${returnFlightsJoined}`
+
+  const isSectorColon = /Sector\s*:/i.test(bodyTemplate);
+  const isReturnDateColon = /Return Date\s*:/i.test(bodyTemplate);
+  const isReturnFlightColon = /Preferred Return Flight\s*:/i.test(bodyTemplate);
+
+  const doubleSpaced =
+    /Sector[^\n]*\n\s*\n\s*Departure Date/i.test(bodyTemplate) ||
+    /Departure Date[^\n]*\n\s*\n\s*Preferred Flight/i.test(bodyTemplate);
+  const lineSep = doubleSpaced ? "\n\n" : "\n";
+
+  const returnSectorLine = reverseSector
+    ? isSectorColon
+      ? `Sector: ${reverseSector}`
+      : `Sector - ${reverseSectorSpaced}`
     : "";
 
+  const returnDateLine = prettyReturnDate
+    ? isReturnDateColon
+      ? `Return Date: ${prettyReturnDate}`
+      : `Return Date - ${prettyReturnDate}`
+    : "";
+
+  const returnFlightLine = returnFlightsJoined
+    ? isReturnFlightColon
+      ? `Preferred Return Flight: ${returnFlightsJoined}`
+      : `Preferred Return Flight - ${returnFlightsJoined}`
+    : "";
+
+  const returnParts: string[] = [];
+  if (returnSectorLine) returnParts.push(returnSectorLine);
+  if (returnDateLine) returnParts.push(returnDateLine);
+  if (returnFlightLine) returnParts.push(returnFlightLine);
+
   let returnDetails = "";
-  if (prettyReturnDate && returnFlightsLine) {
-    returnDetails = `Return Date - ${prettyReturnDate}\n${returnFlightsLine}`;
-  } else if (prettyReturnDate) {
-    returnDetails = `Return Date - ${prettyReturnDate}`;
-  } else if (returnFlightsLine) {
-    returnDetails = returnFlightsLine;
+  if (prettyReturnDate || returnFlightsJoined) {
+    returnDetails = `\n${returnParts.join(lineSep)}`;
   }
 
   const values: Record<string, string> = {
@@ -367,8 +414,12 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
     TRIP_TYPE: tripType,
     RETURN_DATE: prettyReturnDate,
     RETURN_FLIGHTS: returnFlightsJoined,
-    RETURN_FLIGHTS_LINE: returnFlightsLine,
+    RETURN_FLIGHTS_LINE: returnFlightLine,
     RETURN_DETAILS: returnDetails,
+    RETURN_SECTOR: reverseSector,
+    RETURN_SECTOR_SPACED: reverseSectorSpaced,
+    REVERSE_SECTOR: reverseSector,
+    REVERSE_SECTOR_SPACED: reverseSectorSpaced,
     PASSENGERS: passengerBlock(input.passengers),
     TICKETS: ticketBlock(input.ticketNumbers, input.passengers),
     SECTOR: sector,
@@ -397,13 +448,6 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
       key in values ? values[key] : match,
     );
 
-  let bodyTemplate =
-    input.kind === "dormitory"
-      ? input.templates?.dorm || DEFAULT_DORM_TEMPLATE
-      : input.kind === "rebooking"
-        ? input.templates?.rebook || DEFAULT_REBOOK_TEMPLATE
-        : input.templates?.newTicket || DEFAULT_NEW_TICKET_TEMPLATE;
-
   if (input.kind === "new_ticket") {
     bodyTemplate = bodyTemplate.replace(
       /(?:Please\s+)?process\s+(?:(?:one-way|one way|two-way|two way|2-way|round-trip|round trip|roundtrip)\s+)?ticket/gi,
@@ -421,12 +465,12 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
       if (bodyTemplate.includes("{FLIGHTS_LINE}")) {
         bodyTemplate = bodyTemplate.replace(
           "{FLIGHTS_LINE}",
-          `{FLIGHTS_LINE}\n${returnDetails}`,
+          `{FLIGHTS_LINE}\n\n${returnParts.join(lineSep)}`,
         );
       } else if (bodyTemplate.includes("{DATE}")) {
         bodyTemplate = bodyTemplate.replace(
           "{DATE}",
-          `{DATE}\n${returnDetails}`,
+          `{DATE}\n\n${returnParts.join(lineSep)}`,
         );
       } else {
         const lines = bodyTemplate.split("\n");
@@ -437,11 +481,7 @@ export function buildEmail(input: BuildInput): { subject: string; body: string }
           }
         }
         if (idx >= 0) {
-          const usesColon = /:\s*/.test(lines[idx]);
-          const adapted = usesColon
-            ? returnDetails.replace(/ - /g, ": ")
-            : returnDetails;
-          lines.splice(idx + 1, 0, adapted);
+          lines.splice(idx + 1, 0, `\n${returnParts.join(lineSep)}`);
           bodyTemplate = lines.join("\n");
         }
       }
