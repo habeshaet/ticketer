@@ -60,6 +60,56 @@ export default function SettingsPage() {
     flash("Reason saved ✔");
   }
 
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
+  async function persistReasonOrder(newReasons: Reason[]) {
+    setReasons(newReasons);
+    const order = newReasons.map((r) => r.id);
+    const res = await fetch("/api/reasons", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order }),
+    });
+    if (res.ok) {
+      flash("Reason order saved ✔");
+    }
+  }
+
+  function handleDragStart(index: number) {
+    setDraggedIndex(index);
+  }
+
+  function handleDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault();
+    if (dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  }
+
+  function handleDrop(targetIndex: number) {
+    if (draggedIndex === null || draggedIndex === targetIndex) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+    const updated = [...reasons];
+    const [moved] = updated.splice(draggedIndex, 1);
+    updated.splice(targetIndex, 0, moved);
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+    persistReasonOrder(updated);
+  }
+
+  function moveReason(fromIndex: number, direction: "up" | "down") {
+    const toIndex = direction === "up" ? fromIndex - 1 : fromIndex + 1;
+    if (toIndex < 0 || toIndex >= reasons.length) return;
+    const updated = [...reasons];
+    const [moved] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, moved);
+    persistReasonOrder(updated);
+  }
+
   async function addReason() {
     if (!newReason.label.trim()) return;
     const res = await fetch("/api/reasons", {
@@ -251,57 +301,121 @@ export default function SettingsPage() {
       <section className={`${card} p-4`}>
         <SectionTitle title="Reasons for a new ticket" />
         <p className="mb-3 text-xs text-slate-500">
-          The sentence is dropped into the mail through the{" "}
-          <code className="rounded bg-slate-100 px-1">{"{PURPOSE}"}</code>{" "}
+          Drag reasons using the handle <span className="font-mono">⋮⋮</span> or click the arrows to adjust their order. The sentence is dropped into the mail through the{" "}
+          <code className="rounded bg-slate-100 px-1 font-mono">{"{PURPOSE}"}</code>{" "}
           placeholder. You may use {"{NAMES}"}, {"{COUNT}"}, {"{SECTOR}"} and{" "}
           {"{DATE}"} inside it.
         </p>
         <div className="space-y-2">
-          {reasons.map((reason, index) => (
-            <div
-              key={reason.id}
-              className="rounded-xl border border-slate-200 bg-white p-3"
-            >
-              <div className="flex items-center gap-2">
-                <TextInput
-                  value={reason.label}
+          {reasons.map((reason, index) => {
+            const isDragging = draggedIndex === index;
+            const isOver = dragOverIndex === index;
+            return (
+              <div
+                key={reason.id}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragLeave={() => {
+                  if (dragOverIndex === index) setDragOverIndex(null);
+                }}
+                onDrop={() => handleDrop(index)}
+                onDragEnd={() => {
+                  setDraggedIndex(null);
+                  setDragOverIndex(null);
+                }}
+                className={`rounded-xl border transition-all ${
+                  isDragging
+                    ? "opacity-35 border-dashed border-emerald-500 bg-emerald-50/20"
+                    : isOver
+                    ? "border-emerald-500 ring-2 ring-emerald-500/20 bg-emerald-50/40"
+                    : "border-slate-200 bg-white"
+                } p-3`}
+              >
+                <div className="flex items-center gap-2">
+                  {/* Drag Handle */}
+                  <div
+                    title="Drag to reorder"
+                    className="flex h-8 w-6 cursor-grab items-center justify-center text-slate-400 hover:text-slate-700 active:cursor-grabbing"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                      <circle cx="9" cy="6" r="1.5" />
+                      <circle cx="15" cy="6" r="1.5" />
+                      <circle cx="9" cy="12" r="1.5" />
+                      <circle cx="15" cy="12" r="1.5" />
+                      <circle cx="9" cy="18" r="1.5" />
+                      <circle cx="15" cy="18" r="1.5" />
+                    </svg>
+                  </div>
+
+                  {/* Reorder up/down buttons for quick touch / click access */}
+                  <div className="flex flex-col gap-0.5">
+                    <button
+                      type="button"
+                      disabled={index === 0}
+                      onClick={() => moveReason(index, "up")}
+                      className="flex h-3.5 w-4 items-center justify-center text-[10px] text-slate-400 hover:text-slate-800 disabled:opacity-20"
+                      title="Move up"
+                    >
+                      ▲
+                    </button>
+                    <button
+                      type="button"
+                      disabled={index === reasons.length - 1}
+                      onClick={() => moveReason(index, "down")}
+                      className="flex h-3.5 w-4 items-center justify-center text-[10px] text-slate-400 hover:text-slate-800 disabled:opacity-20"
+                      title="Move down"
+                    >
+                      ▼
+                    </button>
+                  </div>
+
+                  <span className="w-5 text-center font-mono text-xs font-bold text-slate-400">
+                    {index + 1}
+                  </span>
+
+                  <TextInput
+                    value={reason.label}
+                    onChange={(e) =>
+                      setReasons((current) =>
+                        current.map((r, i) =>
+                          i === index
+                            ? { ...r, label: e.target.value.toUpperCase() }
+                            : r,
+                        ),
+                      )
+                    }
+                  />
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-emerald-700 hover:underline"
+                    onClick={() => saveReason(reason)}
+                  >
+                    save
+                  </button>
+                  <button
+                    type="button"
+                    className="text-xs font-semibold text-rose-600 hover:underline"
+                    onClick={() => removeReason(reason.id)}
+                  >
+                    delete
+                  </button>
+                </div>
+                <TextArea
+                  rows={2}
+                  className="mt-2"
+                  value={reason.purposeLine}
                   onChange={(e) =>
                     setReasons((current) =>
                       current.map((r, i) =>
-                        i === index
-                          ? { ...r, label: e.target.value.toUpperCase() }
-                          : r,
+                        i === index ? { ...r, purposeLine: e.target.value } : r,
                       ),
                     )
                   }
                 />
-                <button
-                  className="text-xs font-semibold text-emerald-700 hover:underline"
-                  onClick={() => saveReason(reason)}
-                >
-                  save
-                </button>
-                <button
-                  className="text-xs font-semibold text-rose-600 hover:underline"
-                  onClick={() => removeReason(reason.id)}
-                >
-                  delete
-                </button>
               </div>
-              <TextArea
-                rows={2}
-                className="mt-2"
-                value={reason.purposeLine}
-                onChange={(e) =>
-                  setReasons((current) =>
-                    current.map((r, i) =>
-                      i === index ? { ...r, purposeLine: e.target.value } : r,
-                    ),
-                  )
-                }
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="mt-3 rounded-xl border border-dashed border-slate-300 p-3">
           <Field label="New reason">

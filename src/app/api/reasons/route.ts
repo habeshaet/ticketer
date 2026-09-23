@@ -60,6 +60,30 @@ export async function PATCH(request: Request) {
   return json(row);
 }
 
+export async function PUT(request: Request) {
+  const body = await request.json().catch(() => null);
+  if (!body) return badRequest("Invalid JSON body");
+
+  if (Array.isArray(body.order)) {
+    for (let i = 0; i < body.order.length; i++) {
+      const id = Number(body.order[i]);
+      if (Number.isFinite(id)) {
+        await db
+          .update(reasons)
+          .set({ sortOrder: (i + 1) * 10 })
+          .where(eq(reasons.id, id));
+      }
+    }
+    const rows = await db
+      .select()
+      .from(reasons)
+      .orderBy(asc(reasons.sortOrder), asc(reasons.id));
+    return json(rows);
+  }
+
+  return badRequest("Invalid order list");
+}
+
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = Number(searchParams.get("id"));
